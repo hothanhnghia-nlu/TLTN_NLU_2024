@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">FIT Exam</string>
+    <string name="id">ID</string>
+    <string name="full_name">Họ và tên</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Số điện thoại</string>
+    <string name="dob">Ngày sinh</string>
+    <string name="gender">Giới tính</string>
+    <string name="password">Mật khẩu</string>
+    <string name="confirm_password">Xác nhận mật khẩu</string>
+    <string name="google">Tiếp tục với Google</string>
+    <string name="facebook">Tiếp tục với Facebook</string>
+    <string name="signup">Đăng ký</string>
+    <string name="login">Đăng nhập</string>
+    <string name="forgot_password">Quên mật khẩu</string>
+    <string name="save">Lưu</string>
+    <string name="confirm">Xác nhận</string>
+    <string name="account">Cá nhân</string>
+    <string name="history">Lịch sử thi</string>
+    <string name="profile">Thông tin cá nhân</string>
+    <string name="edit_profile">Chỉnh sửa hồ sơ</string>
+    <string name="take_exam">Luyện thi</string>
+    <string name="home">Trang chủ</string>
+    <string name="subjects">Môn học</string>
+    <string name="see_all">Xem tất cả</string>
+    <string name="change_password">Thay đổi mật khẩu</string>
+    <string name="results">Kết quả</string>
+</resources>
