@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.chaos.view.PinView;
 import com.google.android.material.textfield.TextInputEditText;
 
+import vn.edu.hcmuaf.fit.fit_exam.common.MailService;
+
 public class ResetPasswordActivity extends AppCompatActivity {
     TextView tvMessage, tvEmail, btnResend;
     TextInputEditText edEmail;
@@ -55,7 +57,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private void handleConfirm() {
         String inputCode = pinView.getText().toString();
         String email = tvEmail.getText().toString();
-        code = 1234;
 
         if (inputCode.equals(String.valueOf(code))) {
             Toast.makeText(ResetPasswordActivity.this,
@@ -79,15 +80,31 @@ public class ResetPasswordActivity extends AppCompatActivity {
             tvMessage.setVisibility(View.VISIBLE);
             tvMessage.setText("Vui lòng điền đầy đủ thông tin.");
         } else {
-            layoutEmail.setVisibility(View.GONE);
-            layoutPinView.setVisibility(View.VISIBLE);
-            tvEmail.setText(email);
+            int otp = MailService.sendOtp(email);
+            if (otp != 0) {
+                code = otp;
+
+                layoutEmail.setVisibility(View.GONE);
+                layoutPinView.setVisibility(View.VISIBLE);
+                tvEmail.setText(email);
+                Toast.makeText(this,
+                        "Mã OTP đã được gửi đến email của bạn", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Có lỗi xảy ra khi gửi email", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     @SuppressLint("SetTextI18n")
     private void handleReSendOTP() {
-
+        String email = tvEmail.getText().toString();
+        int otp = MailService.sendOtp(email);
+        if (otp != 0) {
+            code = otp;
+            Toast.makeText(this, "Đã gửi lại mã", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Có lỗi xảy ra khi gửi email", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

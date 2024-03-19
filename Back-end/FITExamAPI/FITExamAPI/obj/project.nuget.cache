@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "07xQcnjW1sLuScXY0+R3BGpgzDejq+KyBU8xp2v1SZvVosD9K7p3N9fcnMVsR4ekLgVxmWzDXhcRJtXFoaL7Kw==",
+  "dgSpecHash": "E38aBto6ZVFh9E7lG3W4z5MB3yUDdiJIroOWjMGenU0SD66d9yjAFKwGKNf7NS1EVfXBocchFqaKETrpqenjCg==",
   "success": true,
-  "projectFilePath": "D:\\TLTN_NLU\\Back-end\\FITExamAPI\\FITExamAPI\\FITExamAPI.csproj",
+  "projectFilePath": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\FITExamAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ASUS\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

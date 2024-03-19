@@ -121,12 +121,11 @@ public class QuestionActivity extends AppCompatActivity {
 
         builder.setTitle("Bạn có chắc chắn đã hoàn thành các câu trả lời?")
                 .setMessage("Nhấn Đồng ý để xem kết quả.")
-                .setPositiveButton("Đồng ý", (dialog, which) -> {
+                .setPositiveButton("ĐỒNG Ý", (dialog, which) -> {
                     Toast.makeText(QuestionActivity.this, "Bạn đã đồng ý!", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 })
-                .setNegativeButton("Hủy", (dialog, which) -> {
-                    Toast.makeText(QuestionActivity.this, "Bạn đã hủy!", Toast.LENGTH_SHORT).show();
+                .setNegativeButton("HỦY", (dialog, which) -> {
                     dialog.dismiss();
                 });
 
@@ -139,12 +138,11 @@ public class QuestionActivity extends AppCompatActivity {
 
         builder.setTitle("Bạn có chắc chắn muốn nộp bài?")
                 .setMessage("Nhấn Đồng ý để nộp bài.")
-                .setPositiveButton("Đồng ý", (dialog, which) -> {
+                .setPositiveButton("ĐỒNG Ý", (dialog, which) -> {
                     Toast.makeText(QuestionActivity.this, "Bạn đã đồng ý!", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 })
-                .setNegativeButton("Hủy", (dialog, which) -> {
-                    Toast.makeText(QuestionActivity.this, "Bạn đã hủy!", Toast.LENGTH_SHORT).show();
+                .setNegativeButton("HỦY", (dialog, which) -> {
                     dialog.dismiss();
                 });
 

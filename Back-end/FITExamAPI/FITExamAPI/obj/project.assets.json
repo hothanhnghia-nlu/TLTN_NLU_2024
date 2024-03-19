@@ -4506,11 +4506,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\TLTN_NLU\\Back-end\\FITExamAPI\\FITExamAPI\\FITExamAPI.csproj",
+      "projectUniqueName": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\FITExamAPI.csproj",
       "projectName": "FITExamAPI",
-      "projectPath": "D:\\TLTN_NLU\\Back-end\\FITExamAPI\\FITExamAPI\\FITExamAPI.csproj",
+      "projectPath": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\FITExamAPI.csproj",
       "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-      "outputPath": "D:\\TLTN_NLU\\Back-end\\FITExamAPI\\FITExamAPI\\obj\\",
+      "outputPath": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ASUS\\AppData\\Roaming\\NuGet\\NuGet.Config",

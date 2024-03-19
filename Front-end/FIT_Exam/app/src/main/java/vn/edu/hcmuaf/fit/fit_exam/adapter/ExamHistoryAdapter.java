@@ -80,11 +80,21 @@ public class ExamHistoryAdapter extends RecyclerView.Adapter<ExamHistoryAdapter.
             tvSubjectName.setText(result.getExam().getSubject().getName());
             tvTotalCorrectAnswers.setText(result.getTotalCorrectAnswer());
             tvScore.setText(String.valueOf(result.getScore()));
-            tvResult.setText(result.getTotalCorrectAnswer());
+            classifyByScore(result);
 
             if (result.getExam().getSubject().getImage() != null) {
                 String imageUrl = result.getExam().getSubject().getImage().getUrl();
                 Glide.with(context).load(imageUrl).into(subjectImage);
+            }
+        }
+
+        @SuppressLint("SetTextI18n")
+        private void classifyByScore(Result result) {
+            double score = result.getScore();
+            if (score < 5.0) {
+                tvResult.setText("Không đạt");
+            } else {
+                tvResult.setText("Đạt");
             }
         }
     }
