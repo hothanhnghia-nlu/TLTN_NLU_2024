@@ -29,10 +29,10 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/subjectName"
+                android:id="@+id/examName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Subject Name"
+                android:text="Exam Name"
                 android:textColor="@color/green_nlu"
                 android:textSize="17sp"
                 android:textStyle="bold"/>

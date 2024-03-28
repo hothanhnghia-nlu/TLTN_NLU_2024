@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FITExamAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2d62953b39c8053b4b544b3c7a430f27e37721a5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+97bc0a17342b87b3ef62f0e1a0a6553598b49c07")]
 [assembly: System.Reflection.AssemblyProductAttribute("FITExamAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FITExamAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

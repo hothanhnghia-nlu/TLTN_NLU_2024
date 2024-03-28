@@ -50,7 +50,7 @@ public class ExamHistoryAdapter extends RecyclerView.Adapter<ExamHistoryAdapter.
 //            Intent intent = new Intent(context, SubjectActivity.class);
 //            intent.putExtra("SubjectId", SubjectId);
 //            context.startActivity(intent);
-            Toast.makeText(context, "Subject id: " + subjectId, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, result.getExam().getName(), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -60,14 +60,14 @@ public class ExamHistoryAdapter extends RecyclerView.Adapter<ExamHistoryAdapter.
     }
 
     public static class HistoryViewHolder extends RecyclerView.ViewHolder {
-        TextView tvSubjectName, tvTotalCorrectAnswers, tvScore, tvResult;
+        TextView tvExamName, tvTotalCorrectAnswers, tvScore, tvResult;
         ImageView subjectImage;
         CardView cvHistory;
 
         public HistoryViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            tvSubjectName = itemView.findViewById(R.id.subjectName);
+            tvExamName = itemView.findViewById(R.id.examName);
             tvTotalCorrectAnswers = itemView.findViewById(R.id.totalCorrectAnswers);
             tvScore = itemView.findViewById(R.id.score);
             tvResult = itemView.findViewById(R.id.result);
@@ -77,8 +77,9 @@ public class ExamHistoryAdapter extends RecyclerView.Adapter<ExamHistoryAdapter.
 
         @SuppressLint("SetTextI18n")
         public void bindData(Result result) {
-            tvSubjectName.setText(result.getExam().getSubject().getName());
-            tvTotalCorrectAnswers.setText(result.getTotalCorrectAnswer());
+            tvExamName.setText(result.getExam().getName());
+            tvTotalCorrectAnswers.setText(result.getTotalCorrectAnswer()
+                    + "/" + result.getExam().getNumberOfQuestions());
             tvScore.setText(String.valueOf(result.getScore()));
             classifyByScore(result);
 

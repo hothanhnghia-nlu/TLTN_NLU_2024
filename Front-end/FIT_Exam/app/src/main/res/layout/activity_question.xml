@@ -15,10 +15,10 @@
         android:padding="20dp">
 
         <TextView
-            android:id="@+id/subjectName"
+            android:id="@+id/examName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tên môn học"
+            android:text="Tên bài thi"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />

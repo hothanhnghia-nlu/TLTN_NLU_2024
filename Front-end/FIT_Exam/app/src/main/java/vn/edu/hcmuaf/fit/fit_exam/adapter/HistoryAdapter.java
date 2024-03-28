@@ -51,7 +51,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 //            Intent intent = new Intent(context, SubjectActivity.class);
 //            intent.putExtra("SubjectId", SubjectId);
 //            context.startActivity(intent);
-            Toast.makeText(context, "Subject id: " + subjectId, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, result.getExam().getName(), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -61,14 +61,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     }
 
     public static class HistoryViewHolder extends RecyclerView.ViewHolder {
-        TextView tvSubjectName, tvTotalCorrectAnswers;
+        TextView tvExamName, tvTotalCorrectAnswers;
         ImageView subjectImage;
         CardView cvHistory;
 
         public HistoryViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            tvSubjectName = itemView.findViewById(R.id.subjectName);
+            tvExamName = itemView.findViewById(R.id.examName);
             tvTotalCorrectAnswers = itemView.findViewById(R.id.totalCorrectAnswers);
             subjectImage = itemView.findViewById(R.id.subjectImage);
             cvHistory = itemView.findViewById(R.id.cvHistory);
@@ -76,8 +76,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
         @SuppressLint("SetTextI18n")
         public void bindData(Result result) {
-            tvSubjectName.setText(result.getExam().getSubject().getName());
-            tvTotalCorrectAnswers.setText(result.getTotalCorrectAnswer());
+            tvExamName.setText(result.getExam().getName());
+            tvTotalCorrectAnswers.setText(result.getTotalCorrectAnswer()
+                    + "/" + result.getExam().getNumberOfQuestions());
 
             if (result.getExam().getSubject().getImage() != null) {
                 String imageUrl = result.getExam().getSubject().getImage().getUrl();

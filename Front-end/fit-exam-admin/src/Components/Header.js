@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {Link} from "react-router-dom";
 
 const Header = () => {
@@ -42,7 +42,6 @@ const Header = () => {
                             <div className="dropdown-menu">
                                 <Link to="/my-profile" className="dropdown-item">Hồ sơ cá nhân</Link>
                                 <Link to="/edit-profile" className="dropdown-item">Chỉnh sửa hồ sơ</Link>
-                                <a className="dropdown-item" href="Cài đặt.html">Cài đặt</a>
                                 <Link to="/login" class="dropdown-item">Đăng xuất</Link>
                             </div>
                         </li>
@@ -52,7 +51,6 @@ const Header = () => {
                         <div className="dropdown-menu dropdown-menu-right">
                             <Link to="/my-profile" className="dropdown-item">Hồ sơ cá nhân</Link>
                             <Link to="/edit-profile" className="dropdown-item">Chỉnh sửa hồ sơ</Link>
-                            <a class="dropdown-item" href="Cài đặt.html">Cài đặt</a>
                             <Link to="/login" class="dropdown-item">Đăng xuất</Link>
                         </div>
                     </div>

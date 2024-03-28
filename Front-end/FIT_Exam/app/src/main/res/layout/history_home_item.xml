@@ -30,10 +30,10 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/subjectName"
+                android:id="@+id/examName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Subject Name"
+                android:text="Exam Name"
                 android:textColor="@color/black"
                 android:textSize="17sp"
                 android:textStyle="bold"/>
@@ -58,8 +58,9 @@
                     android:layout_toEndOf="@id/question"
                     android:layout_marginStart="20dp"
                     android:text="0/0"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
+                    android:textColor="@color/red"
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
             </RelativeLayout>
 
         </LinearLayout>

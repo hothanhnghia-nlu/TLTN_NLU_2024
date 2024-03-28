@@ -14,20 +14,20 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import vn.edu.hcmuaf.fit.fit_exam.QuestionActivity;
 import vn.edu.hcmuaf.fit.fit_exam.R;
-import vn.edu.hcmuaf.fit.fit_exam.TakeExamActivity;
+import vn.edu.hcmuaf.fit.fit_exam.SubjectActivity;
 import vn.edu.hcmuaf.fit.fit_exam.model.Subject;
 
-public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectViewHolder> {
+public class SubjectHomeAdapter extends RecyclerView.Adapter<SubjectHomeAdapter.SubjectViewHolder> {
     private final List<Subject> subjectList;
     static Context context;
 
-    public SubjectAdapter(Context context, List<Subject> subjectList) {
+    public SubjectHomeAdapter(Context context, List<Subject> subjectList) {
         this.context = context;
         this.subjectList = subjectList;
     }
@@ -35,7 +35,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
     @NonNull
     @Override
     public SubjectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.subject_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.subject_home_item, parent, false);
         return new SubjectViewHolder(view);
     }
 
@@ -49,9 +49,12 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
         holder.bindData(subject);
 
         holder.cvSubject.setOnClickListener(view -> {
-//            Intent intent = new Intent(context, TakeExamActivity.class);
-//            intent.putExtra("subjectId", subject.getId());
+            int subjectId = subject.getId();
+//            Intent intent = new Intent(context, SubjectActivity.class);
+//            intent.putExtra("SubjectId", SubjectId);
 //            context.startActivity(intent);
+
+            Toast.makeText(context, subject.getName(), Toast.LENGTH_SHORT).show();
         });
     }
 

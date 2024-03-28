@@ -51,7 +51,7 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
 //            Intent intent = new Intent(context, SubjectActivity.class);
 //            intent.putExtra("SubjectId", SubjectId);
 //            context.startActivity(intent);
-            Toast.makeText(context, "Subject id: " + subjectId, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, exam.getName(), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -61,14 +61,14 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
     }
 
     public static class TakeExamViewHolder extends RecyclerView.ViewHolder {
-        TextView tvSubjectName, tvTotalQuestion, tvTime;
+        TextView tvExamName, tvTotalQuestion, tvTime;
         ImageView subjectImage;
         CardView cvExam;
 
         public TakeExamViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            tvSubjectName = itemView.findViewById(R.id.subjectName);
+            tvExamName = itemView.findViewById(R.id.examName);
             tvTotalQuestion = itemView.findViewById(R.id.totalQuestions);
             tvTime = itemView.findViewById(R.id.timer);
             subjectImage = itemView.findViewById(R.id.subjectImage);
@@ -77,8 +77,8 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
 
         @SuppressLint("SetTextI18n")
         public void bindData(Exam exam) {
-            tvSubjectName.setText(exam.getName());
-            tvTotalQuestion.setText(exam.getNumberOfQuestions());
+            tvExamName.setText(exam.getName());
+            tvTotalQuestion.setText(String.valueOf(exam.getNumberOfQuestions()));
 //            tvTime.setText(exam.getName());
 
             if (exam.getSubject().getImage() != null) {
