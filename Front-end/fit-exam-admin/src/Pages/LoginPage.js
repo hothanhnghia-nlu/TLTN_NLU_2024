@@ -15,17 +15,17 @@ const LoginPage = () => {
                             <form action="/">
                                 <div className="form-group">
                                     <label>Email</label>
-                                    <input type="email" className="form-control"/>
+                                    <input type="email" className="form-control" required="required"/>
                                 </div>
-                                <div class="form-group">
+                                <div className="form-group">
                                     <label>Mật khẩu</label>
-                                    <input type="password" class="form-control"/>
+                                    <input type="password" className="form-control" required="required"/>
                                 </div>
                                 <div className="text-right">
                                     <Link to="/forgot-password">Quên mật khẩu?</Link>
                                 </div>
-                                <div class="form-group text-center custom-mt-form-group">
-                                    <button class="btn btn-primary btn-block account-btn" type="submit">Đăng nhập</button>
+                                <div className="form-group text-center custom-mt-form-group">
+                                    <button className="btn btn-primary btn-block account-btn" type="submit">Đăng nhập</button>
                                 </div>
                                 <div className="text-center">
                                     <Link to="/signup">Chưa có tài khoản?</Link>

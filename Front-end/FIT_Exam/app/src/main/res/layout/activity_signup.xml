@@ -38,9 +38,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Tạo tài khoản cá nhân mới"
+                android:text="Tạo tài khoản cá nhân mới."
                 android:textSize="16sp"
                 android:textColor="@color/gray_custom"/>
+
+            <TextView
+                android:id="@+id/showError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginTop="20dp"
+                android:text="Message"
+                android:textSize="16sp"
+                android:textColor="@color/red"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"

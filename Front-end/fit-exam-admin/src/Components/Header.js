@@ -65,35 +65,26 @@ const Header = () => {
                                     </Link>
                                 </div>
                                 <ul className="sidebar-ul">
-                                    <li className="active">
+                                    <li className="submenu active">
                                         <Link to="/"><img src="assets/img/sidebar/icon-1.png" alt="icon"/><span>Thống kê</span></Link>
                                     </li>
                                     <li className="submenu">
-                                        <a href="#"><img src="assets/img/sidebar/icon-2.png" alt="icon"/> <span> Giáo viên</span> </a>
+                                        <Link to="/teachers"><img src="assets/img/sidebar/icon-2.png" alt="icon"/> <span> Giảng viên</span> </Link>
                                     </li>
                                     <li className="submenu">
-                                        <a href="#"><img src="assets/img/sidebar/icon-3.png" alt="icon"/> <span> Sinh viên</span> </a>
+                                        <Link to="/students"><img src="assets/img/sidebar/icon-3.png" alt="icon"/> <span> Sinh viên</span> </Link>
                                     </li>
                                     <li className="submenu">
-                                        <a href="#"><img src="assets/img/sidebar/icon-4.png" alt="icon"/> <span> Môn học</span> </a>
+                                        <Link to="/subjects"><img src="assets/img/sidebar/icon-4.png" alt="icon"/> <span> Môn học</span> </Link>
                                     </li>
                                     <li className="submenu">
-                                        <a href="javascript:void(0);"><img src="assets/img/sidebar/icon-7.png" alt="icon"/> <span>Bài thi</span> </a>
-                                    </li>
-                                    <li>
-                                        <a href="calendar.html"><img src="assets/img/sidebar/icon-6.png" alt="icon"/> <span>Calendar</span></a>
-                                    </li>
-                                    <li>
-                                        <a href="exam-list.html"><img src="assets/img/sidebar/icon-5.png" alt="icon"/> <span>Exam list</span></a>
-                                    </li>
-                                    <li>
-                                        <a href="holidays.html"><img src="assets/img/sidebar/icon-8.png" alt="icon"/> <span>Holidays</span></a>
-                                    </li>
-                                    <li>
-                                        <a href="calendar.html"><img src="assets/img/sidebar/icon-9.png" alt="icon"/><span> Events</span></a>
+                                        <Link to="/exams"><img src="assets/img/sidebar/icon-7.png" alt="icon"/> <span>Bài thi</span> </Link>
                                     </li>
                                     <li className="submenu">
-                                        <a href="#"><img src="assets/img/sidebar/icon-10.png" alt="icon"/><span> Accounts </span> </a>
+                                        <Link to="/question-bank"><img src="assets/img/sidebar/icon-7.png" alt="icon"/> <span>Ngân hàng câu hỏi</span> </Link>
+                                    </li>
+                                    <li className="submenu">
+                                        <Link to="/logs"><img src="assets/img/sidebar/icon-12.png" alt="icon"/> <span>Nhật ký</span> </Link>
                                     </li>
                                 </ul>
                             </div>

@@ -5,6 +5,12 @@ import RegisterPage from "./Pages/RegisterPage";
 import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
 import ProfilePage from "./Pages/ProfilePage";
 import EditProfilePage from "./Pages/EditProfilePage";
+import ExamPage from "./Pages/ExamPage";
+import SubjectPage from "./Pages/SubjectPage";
+import StudentPage from "./Pages/StudentPage";
+import TeacherPage from "./Pages/TeacherPage";
+import QuestionBankPage from "./Pages/QuestionBankPage";
+import LogPage from "./Pages/LogPage";
 
 function App() {
     return (
@@ -16,6 +22,12 @@ function App() {
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                 <Route path="/my-profile" element={<ProfilePage />} />
                 <Route path="/edit-profile" element={<EditProfilePage />} />
+                <Route path="/students" element={<StudentPage />} />
+                <Route path="/teachers" element={<TeacherPage />} />
+                <Route path="/exams" element={<ExamPage />} />
+                <Route path="/subjects" element={<SubjectPage />} />
+                <Route path="/question-bank" element={<QuestionBankPage />} />
+                <Route path="/logs" element={<LogPage />} />
             </Routes>
         </Router>
     );

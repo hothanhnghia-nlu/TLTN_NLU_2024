@@ -35,10 +35,6 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SubjectExamActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".SubjectActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

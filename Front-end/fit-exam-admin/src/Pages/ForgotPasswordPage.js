@@ -6,21 +6,21 @@ const ForgotPasswordPage = () => {
     TabTitle('Quên mật khẩu | FIT Exam Admin');
 
     return (
-        <div class="main-wrapper">
-            <div class="account-page">
-                <div class="container">
-                    <h3 class="account-title text-white">Quên mật khẩu</h3>
-                    <div class="account-box">
-                        <div class="account-wrapper">
+        <div className="main-wrapper">
+            <div className="account-page">
+                <div className="container">
+                    <h3 className="account-title text-white">Quên mật khẩu</h3>
+                    <div className="account-box">
+                        <div className="account-wrapper">
                             <form >
-                                <div class="form-group">
+                                <div className="form-group">
                                     <label>Email</label>
-                                    <input type="email" class="form-control"/>
+                                    <input type="email" className="form-control" required="required"/>
                                 </div>
-                                <div class="form-group text-center custom-mt-form-group">
-                                    <button class="btn btn-primary btn-block account-btn" type="submit">Đặt lại mật khẩu</button>
+                                <div className="form-group text-center custom-mt-form-group">
+                                    <button className="btn btn-primary btn-block account-btn" type="submit">Đặt lại mật khẩu</button>
                                 </div>
-                                <div class="text-center">
+                                <div className="text-center">
                                     <Link to="/login">Về trang đăng nhập</Link>
                                 </div>
                             </form>
