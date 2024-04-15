@@ -8,9 +8,12 @@ public class Question implements Serializable {
     private String content;
     private String correctAnswer;
     private String questionType;
-    private int difficultyLevel;
+    private int imageId;
+    private int subjectId;
+    private String difficultyLevel;
+    private Image image;
+    private Subject subject;
     private List<Answer> answers;
-    private List<ExamQuestion> examQuestions;
     private List<QuestionOption> questionOptions;
 
     public Question() {
@@ -48,12 +51,44 @@ public class Question implements Serializable {
         this.questionType = questionType;
     }
 
-    public int getDifficultyLevel() {
+    public int getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(int imageId) {
+        this.imageId = imageId;
+    }
+
+    public int getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(int subjectId) {
+        this.subjectId = subjectId;
+    }
+
+    public String getDifficultyLevel() {
         return difficultyLevel;
     }
 
-    public void setDifficultyLevel(int difficultyLevel) {
+    public void setDifficultyLevel(String difficultyLevel) {
         this.difficultyLevel = difficultyLevel;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 
     public List<Answer> getAnswers() {
@@ -62,14 +97,6 @@ public class Question implements Serializable {
 
     public void setAnswers(List<Answer> answers) {
         this.answers = answers;
-    }
-
-    public List<ExamQuestion> getExamQuestions() {
-        return examQuestions;
-    }
-
-    public void setExamQuestions(List<ExamQuestion> examQuestions) {
-        this.examQuestions = examQuestions;
     }
 
     public List<QuestionOption> getQuestionOptions() {

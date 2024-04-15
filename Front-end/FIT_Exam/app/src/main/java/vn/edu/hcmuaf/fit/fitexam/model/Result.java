@@ -8,8 +8,8 @@ public class Result implements Serializable {
     private int examId;
     private int totalCorrectAnswer;
     private double score;
-    private String startTime;
-    private String endTime;
+    private String examDate;
+    private int overallTime;
     private User user;
     private Exam exam;
 
@@ -56,20 +56,20 @@ public class Result implements Serializable {
         this.score = score;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public String getExamDate() {
+        return examDate;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public void setExamDate(String examDate) {
+        this.examDate = examDate;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public int getOverallTime() {
+        return overallTime;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setOverallTime(int overallTime) {
+        this.overallTime = overallTime;
     }
 
     public User getUser() {

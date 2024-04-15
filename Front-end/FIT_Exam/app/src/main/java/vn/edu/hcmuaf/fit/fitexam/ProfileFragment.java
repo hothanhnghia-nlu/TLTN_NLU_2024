@@ -31,7 +31,7 @@ import java.util.Date;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
-    TextView tvName, tvEmail, tvPhone, tvDob, tvGender;
+    TextView tvName, tvFaculty, tvEmail, tvPhone, tvDob, tvGender;
     RelativeLayout changePassword, editProfile, logout;
     CircleImageView cvProfileImage;
 
@@ -45,6 +45,7 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         tvName = view.findViewById(R.id.fullName);
+        tvFaculty = view.findViewById(R.id.faculty);
         tvEmail = view.findViewById(R.id.email);
         tvPhone = view.findViewById(R.id.phoneNumber);
         tvDob = view.findViewById(R.id.dob);

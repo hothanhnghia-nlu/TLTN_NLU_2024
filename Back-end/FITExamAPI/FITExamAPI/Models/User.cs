@@ -15,6 +15,7 @@ namespace FITExamAPI.Models
         public DateTime? Dob { get; set; }
         public string? Gender { get; set; } = string.Empty;
         public int? ImageId { get; set; }
+        public int? FacultyId { get; set; }
         [Required]
         public string Password { get; set; } = string.Empty;
         public sbyte? Role { get; set; }
@@ -22,6 +23,7 @@ namespace FITExamAPI.Models
         public DateTime? UpdatedAt { get; set; }
         public sbyte? Status { get; set; }
         public Image? Image { get; set; }
+        public Faculty? Faculty { get; set; }
         public virtual ICollection<Exam>? Exams { get; set; } = new List<Exam>();
         public virtual ICollection<Result>? Results { get; set; } = new List<Result>();
         public virtual ICollection<Log>? Logs { get; set; } = new List<Log>();

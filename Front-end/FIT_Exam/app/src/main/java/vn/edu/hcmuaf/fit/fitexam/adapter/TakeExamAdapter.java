@@ -55,7 +55,7 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
         holder.cvExam.setOnClickListener(view -> {
             int examId = exam.getId();
             String examName = exam.getName();
-            int time = exam.getTime();
+            int time = exam.getExamTime();
             showStartDialog(examId, examName, time);
         });
     }
@@ -124,7 +124,7 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
         public void bindData(Exam exam) {
             tvExamName.setText(exam.getName());
             tvTotalQuestion.setText(String.valueOf(exam.getNumberOfQuestions()));
-            tvTime.setText(exam.getTime() + " phút");
+            tvTime.setText(exam.getExamTime() + " phút");
 
             if (exam.getSubject().getImage() != null) {
                 String imageUrl = exam.getSubject().getImage().getUrl();

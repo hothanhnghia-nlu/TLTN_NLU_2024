@@ -8,14 +8,13 @@ public class Exam implements Serializable {
     private String name;
     private int subjectId;
     private int creatorId;
-    private int time;
+    private int examTime;
     private int numberOfQuestions;
     private int minimumDifficulty;
     private int maximumDifficulty;
     private Subject subject;
     private User user;
     private List<Result> results;
-    private List<ExamQuestion> examQuestions;
 
     public Exam() {
     }
@@ -52,12 +51,12 @@ public class Exam implements Serializable {
         this.creatorId = creatorId;
     }
 
-    public int getTime() {
-        return time;
+    public int getExamTime() {
+        return examTime;
     }
 
-    public void setTime(int time) {
-        this.time = time;
+    public void setExamTime(int examTime) {
+        this.examTime = examTime;
     }
 
     public int getNumberOfQuestions() {
@@ -108,11 +107,4 @@ public class Exam implements Serializable {
         this.results = results;
     }
 
-    public List<ExamQuestion> getExamQuestions() {
-        return examQuestions;
-    }
-
-    public void setExamQuestions(List<ExamQuestion> examQuestions) {
-        this.examQuestions = examQuestions;
-    }
 }

@@ -14,16 +14,22 @@ namespace FITExamAPI.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Exam> Exams { get; set; }
+        public DbSet<Result> Results { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Image> Images { get; set; }
-        public DbSet<ExamQuestion> ExamQuestions { get; set; }
         public DbSet<QuestionOption> QuestionOptions { get; set; }
+        public DbSet<Faculty> Faculties { get; set; }
         public DbSet<Log> Logs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Faculty)
+                .WithMany(f => f.Users)
+                .HasForeignKey(u => u.FacultyId);
+            
             modelBuilder.Entity<Exam>()
                 .HasOne(e => e.Subject)
                 .WithMany(s => s.Exams)
@@ -33,7 +39,7 @@ namespace FITExamAPI.Data
                 .HasOne(e => e.User)
                 .WithMany(s => s.Exams)
                 .HasForeignKey(e => e.CreatorId);
-
+           
             modelBuilder.Entity<Image>()
                 .HasOne(i => i.Subject)
                 .WithOne(s => s.Image)
@@ -54,15 +60,15 @@ namespace FITExamAPI.Data
                 .WithMany(e => e.Results)
                 .HasForeignKey(s => s.UserId);
 
+            modelBuilder.Entity<Question>()
+                .HasOne(q => q.Subject)
+                .WithMany(s => s.Questions)
+                .HasForeignKey(q => q.SubjectId);
+
             modelBuilder.Entity<Answer>()
                 .HasOne(a => a.Question)
                 .WithMany(q => q.Answers)
                 .HasForeignKey(a => a.QuestionId);
-
-            modelBuilder.Entity<ExamQuestion>()
-                .HasOne(e => e.Question)
-                .WithMany(q => q.ExamQuestions)
-                .HasForeignKey(e => e.QuestionId);
              
             modelBuilder.Entity<QuestionOption>()
                 .HasOne(e => e.Question)

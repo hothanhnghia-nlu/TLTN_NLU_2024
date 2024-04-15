@@ -3,8 +3,16 @@
   "WorkspaceRootPath": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\models\\exam.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\models\\exam.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\models\\question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\models\\question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\data\\fitexamcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -31,6 +39,32 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Models\\User.cs",
+              "RelativeDocumentMoniker": "FITExamAPI\\Models\\User.cs",
+              "ToolTip": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Models\\User.cs",
+              "RelativeToolTip": "FITExamAPI\\Models\\User.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-15T08:13:39.493Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Question.cs",
+              "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Models\\Question.cs",
+              "RelativeDocumentMoniker": "FITExamAPI\\Models\\Question.cs",
+              "ToolTip": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Models\\Question.cs",
+              "RelativeToolTip": "FITExamAPI\\Models\\Question.cs",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAowBAAAAAgAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-15T03:10:05.783Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "Exam.cs",
               "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Models\\Exam.cs",
               "RelativeDocumentMoniker": "FITExamAPI\\Models\\Exam.cs",
@@ -43,7 +77,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "FitExamContext.cs",
               "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Data\\FitExamContext.cs",
               "RelativeDocumentMoniker": "FITExamAPI\\Data\\FitExamContext.cs",
@@ -51,7 +85,8 @@
               "RelativeToolTip": "FITExamAPI\\Data\\FitExamContext.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-21T02:21:17.257Z"
+              "WhenOpened": "2024-03-21T02:21:17.257Z",
+              "EditorCaption": ""
             }
           ]
         }

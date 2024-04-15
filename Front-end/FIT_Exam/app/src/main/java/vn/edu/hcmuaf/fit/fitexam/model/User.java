@@ -10,10 +10,12 @@ public class User implements Serializable {
     private String dob;
     private String gender;
     private int imageId;
+    private int facultyId;
     private String password;
     private int role;
     private int status;
     private Image image;
+    private Faculty faculty;
 
     public User() {
     }
@@ -127,5 +129,21 @@ public class User implements Serializable {
 
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    public int getFacultyId() {
+        return facultyId;
+    }
+
+    public void setFacultyId(int facultyId) {
+        this.facultyId = facultyId;
+    }
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
     }
 }

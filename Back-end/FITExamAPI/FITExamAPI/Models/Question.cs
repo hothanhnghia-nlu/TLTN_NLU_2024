@@ -10,9 +10,12 @@ namespace FITExamAPI.Models
         [MaxLength]
         public string? CorrectAnswer { get; set; } = string.Empty;
         public string? QuestionType { get; set; } = string.Empty;
-        public int? DifficultyLevel { get; set; }
+        public int? ImageId { get; set; }
+        public int? SubjectId { get; set; }
+        public string? DifficultyLevel { get; set; } = string.Empty;
+        public virtual Image? Image { get; set; }
+        public virtual Subject? Subject { get; set; }
         public virtual ICollection<Answer>? Answers { get; set; } = new List<Answer>();
-        public virtual ICollection<ExamQuestion>? ExamQuestions { get; set; } = new List<ExamQuestion>();
         public virtual ICollection<QuestionOption>? QuestionOptions { get; set; } = new List<QuestionOption>();
     }
 }
