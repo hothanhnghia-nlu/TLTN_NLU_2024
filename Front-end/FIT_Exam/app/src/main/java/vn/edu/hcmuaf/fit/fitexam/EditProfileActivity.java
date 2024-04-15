@@ -1,5 +1,6 @@
 package vn.edu.hcmuaf.fit.fitexam;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -109,9 +110,16 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         btnBack.setOnClickListener(view -> {
-            finish();
+            showCancelDialog();
         });
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                showCancelDialog();
+            }
+        };
+        EditProfileActivity.this.getOnBackPressedDispatcher().addCallback(this, callback);
     }
     private void checkCameraPermission() {
         if (ContextCompat.checkSelfPermission(this, "android.permission.CAMERA")
