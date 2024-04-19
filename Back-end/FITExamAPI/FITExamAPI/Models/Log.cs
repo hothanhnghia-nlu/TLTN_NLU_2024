@@ -6,11 +6,11 @@ namespace FITExamAPI.Models
     {
         public int Id { get; set; }
         public int? UserId { get; set; }
+        [MaxLength(255)]
         public string? Level { get; set; } = string.Empty;
-        [MaxLength]
         public string? Source { get; set; } = string.Empty;
+        [MaxLength(255)]
         public string? Ip { get; set; } = string.Empty;
-        [MaxLength]
         public string? Content { get; set; } = string.Empty;
         public sbyte? Status { get; set; }
         public DateTime? CreatedAt { get; set; }

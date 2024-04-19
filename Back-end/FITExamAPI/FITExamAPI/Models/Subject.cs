@@ -1,8 +1,11 @@
-﻿namespace FITExamAPI.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FITExamAPI.Models
 {
     public class Subject
     {
         public int Id { get; set; }
+        [MaxLength(255)]
         public string? Name { get; set; } = string.Empty;
         public int? Credit { get; set; }
         public int? ImageId { get; set; }

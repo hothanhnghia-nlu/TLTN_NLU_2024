@@ -1,4 +1,6 @@
 using FITExamAPI.Data;
+using FITExamAPI.Repository;
+using FITExamAPI.Service;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,8 @@ builder.Services.AddDbContext<FitExamContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("FITExamDb"));
 });
+
+builder.Services.AddScoped<UserRepository, UserService>();
 
 var app = builder.Build();
 

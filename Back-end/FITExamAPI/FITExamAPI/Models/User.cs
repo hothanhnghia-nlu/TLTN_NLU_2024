@@ -6,17 +6,21 @@ namespace FITExamAPI.Models
     {
         public int Id { get; set; }
         [Required]
+        [MaxLength(255)]
         public string Name { get; set; } = string.Empty;
         [Required]
+        [MaxLength(320)]
         public string Email { get; set; } = string.Empty;
         [Required]
         [MaxLength(10)]
         public string Phone { get; set; } = string.Empty;
         public DateTime? Dob { get; set; }
+        [MaxLength(5)]
         public string? Gender { get; set; } = string.Empty;
         public int? ImageId { get; set; }
         public int? FacultyId { get; set; }
         [Required]
+        [MaxLength(255)]
         public string Password { get; set; } = string.Empty;
         public sbyte? Role { get; set; }
         public DateTime? CreatedAt { get; set; }

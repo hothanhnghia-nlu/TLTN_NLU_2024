@@ -19,7 +19,6 @@ namespace FITExamAPI.Data
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Image> Images { get; set; }
-        public DbSet<QuestionOption> QuestionOptions { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<Log> Logs { get; set; }
 
@@ -70,11 +69,6 @@ namespace FITExamAPI.Data
                 .WithMany(q => q.Answers)
                 .HasForeignKey(a => a.QuestionId);
              
-            modelBuilder.Entity<QuestionOption>()
-                .HasOne(e => e.Question)
-                .WithMany(q => q.QuestionOptions)
-                .HasForeignKey(e => e.QuestionId);
-                  
             modelBuilder.Entity<Log>()
                 .HasOne(l => l.User)
                 .WithMany(u => u.Logs)
