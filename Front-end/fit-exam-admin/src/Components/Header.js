@@ -6,18 +6,18 @@ const Header = () => {
         <div className="main-wrapper">
             <div className="header-outer">
                 <div className="header">
-                    <a id="mobile_btn" className="mobile_btn float-left" href="#sidebar"><i className="fas fa-bars"
-                                                                                            aria-hidden="true"></i></a>
-                    <a id="toggle_btn" className="float-left" href="javascript:void(0);">
+                    <Link id="mobile_btn" className="mobile_btn float-left" href="#sidebar"><i className="fas fa-bars"
+                                                                                            aria-hidden="true"></i></Link>
+                    <Link id="toggle_btn" className="float-left" href="javascript:void(0);">
                         <img src="assets/img/sidebar/icon-21.png" alt=""/>
-                    </a>
+                    </Link>
 
                     <ul className="nav float-left">
                         <li>
                             <div className="top-nav-search">
-                                <a href="javascript:void(0);" className="responsive-search">
+                                <Link href="javascript:void(0);" className="responsive-search">
                                     <i className="fa fa-search"></i>
-                                </a>
+                                </Link>
                                 <form action="search.html">
                                     <input className="form-control" type="text" placeholder="Search here"/>
                                     <button className="btn" type="submit"><i className="fa fa-search"></i></button>
@@ -32,13 +32,13 @@ const Header = () => {
 
                     <ul className="nav user-menu float-right">
                         <li className="nav-item dropdown has-arrow">
-                            <a href="#" className=" nav-link user-link" data-toggle="dropdown">
+                            <Link href="#" className=" nav-link user-link" data-toggle="dropdown">
                                 <span className="user-img">
                                     <img className="rounded-circle" src="assets/img/user-06.jpg" width="30" alt="Admin"/>
                                     <span className="status online"></span>
                                 </span>
                                 <span className="user-name">Admin</span>
-                            </a>
+                            </Link>
                             <div className="dropdown-menu">
                                 <Link to="/my-profile" className="dropdown-item">Hồ sơ cá nhân</Link>
                                 <Link to="/edit-profile" className="dropdown-item">Chỉnh sửa hồ sơ</Link>
@@ -47,7 +47,7 @@ const Header = () => {
                         </li>
                     </ul>
                     <div className="dropdown mobile-user-menu float-right">
-                        <a href="#" className="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fas fa-ellipsis-v"></i></a>
+                        <Link href="#" className="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fas fa-ellipsis-v"></i></Link>
                         <div className="dropdown-menu dropdown-menu-right">
                             <Link to="/my-profile" className="dropdown-item">Hồ sơ cá nhân</Link>
                             <Link to="/edit-profile" className="dropdown-item">Chỉnh sửa hồ sơ</Link>
@@ -73,6 +73,9 @@ const Header = () => {
                                     </li>
                                     <li className="submenu">
                                         <Link to="/students"><img src="assets/img/sidebar/icon-3.png" alt="icon"/> <span> Sinh viên</span> </Link>
+                                    </li>
+                                    <li className="submenu">
+                                        <Link to="/faculties"><img src="assets/img/sidebar/icon-18.png" alt="icon"/> <span> Khoa</span> </Link>
                                     </li>
                                     <li className="submenu">
                                         <Link to="/subjects"><img src="assets/img/sidebar/icon-4.png" alt="icon"/> <span> Môn học</span> </Link>

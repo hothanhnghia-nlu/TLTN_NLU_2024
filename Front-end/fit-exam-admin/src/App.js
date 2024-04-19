@@ -11,6 +11,7 @@ import StudentPage from "./Pages/StudentPage";
 import TeacherPage from "./Pages/TeacherPage";
 import QuestionBankPage from "./Pages/QuestionBankPage";
 import LogPage from "./Pages/LogPage";
+import FacultyPage from "./Pages/FacultyPage";
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/edit-profile" element={<EditProfilePage />} />
                 <Route path="/students" element={<StudentPage />} />
                 <Route path="/teachers" element={<TeacherPage />} />
+                <Route path="/faculties" element={<FacultyPage />} />
                 <Route path="/exams" element={<ExamPage />} />
                 <Route path="/subjects" element={<SubjectPage />} />
                 <Route path="/question-bank" element={<QuestionBankPage />} />
