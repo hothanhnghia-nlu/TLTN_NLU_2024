@@ -7,6 +7,7 @@
     <string name="phone_number">Số điện thoại</string>
     <string name="dob">Ngày sinh</string>
     <string name="gender">Giới tính</string>
+    <string name="faculty">Khoa</string>
     <string name="password">Mật khẩu</string>
     <string name="confirm_password">Xác nhận mật khẩu</string>
     <string name="google">Đăng nhập bằng Google</string>

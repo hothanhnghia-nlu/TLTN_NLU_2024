@@ -50,10 +50,11 @@ public class EditProfileActivity extends AppCompatActivity {
     TextView tvMessage;
     ImageView btnBack;
     Button btnSave;
-    AutoCompleteTextView acGender;
+    AutoCompleteTextView acGender, acFaculty;
     CircleImageView cvProfileImage, cvCamera;
     String[] gender = new String[] {"Nam", "Nữ", "Khác"};
-    String selectedGender;
+    String[] faculty;
+    String selectedGender, selectedFaculty;
     private static final int REQUEST_IMAGE_PICK = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
@@ -69,6 +70,7 @@ public class EditProfileActivity extends AppCompatActivity {
         edEmail = findViewById(R.id.email);
         edDob = findViewById(R.id.dob);
         acGender = findViewById(R.id.gender);
+        acFaculty = findViewById(R.id.faculty);
         cvProfileImage = findViewById(R.id.profileImage);
         cvCamera = findViewById(R.id.camera);
         tvMessage = findViewById(R.id.showError);
@@ -78,6 +80,7 @@ public class EditProfileActivity extends AppCompatActivity {
         if (checkInternetPermission()) {
 //            getUserInformation(Integer.parseInt(id));
             getUserGender();
+            getFaculty();
         } else {
             Toast.makeText(this, "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
         }
@@ -93,6 +96,10 @@ public class EditProfileActivity extends AppCompatActivity {
 
         acGender.setOnItemClickListener((parent, view, position, id) -> {
             selectedGender = (String) parent.getItemAtPosition(position);
+        });
+
+        acFaculty.setOnItemClickListener((parent, view, position, id) -> {
+            selectedFaculty = (String) parent.getItemAtPosition(position);
         });
 
         cvProfileImage.setOnClickListener(v -> {
@@ -121,6 +128,7 @@ public class EditProfileActivity extends AppCompatActivity {
         };
         EditProfileActivity.this.getOnBackPressedDispatcher().addCallback(this, callback);
     }
+
     private void checkCameraPermission() {
         if (ContextCompat.checkSelfPermission(this, "android.permission.CAMERA")
                 != PackageManager.PERMISSION_GRANTED) {
@@ -174,8 +182,10 @@ public class EditProfileActivity extends AppCompatActivity {
         String email = edEmail.getText().toString();
         String dob = convertDateType(edDob.getText().toString());
         String gender = selectedGender;
+        String faculty = selectedFaculty;
 
-        if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || dob.isEmpty() || gender.isEmpty()) {
+        if (name.isEmpty() || phone.isEmpty() || email.isEmpty()
+                || dob.isEmpty() || gender.isEmpty() || faculty.isEmpty()) {
             tvMessage.setVisibility(View.VISIBLE);
             tvMessage.setText("Vui lòng điền đầy đủ thông tin.");
         } else {
@@ -258,6 +268,17 @@ public class EditProfileActivity extends AppCompatActivity {
     private String getPhoneIpAddress() {
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         return Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
+    }
+
+    private void getFaculty() {
+        displayFaculty();
+    }
+
+    private void displayFaculty() {
+        if (faculty != null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.drop_down_item, faculty);
+            acFaculty.setAdapter(adapter);
+        }
     }
 
     private void getUserGender() {

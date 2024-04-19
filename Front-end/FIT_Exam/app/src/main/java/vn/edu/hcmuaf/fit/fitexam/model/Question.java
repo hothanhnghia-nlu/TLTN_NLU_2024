@@ -6,7 +6,6 @@ import java.util.List;
 public class Question implements Serializable {
     private int id;
     private String content;
-    private String correctAnswer;
     private String questionType;
     private int imageId;
     private int subjectId;
@@ -14,7 +13,6 @@ public class Question implements Serializable {
     private Image image;
     private Subject subject;
     private List<Answer> answers;
-    private List<QuestionOption> questionOptions;
 
     public Question() {
     }
@@ -33,14 +31,6 @@ public class Question implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public String getCorrectAnswer() {
-        return correctAnswer;
-    }
-
-    public void setCorrectAnswer(String correctAnswer) {
-        this.correctAnswer = correctAnswer;
     }
 
     public String getQuestionType() {
@@ -99,11 +89,4 @@ public class Question implements Serializable {
         this.answers = answers;
     }
 
-    public List<QuestionOption> getQuestionOptions() {
-        return questionOptions;
-    }
-
-    public void setQuestionOptions(List<QuestionOption> questionOptions) {
-        this.questionOptions = questionOptions;
-    }
 }

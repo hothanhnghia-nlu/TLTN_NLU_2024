@@ -2,32 +2,27 @@ package vn.edu.hcmuaf.fit.fitexam.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 import vn.edu.hcmuaf.fit.fitexam.R;
-import vn.edu.hcmuaf.fit.fitexam.ResultActivity;
+import vn.edu.hcmuaf.fit.fitexam.model.Answer;
 import vn.edu.hcmuaf.fit.fitexam.model.Result;
 
 public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultViewHolder> {
-    private final List<Result> resultList;
+    private final List<Answer> answerList;
     static Context context;
 
-    public ResultAdapter(Context context, List<Result> resultList) {
+    public ResultAdapter(Context context, List<Answer> answerList) {
         this.context = context;
-        this.resultList = resultList;
+        this.answerList = answerList;
     }
 
     @NonNull
@@ -40,17 +35,17 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultView
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ResultViewHolder holder, int position) {
-        Result result = resultList.get(position);
-        if (result == null) {
+        Answer answer = answerList.get(position);
+        if (answer == null) {
             return;
         }
-        holder.bindData(result);
+        holder.bindData(answer);
 
     }
 
     @Override
     public int getItemCount() {
-        return resultList != null ? resultList.size() : 0;
+        return answerList != null ? answerList.size() : 0;
     }
 
     public static class ResultViewHolder extends RecyclerView.ViewHolder {
@@ -67,12 +62,12 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultView
         }
 
         @SuppressLint("SetTextI18n")
-        public void bindData(Result result) {
-            tvQuestion.setText(result.getExam().getName());
-            tvAnswer1.setText(result.getExam().getName());
-            tvAnswer2.setText(result.getExam().getName());
-            tvAnswer3.setText(result.getExam().getName());
-            tvAnswer4.setText(result.getExam().getName());
+        public void bindData(Answer answer) {
+            tvQuestion.setText(answer.getQuestion().getContent());
+            tvAnswer1.setText(answer.getContent());
+            tvAnswer2.setText(answer.getContent());
+            tvAnswer3.setText(answer.getContent());
+            tvAnswer4.setText(answer.getContent());
         }
     }
 }

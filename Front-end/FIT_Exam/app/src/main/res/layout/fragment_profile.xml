@@ -21,7 +21,7 @@
             <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/green_nlu">
+                android:background="@color/white">
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -34,7 +34,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/profile"
-                        android:textColor="@color/white"
+                        android:textColor="@color/green_nlu"
                         android:textSize="20sp"
                         android:textStyle="bold" />
                 </androidx.appcompat.widget.Toolbar>
