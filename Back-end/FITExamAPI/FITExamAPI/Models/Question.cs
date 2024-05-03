@@ -9,7 +9,7 @@ namespace FITExamAPI.Models
         [MaxLength(255)]
         public string? QuestionType { get; set; } = string.Empty;
         public int? ImageId { get; set; }
-        public int? SubjectId { get; set; }
+        public string? SubjectId { get; set; }
         [MaxLength(255)]
         public string? DifficultyLevel { get; set; } = string.Empty;
         public virtual Image? Image { get; set; }

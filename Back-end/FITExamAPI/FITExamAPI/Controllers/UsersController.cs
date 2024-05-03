@@ -25,22 +25,13 @@ namespace FITExamAPI.Controllers
             _userRepository = userRepository;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<User>> CreateUser(User user)
-        {
-            if (_context.Users.Where(n => n.Email == user.Email || n.Phone == user.Phone).Count() != 0)
-            {
-                return Problem("Account already exists");
-            }
-
-            await _userRepository.CreateAsync(user);
-
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
-        }
-
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
         {
+            if (_context.Users == null)
+            {
+                return NotFound();
+            }
             return await _userRepository.GetAllAsync();
         }
 
@@ -53,8 +44,29 @@ namespace FITExamAPI.Controllers
             {
                 return NotFound();
             }
-
             return user;
+        }
+        
+        [HttpGet("list")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUserByRole([FromQuery] sbyte role)
+        {
+            var users = await _userRepository.GetByRoleAsync(role);
+
+            if (users == null)
+            {
+                return NotFound();
+            }
+            return users;
+        }
+
+        [HttpGet("id")]
+        public async Task<ActionResult<string?>> GetUserId([FromQuery] string email)
+        {
+            if (_context.Users == null)
+            {
+                return NotFound();
+            }
+            return await _userRepository.GetIdAsync(email);
         }
 
         [HttpPut("{id}")]
@@ -76,13 +88,8 @@ namespace FITExamAPI.Controllers
             {
                 return NotFound();
             }
-
-            return Ok("User is deleted successfully");
+            return Ok("User " + id + " is deleted successfully");
         }
 
-        private bool UserExists(int id)
-        {
-            return _context.Users.Any(e => e.Id == id);
-        }
     }
 }

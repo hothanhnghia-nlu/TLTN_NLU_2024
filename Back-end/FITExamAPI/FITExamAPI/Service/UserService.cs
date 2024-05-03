@@ -2,6 +2,7 @@
 using FITExamAPI.Models;
 using FITExamAPI.Repository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using BCryptNet = BCrypt.Net.BCrypt;
 
 namespace FITExamAPI.Service
@@ -15,19 +16,6 @@ namespace FITExamAPI.Service
             _context = context;
         }
 
-        public async Task<User> CreateAsync(User user)
-        {
-            user.Password = BCryptNet.HashPassword(user.Password);
-            user.Role = 0;
-            user.CreatedAt = DateTime.Now;
-            user.UpdatedAt = DateTime.Now;
-            user.Status = 0;
-
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
-            return user;
-        }
-
         public async Task<List<User>> GetAllAsync()
         {
             return await _context.Users.ToListAsync();
@@ -38,6 +26,28 @@ namespace FITExamAPI.Service
             return await _context.Users.FindAsync(id);
         }
 
+        public async Task<List<User>?> GetByRoleAsync(sbyte role)
+        {
+            var user = await _context.Users.Where(u => u.Role == role).ToListAsync();
+
+            if (user == null)
+            {
+                return null;
+            }
+            return user;
+        }
+        
+        public async Task<string?> GetIdAsync(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null)
+            {
+                return null;
+            }
+            return user.Id.ToString();
+        }
+
         public async Task<User?> UpdateAsync(int id, User user)
         {
             var existingUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
@@ -46,20 +56,47 @@ namespace FITExamAPI.Service
                 return null;
             }
 
-            if (!string.IsNullOrEmpty(user.Password) && user.Password.Count() < 25)
+            if (!string.IsNullOrEmpty(user.Name))
             {
-                user.Password = BCryptNet.HashPassword(user.Password);
+                existingUser.Name = user.Name;
             }
 
-            existingUser.Name = user.Name ?? existingUser.Name;
-            existingUser.Phone = user.Phone ?? existingUser.Phone;
-            existingUser.Email = user.Email ?? existingUser.Email;
-            existingUser.Dob = user.Dob ?? existingUser.Dob;
-            existingUser.Gender = user.Gender ?? existingUser.Gender;
-            existingUser.Password = user.Password ?? existingUser.Password;
-            existingUser.Role = user.Role ?? existingUser.Role;
+            if (!string.IsNullOrEmpty(user.Phone))
+            {
+                existingUser.Phone = user.Phone;
+            }
+
+            if (!string.IsNullOrEmpty(user.Email))
+            {
+                existingUser.Email = user.Email;
+            }
+
+            if (user.Dob.HasValue)
+            {
+                existingUser.Dob = user.Dob;
+            }
+
+            if (!string.IsNullOrEmpty(user.Gender))
+            {
+                existingUser.Gender = user.Gender;
+            }
+
+            if (!string.IsNullOrEmpty(user.Password) && user.Password.Length < 25)
+            {
+                existingUser.Password = BCryptNet.HashPassword(user.Password);
+            }
+
+            if (user.Role.HasValue)
+            {
+                existingUser.Role = user.Role.Value;
+            }
+
             existingUser.UpdatedAt = DateTime.Now;
-            existingUser.Status = user.Status ?? existingUser.Status;
+
+            if (user.Status.HasValue)
+            {
+                existingUser.Status = user.Status.Value;
+            }
 
             await _context.SaveChangesAsync();
             return existingUser;
@@ -76,5 +113,6 @@ namespace FITExamAPI.Service
             await _context.SaveChangesAsync();
             return user;
         }
+
     }
 }

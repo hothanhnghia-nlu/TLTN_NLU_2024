@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FITExamAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -42,8 +42,7 @@ namespace FITExamAPI.Migrations
                 name: "Subjects",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     Credit = table.Column<int>(type: "int", nullable: true),
                     ImageId = table.Column<int>(type: "int", nullable: true)
@@ -64,14 +63,14 @@ namespace FITExamAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: true),
+                    Phone = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     Dob = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
                     ImageId = table.Column<int>(type: "int", nullable: true),
                     FacultyId = table.Column<int>(type: "int", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     Role = table.Column<short>(type: "smallint", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -101,7 +100,7 @@ namespace FITExamAPI.Migrations
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     QuestionType = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     ImageId = table.Column<int>(type: "int", nullable: true),
-                    SubjectId = table.Column<int>(type: "int", nullable: true),
+                    SubjectId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DifficultyLevel = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
@@ -126,12 +125,12 @@ namespace FITExamAPI.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    SubjectId = table.Column<int>(type: "int", nullable: true),
+                    SubjectId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CreatorId = table.Column<int>(type: "int", nullable: true),
                     ExamTime = table.Column<int>(type: "int", nullable: true),
                     NumberOfQuestions = table.Column<int>(type: "int", nullable: true),
-                    MinimumDifficulty = table.Column<int>(type: "int", nullable: true),
-                    MaximumDifficulty = table.Column<int>(type: "int", nullable: true)
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {

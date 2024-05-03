@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FITExamAPI.Migrations
 {
     [DbContext(typeof(FitExamContext))]
-    [Migration("20240419033626_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240503140607_InitDatabase")]
+    partial class InitDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,13 +60,10 @@ namespace FITExamAPI.Migrations
                     b.Property<int?>("CreatorId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("ExamTime")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MaximumDifficulty")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MinimumDifficulty")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -76,8 +73,11 @@ namespace FITExamAPI.Migrations
                     b.Property<int?>("NumberOfQuestions")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SubjectId")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SubjectId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -185,8 +185,8 @@ namespace FITExamAPI.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int?>("SubjectId")
-                        .HasColumnType("int");
+                    b.Property<string>("SubjectId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -234,11 +234,8 @@ namespace FITExamAPI.Migrations
 
             modelBuilder.Entity("FITExamAPI.Models.Subject", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("Credit")
                         .HasColumnType("int");
@@ -274,7 +271,6 @@ namespace FITExamAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(320)
                         .HasColumnType("nvarchar(320)");
 
@@ -289,17 +285,14 @@ namespace FITExamAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
