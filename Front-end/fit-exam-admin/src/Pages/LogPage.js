@@ -1,10 +1,61 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {TabTitle} from "../Utils/DynamicTitle";
 import {Link} from "react-router-dom";
 import Header from "../Components/Header";
+import moment from "moment/moment";
+import {fetchAllLog} from "../Service/LogService";
+import ReactPaginate from "react-paginate";
 
 const ExamList = () => {
     TabTitle('Nhật ký | FIT Exam Admin');
+    
+    const [listLogs, setListLogs] = useState([]);
+    const [totalLogs, setTotalLogs] = useState([]);
+    const [query, setQuery] = useState("");
+    const keys = ["source", "content"];
+
+    useEffect(() => {
+        getLogs();
+    }, [])
+
+    const getLogs = async () => {
+        let res = await fetchAllLog();
+        if (res) {
+            setListLogs(res);
+            setTotalLogs(res.length);
+        }
+    }
+
+    const convertDate = ({date}) => {
+        const dateMoment = moment(date);
+        return dateMoment.format('DD/MM/YYYY HH:mm:ss');
+    }
+
+    const getLogStatus = (item) => {
+        if (item.status === 0) {
+            return <td className="badge-primary" style={{padding: '5px'}}>SUCCESS</td>;
+        } else {
+            return <td className="badge-danger" style={{padding: '5px'}}>FAILED</td>;
+        }
+    }
+
+    const [currentItems, setCurrentItems] = useState(null);
+    const [pageCount, setPageCount] = useState(0);
+    const [itemOffset, setItemOffset] = useState(0);
+    const itemsPerPage = 5;
+
+    useEffect(() => {
+        const endOffset = itemOffset + itemsPerPage;
+        console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+        setCurrentItems(listLogs.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(totalLogs / itemsPerPage));
+    }, [itemOffset, itemsPerPage, listLogs, totalLogs]);
+
+    const handlePageClick = (event) => {
+        const newOffset = (event.selected * itemsPerPage) % totalLogs;
+        console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
+        setItemOffset(newOffset);
+    };
 
     return (
         <>
@@ -26,47 +77,78 @@ const ExamList = () => {
                             </div>
                         </div>
                     </div>
+
                     <div>
-                        <div className="content-page">
-                            <div className="row">
-                                <div className="col-md-12 mb-3">
-                                    <div className="table-responsive">
-                                        <table className="table custom-table datatable">
-                                            <thead className="thead-light">
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Mã tài khoản</th>
-                                                <th>Cấp độ</th>
-                                                <th>Thông tin</th>
-                                                <th>Địa chỉ IP</th>
-                                                <th>Nội dung</th>
-                                                <th>Trạng thái</th>
-                                                <th>Ngày tạo</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>2</td>
-                                                <td>INFO</td>
-                                                <td>Login</td>
-                                                <td>192.168.1.6</td>
-                                                <td>Email: nva@gmail.com is login successful</td>
-                                                <td>SUCCESS</td>
-                                                <td>01/01/2024 10:00:00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>2</td>
-                                                <td>ALERT</td>
-                                                <td>Login</td>
-                                                <td>192.168.1.6</td>
-                                                <td>Email: nva@gmail.com is login failed</td>
-                                                <td>FAILED</td>
-                                                <td>01/01/2024 10:00:00</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
+                        <div className="card flex-fill">
+                            <div className="card-header">
+                                <div className="row filter-row">
+                                    <div className="col-md-6"/>
+                                    <div className="col-md-6">
+                                        <div className="form-focus">
+                                            <input type="text" className="form-control floating"
+                                                   onChange={(e) => setQuery(e.target.value)}/>
+                                            <label className="focus-label">Tìm kiếm</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="card-body">
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="table-responsive">
+                                            <table className="table custom-table mb-3 datatable">
+                                                <thead className="thead-light">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Mã tài khoản</th>
+                                                    <th>Cấp độ</th>
+                                                    <th>Thông tin</th>
+                                                    <th>Địa chỉ IP</th>
+                                                    <th>Nội dung</th>
+                                                    <th>Trạng thái</th>
+                                                    <th>Ngày tạo</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {currentItems && currentItems.filter((current) => keys.some(key => current[key].toLowerCase().includes(query)))
+                                                    .map((item, index) => {
+                                                    return (
+                                                        <tr key={`logs-${index}`}>
+                                                            <td>{item.id}</td>
+                                                            <td>{item.userId}</td>
+                                                            <td>{item.level}</td>
+                                                            <td>{item.source}</td>
+                                                            <td>{item.ip}</td>
+                                                            <td>{item.content}</td>
+                                                            <td>{getLogStatus(item)}</td>
+                                                            <td>{convertDate({ date: item.createdAt })}</td>
+                                                        </tr>
+                                                    )
+                                                })
+                                                }
+                                                </tbody>
+                                            </table>
+
+                                            <ReactPaginate
+                                                nextLabel="sau >"
+                                                onPageChange={handlePageClick}
+                                                pageRangeDisplayed={3}
+                                                marginPagesDisplayed={2}
+                                                pageCount={pageCount}
+                                                previousLabel="< trước"
+                                                pageClassName="page-item"
+                                                pageLinkClassName="page-link"
+                                                previousClassName="page-item"
+                                                previousLinkClassName="page-link"
+                                                nextClassName="page-item"
+                                                nextLinkClassName="page-link"
+                                                breakLabel="..."
+                                                breakClassName="page-item"
+                                                breakLinkClassName="page-link"
+                                                containerClassName="pagination"
+                                                activeClassName="active"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>

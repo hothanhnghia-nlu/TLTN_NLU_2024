@@ -1,10 +1,126 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {TabTitle} from "../Utils/DynamicTitle";
 import {Link} from "react-router-dom";
 import Header from "../Components/Header";
+import {fetchAllUser, deleteUser, updateUser} from "../Service/UserService";
+import moment from "moment/moment";
+import ReactPaginate from "react-paginate";
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const AccountPage = () => {
     TabTitle('Sinh viên | FIT Exam Admin');
+
+    const [listStudents, setListStudents] = useState([]);
+    const [totalStudents, setTotalStudents] = useState(0);
+    const [dataStudentEdit, setDataStudentEdit] = useState({});
+    const [dataStudentDelete, setDataStudentDelete] = useState({});
+
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [dob, setDob] = useState("");
+    const [gender, setGender] = useState("");
+    const [role, setRole] = useState("");
+    const [status, setStatus] = useState("");
+
+    const [query, setQuery] = useState("");
+    const keys = ["name", "email", "phone"];
+
+    useEffect(() => {
+        getStudents(0);
+    }, [])
+
+    const getStudents = async (role) => {
+        let res = await fetchAllUser({role});
+        if (res) {
+            setListStudents(res);
+            setTotalStudents(res.length);
+        }
+    }
+
+    const convertDate = ({date}) => {
+        const dateMoment = moment(date);
+        return dateMoment.format('DD/MM/YYYY');
+    }
+
+    const getStatus = (item) => {
+        if (item.status === 1) {
+            return <td className="badge-primary" style={{padding: '5px'}}>Đang hoạt động</td>;
+        } else {
+            return <td className="badge-danger" style={{padding: '5px'}}>Ngừng hoạt động</td>;
+        }
+    }
+
+    const [currentItems, setCurrentItems] = useState(null);
+    const [pageCount, setPageCount] = useState(0);
+    const [itemOffset, setItemOffset] = useState(0);
+    const itemsPerPage = 5;
+
+    useEffect(() => {
+        const endOffset = itemOffset + itemsPerPage;
+        console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+        setCurrentItems(listStudents.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(totalStudents / itemsPerPage));
+    }, [itemOffset, itemsPerPage, listStudents, totalStudents]);
+
+    const handlePageClick = (event) => {
+        const newOffset = (event.selected * itemsPerPage) % totalStudents;
+        console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
+        setItemOffset(newOffset);
+    };
+
+    useEffect(() => {
+        if (dataStudentEdit) {
+            setName(dataStudentEdit.name);
+            setEmail(dataStudentEdit.email);
+            setPhone(dataStudentEdit.phone);
+            setGender(dataStudentEdit.gender);
+            setRole(dataStudentEdit.role);
+            setStatus(dataStudentEdit.status);
+
+            if (dataStudentEdit.dob) {
+                const formattedDate = moment(dataStudentEdit.dob).format('YYYY-MM-DD');
+                setDob(formattedDate);
+            }
+        }
+    }, [dataStudentEdit]);
+
+    const handleEditStudent = (student) => {
+        setDataStudentEdit(student);
+    }
+
+    const handleDeleteStudent = (student) => {
+        setDataStudentDelete(student);
+    }
+
+    const handleUpdate = async (id) => {
+        let res = await updateUser({id}, name, email, phone, dob, gender, role, status);
+
+        if (res) {
+            toast.success("Cập nhật sinh viên " + id + " thành công!", {
+                onClose: () => {
+                    window.location.reload();
+                }
+            });
+        } else {
+            toast.error("Cập nhật sinh viên " + id + " thất bại!");
+        }
+    }
+
+    const confirmDelete = async (id) => {
+        let res = await deleteUser({id});
+
+        if (res) {
+            toast.success("Xóa sinh viên " + id + " thành công!", {
+                onClose: () => {
+                    window.location.reload();
+                }
+            });
+        } else {
+            toast.error("Xóa sinh viên " + id + " thất bại!");
+        }
+    }
 
     return (
         <>
@@ -26,189 +142,98 @@ const AccountPage = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="content-page">
-                        <div className="row">
-                            <div className="col-sm-8 col-5">
-                            </div>
-                            <div className="col-sm-4 col-7 text-right add-btn-col">
-                                <Link to="#" className="btn btn-primary btn-rounded float-right" data-toggle="modal"
-                                      data-target="#add_user"><i className="fas fa-plus"></i> Thêm sinh viên</Link>
-                            </div>
-                        </div>
-                        <div className="row filter-row">
-                            <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12"/>
-                            <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12"/>
-                            <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-                                <div className="form-group form-focus">
-                                    <input type="number" className="form-control floating"/>
-                                    <label className="focus-label">MSSV</label>
-                                </div>
-                            </div>
-                            <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-                                <div className="form-group form-focus">
-                                    <input type="text" className="form-control floating"/>
-                                    <label className="focus-label">Họ tên</label>
-                                </div>
-                            </div>
-                            <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-                                <div className="form-group form-focus">
-                                    <input type="text" className="form-control floating"/>
-                                    <label className="focus-label">Số điện thoại</label>
-                                </div>
-                            </div>
-                            <div className="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-                                <Link to="#" className="btn btn-search rounded btn-block mb-3"> search </Link>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-md-12 mb-3">
-                                <div className="table-responsive">
-                                    <table className="table custom-table mb-0 datatable">
-                                        <thead className="thead-light">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Họ tên</th>
-                                            <th>Ảnh đại diện</th>
-                                            <th>Email</th>
-                                            <th>Số điện thoại</th>
-                                            <th>Ngày sinh</th>
-                                            <th>Giới tính</th>
-                                            <th className="text-center">Trạng thái</th>
-                                            <th className="text-right">Tính năng</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Nguyễn Văn A</td>
-                                            <td>Avatar</td>
-                                            <td>nva@gmail.com</td>
-                                            <td>0987654321</td>
-                                            <td>01/01/2002</td>
-                                            <td>Nam</td>
-                                            <td className="text-center">Active</td>
-                                            <td className="text-right">
-                                                <div className="dropdown dropdown-action">
-                                                    <Link to="#" className="action-icon dropdown-toggle"
-                                                          data-toggle="dropdown" aria-expanded="false"><i
-                                                        className="fas fa-ellipsis-v"></i></Link>
-                                                    <div className="dropdown-menu dropdown-menu-right">
-                                                        <Link className="dropdown-item" to="#" title="Edit"
-                                                              data-toggle="modal" data-target="#edit_user"><i
-                                                            className="fas fa-pencil-alt m-r-5"></i> Chỉnh sửa</Link>
-                                                        <Link className="dropdown-item" to="#" title="Delete"
-                                                              data-toggle="modal" data-target="#delete_user"><i
-                                                            className="fas fa-trash-alt m-r-5"></i> Xóa</Link>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
 
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Lê Thị Thu B</td>
-                                            <td>Avatar</td>
-                                            <td>lethub@gmail.com</td>
-                                            <td>0123456789</td>
-                                            <td>18/11/2003</td>
-                                            <td>Nữ</td>
-                                            <td className="text-center">Active</td>
-                                            <td className="text-right">
-                                                <div className="dropdown dropdown-action">
-                                                    <Link to="#" className="action-icon dropdown-toggle"
-                                                          data-toggle="dropdown" aria-expanded="false"><i
-                                                        className="fas fa-ellipsis-v"></i></Link>
-                                                    <div className="dropdown-menu dropdown-menu-right">
-                                                        <Link className="dropdown-item" to="#" title="Edit"
-                                                              data-toggle="modal" data-target="#edit_user"><i
-                                                            className="fas fa-pencil-alt m-r-5"></i> Chỉnh sửa</Link>
-                                                        <Link className="dropdown-item" to="#" title="Delete"
-                                                              data-toggle="modal" data-target="#delete_user"><i
-                                                            className="fas fa-trash-alt m-r-5"></i> Xóa</Link>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                    <div>
+                        <div className="card flex-fill">
+                            <div className="card-header">
+                                <div className="row align-items-center">
+                                    <div className="col-md-6"/>
+                                    <div className="col-md-6">
+                                        <div className="form-focus">
+                                            <input type="text" className="form-control floating" onChange={(e) => setQuery(e.target.value)}/>
+                                            <label className="focus-label">Họ tên, email, SĐT</label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            <div className="card-body">
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="table-responsive">
+                                            <table className="table custom-table mb-3 datatable">
+                                                <thead className="thead-light">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Họ tên</th>
+                                                    <th>Ảnh đại diện</th>
+                                                    <th>Email</th>
+                                                    <th>Số điện thoại</th>
+                                                    <th>Ngày sinh</th>
+                                                    <th>Giới tính</th>
+                                                    <th className="text-center">Trạng thái</th>
+                                                    <th className="text-right">Tính năng</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {currentItems && currentItems.filter((current) => keys.some(key => current[key].toLowerCase().includes(query)))
+                                                    .map((item, index) => {
+                                                        return (
+                                                            <tr key={`students-${index}`}>
+                                                                <td>{item.id}</td>
+                                                                <td>{item.name}</td>
+                                                                <td>{item.imageId}</td>
+                                                                <td>{item.email}</td>
+                                                                <td>{item.phone}</td>
+                                                                <td>{convertDate({date: item.dob})}</td>
+                                                                <td>{item.gender}</td>
+                                                                <td className="text-center">{getStatus(item)}</td>
+                                                                <td className="text-right">
+                                                                    <div className="dropdown dropdown-action">
+                                                                        <Link to="#" className="action-icon dropdown-toggle"
+                                                                              data-toggle="dropdown" aria-expanded="false"><i
+                                                                            className="fas fa-ellipsis-v"></i></Link>
+                                                                        <div className="dropdown-menu dropdown-menu-right">
+                                                                            <Link className="dropdown-item" to="#" title="Edit"
+                                                                                  data-toggle="modal" data-target="#edit_user"
+                                                                                  onClick={() => handleEditStudent(item)}>
+                                                                                <i className="fas fa-pencil-alt m-r-5"></i> Chỉnh sửa</Link>
+                                                                            <Link className="dropdown-item" to="#" title="Delete"
+                                                                                  data-toggle="modal" data-target="#delete_user"
+                                                                                  onClick={() => handleDeleteStudent(item)}>
+                                                                                <i className="fas fa-trash-alt m-r-5"></i> Xóa</Link>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+                                                </tbody>
+                                            </table>
 
-            <div id="add_user" className="modal" role="dialog">
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content modal-lg">
-                        <div className="modal-header">
-                            <h4 className="modal-title">Thêm tài khoản</h4>
-                            <button type="button" className="close" data-dismiss="modal">&times;</button>
-                        </div>
-                        <div className="modal-body">
-                            <form>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Họ và tên</label>
-                                            <input type="text" className="form-control" required="required"/>
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Email</label>
-                                            <input type="email" className="form-control" required="required"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Số điện thoại</label>
-                                            <input type="text" className="form-control" required="required"/>
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Ngày sinh</label>
-                                            <input type="date" className="form-control" required="required"/>
+                                            <ReactPaginate
+                                                nextLabel="sau >"
+                                                onPageChange={handlePageClick}
+                                                pageRangeDisplayed={3}
+                                                marginPagesDisplayed={2}
+                                                pageCount={pageCount}
+                                                previousLabel="< trước"
+                                                pageClassName="page-item"
+                                                pageLinkClassName="page-link"
+                                                previousClassName="page-item"
+                                                previousLinkClassName="page-link"
+                                                nextClassName="page-item"
+                                                nextLinkClassName="page-link"
+                                                breakLabel="..."
+                                                breakClassName="page-item"
+                                                breakLinkClassName="page-link"
+                                                containerClassName="pagination"
+                                                activeClassName="active"
+                                            />
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Giới tính</label>
-                                            <select className="form-control select">
-                                                <option>Nam</option>
-                                                <option>Nữ</option>
-                                                <option>Khác</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Vai trò</label>
-                                            <select className="form-control select">
-                                                <option>Admin</option>
-                                                <option>Sinh viên</option>
-                                                <option>Giáo viên</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-12">
-                                        <div className="form-group">
-                                            <label>Ảnh đại diện</label>
-                                            <input type="file" className="form-control" required="required"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="m-t-20 text-center">
-                                    <button className="btn btn-primary btn-lg mb-3">Tạo tài khoản</button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -227,13 +252,23 @@ const AccountPage = () => {
                                     <div className="col-sm-6">
                                         <div className="form-group">
                                             <label>Họ và tên</label>
-                                            <input type="text" className="form-control" required="required" value="Nguyễn Văn A"/>
+                                            <input type="text" className="form-control" required="required"
+                                                   value={name}
+                                                   onChange={(event) => {
+                                                       setName(event.target.value);
+                                                   }}
+                                            />
                                         </div>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="form-group">
                                             <label>Email</label>
-                                            <input type="email" className="form-control" required="required" value="nva@gmail.com"/>
+                                            <input type="email" className="form-control" required="required"
+                                                   value={email}
+                                                   onChange={(event) => {
+                                                       setEmail(event.target.value);
+                                                   }}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -241,13 +276,23 @@ const AccountPage = () => {
                                     <div className="col-sm-6">
                                         <div className="form-group">
                                             <label>Số điện thoại</label>
-                                            <input type="text" className="form-control" required="required" value="0987654321"/>
+                                            <input type="text" className="form-control" required="required"
+                                                   value={phone}
+                                                   onChange={(event) => {
+                                                       setPhone(event.target.value);
+                                                   }}
+                                            />
                                         </div>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="form-group">
                                             <label>Ngày sinh</label>
-                                            <input type="date" className="form-control" required="required"/>
+                                            <input type="date" className="form-control" required="required"
+                                                   value={dob}
+                                                   onChange={(event) => {
+                                                       setDob(event.target.value);
+                                                   }}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -255,20 +300,27 @@ const AccountPage = () => {
                                     <div className="col-sm-6">
                                         <div className="form-group">
                                             <label>Giới tính</label>
-                                            <select className="form-control select">
-                                                <option>Nam</option>
-                                                <option>Nữ</option>
-                                                <option>Khác</option>
+                                            <select
+                                                className="form-control select"
+                                                value={gender}
+                                                onChange={(event) => setGender(event.target.value)}>
+                                                <option value="default">---Chọn giới tính---</option>
+                                                <option value="Nam">Nam</option>
+                                                <option value="Nữ">Nữ</option>
+                                                <option value="Khác">Khác</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="form-group">
                                             <label>Vai trò</label>
-                                            <select className="form-control select">
-                                                <option>Admin</option>
-                                                <option>Sinh viên</option>
-                                                <option>Giáo viên</option>
+                                            <select
+                                                className="form-control select"
+                                                value={role}
+                                                onChange={(event) => setRole(event.target.value)}>
+                                                <option value={2}>Admin</option>
+                                                <option value={1}>Giảng viên</option>
+                                                <option value={0}>Sinh viên</option>
                                             </select>
                                         </div>
                                     </div>
@@ -277,21 +329,19 @@ const AccountPage = () => {
                                     <div className="col-sm-6">
                                         <div className="form-group">
                                             <label>Trạng thái</label>
-                                            <select className="form-control select">
-                                                <option>Pending</option>
-                                                <option>Approved</option>
+                                            <select
+                                                className="form-control select"
+                                                value={status}
+                                                onChange={(event) => setStatus(event.target.value)}>
+                                                <option value={1}>Đang hoạt động</option>
+                                                <option value={0}>Ngừng hoạt động</option>
                                             </select>
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Ảnh đại diện</label>
-                                            <input type="file" className="form-control" required="required"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="m-t-20 text-center">
-                                    <button className="btn btn-primary btn-lg mb-3">Lưu thay đổi</button>
+                                    <button className="btn btn-primary btn-lg mb-3"
+                                            onClick={() => handleUpdate(dataStudentEdit.id)}  data-dismiss="modal">Lưu thay đổi</button>
                                 </div>
                             </form>
                         </div>
@@ -309,12 +359,17 @@ const AccountPage = () => {
                             <p>Bạn có chắc muốn xóa tài khoản này?</p>
                             <div className="m-t-20 text-left">
                                 <Link to="#" className="btn btn-white" data-dismiss="modal">Hủy</Link>
-                                <button type="submit" className="btn btn-danger" style={{marginLeft: '10px'}}>Xóa</button>
+                                <button type="submit" className="btn btn-danger"
+                                        data-dismiss="modal"
+                                        onClick={() => confirmDelete(dataStudentDelete.id)}
+                                        style={{marginLeft: '10px'}}>Xóa
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <ToastContainer/>
         </>
     )
 }

@@ -1,5 +1,5 @@
 import HomePage from "./Pages/HomePage";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {Routes, Route, BrowserRouter} from "react-router-dom";
 import LoginPage from "./Pages/LoginPage";
 import RegisterPage from "./Pages/RegisterPage";
 import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
@@ -15,7 +15,7 @@ import FacultyPage from "./Pages/FacultyPage";
 
 function App() {
     return (
-        <Router>
+        <BrowserRouter>
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
@@ -31,7 +31,7 @@ function App() {
                 <Route path="/question-bank" element={<QuestionBankPage />} />
                 <Route path="/logs" element={<LogPage />} />
             </Routes>
-        </Router>
+        </BrowserRouter>
     );
 }
 

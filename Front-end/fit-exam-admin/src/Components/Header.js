@@ -1,7 +1,29 @@
-import React from "react";
-import {Link} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import 'react-toastify/dist/ReactToastify.css';
+import {fetchUserById} from "../Service/UserService";
 
 const Header = () => {
+    const navigate = useNavigate();
+    const userId = localStorage.getItem("id");
+    const [user, setUser] = useState([]);
+
+    useEffect(() => {
+        getUserInfo(userId);
+    }, [])
+
+    const getUserInfo = async (id) => {
+        let res = await fetchUserById({id});
+        if (res) {
+            setUser(res);
+        }
+    }
+
+    const handleLogout = () => {
+        localStorage.removeItem("id");
+        navigate("/login");
+    }
+
     return (
         <div className="main-wrapper">
             <div className="header-outer">
@@ -13,17 +35,6 @@ const Header = () => {
                     </Link>
 
                     <ul className="nav float-left">
-                        <li>
-                            <div className="top-nav-search">
-                                <Link href="javascript:void(0);" className="responsive-search">
-                                    <i className="fa fa-search"></i>
-                                </Link>
-                                <form action="search.html">
-                                    <input className="form-control" type="text" placeholder="Search here"/>
-                                    <button className="btn" type="submit"><i className="fa fa-search"></i></button>
-                                </form>
-                            </div>
-                        </li>
                         <li>
                             <Link to="/" className="mobile-logo d-md-block d-lg-none d-block">
                                 <img src="assets/img/logo1.png" alt="" width="30" height="30"/></Link>
@@ -37,12 +48,13 @@ const Header = () => {
                                     <img className="rounded-circle" src="assets/img/user-06.jpg" width="30" alt="Admin"/>
                                     <span className="status online"></span>
                                 </span>
-                                <span className="user-name">Admin</span>
+                                <span className="user-name"> {user.name}</span>
                             </Link>
                             <div className="dropdown-menu">
                                 <Link to="/my-profile" className="dropdown-item">Hồ sơ cá nhân</Link>
                                 <Link to="/edit-profile" className="dropdown-item">Chỉnh sửa hồ sơ</Link>
-                                <Link to="/login" class="dropdown-item">Đăng xuất</Link>
+                                <h5 className="dropdown-item" style={{cursor: "pointer"}}
+                                    onClick={() => handleLogout()}>Đăng xuất</h5>
                             </div>
                         </li>
                     </ul>
@@ -51,7 +63,8 @@ const Header = () => {
                         <div className="dropdown-menu dropdown-menu-right">
                             <Link to="/my-profile" className="dropdown-item">Hồ sơ cá nhân</Link>
                             <Link to="/edit-profile" className="dropdown-item">Chỉnh sửa hồ sơ</Link>
-                            <Link to="/login" class="dropdown-item">Đăng xuất</Link>
+                            <h5 className="dropdown-item" style={{cursor: "pointer"}}
+                                onClick={() => handleLogout()}>Đăng xuất</h5>
                         </div>
                     </div>
 

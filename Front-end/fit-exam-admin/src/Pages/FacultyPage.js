@@ -1,10 +1,111 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {TabTitle} from "../Utils/DynamicTitle";
 import {Link} from "react-router-dom";
 import Header from "../Components/Header";
+import {createFaculty, fetchAllFaculty} from "../Service/FacultyService";
+import ReactPaginate from "react-paginate";
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import {deleteFaculty, updateFaculty} from "../Service/FacultyService";
 
 const FacultyPage = () => {
     TabTitle('Quản lý khoa | FIT Exam Admin');
+
+    const [listFaculties, setListFaculties] = useState([]);
+    const [totalFaculties, setTotalFaculties] = useState(0);
+    const [dataFacultyEdit, setDataFacultyEdit] = useState({});
+    const [dataFacultyDelete, setDataFacultyDelete] = useState({});
+    const [name, setName] = useState("");
+    const [query, setQuery] = useState("");
+
+    useEffect(() => {
+        getFaculties();
+    }, [])
+
+    const getFaculties = async () => {
+        let res = await fetchAllFaculty();
+        if (res) {
+            setListFaculties(res);
+            setTotalFaculties(res.length);
+        }
+    }
+
+    const [currentItems, setCurrentItems] = useState(null);
+    const [pageCount, setPageCount] = useState(0);
+    const [itemOffset, setItemOffset] = useState(0);
+    const itemsPerPage = 5;
+
+    useEffect(() => {
+        const endOffset = itemOffset + itemsPerPage;
+        console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+        setCurrentItems(listFaculties.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(totalFaculties / itemsPerPage));
+    }, [itemOffset, itemsPerPage, listFaculties, totalFaculties]);
+
+    const handlePageClick = (event) => {
+        const newOffset = (event.selected * itemsPerPage) % totalFaculties;
+        console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
+        setItemOffset(newOffset);
+    };
+
+    const handleSave = async () => {
+        let res = await createFaculty(name);
+        if (res && res.id) {
+            setName('');
+
+            toast.success("Tạo khoa thành công!", {
+                onClose: () => {
+                    window.location.reload();
+                }
+            });
+        } else {
+            toast.error("Tạo khoa thất bại!");
+        }
+    }
+
+    useEffect(() => {
+        if (dataFacultyEdit) {
+            setName(dataFacultyEdit.name);
+        }
+    }, [dataFacultyEdit]);
+
+    const handleEditFaculty = (Faculty) => {
+        setDataFacultyEdit(Faculty);
+    }
+
+    const handleDeleteFaculty = (Faculty) => {
+        setDataFacultyDelete(Faculty);
+    }
+
+    const handleUpdate = async () => {
+        let facultyId = dataFacultyEdit.id;
+        let res = await updateFaculty(facultyId, name);
+
+        if (res && facultyId) {
+            toast.success("Cập nhật khoa thành công!", {
+                onClose: () => {
+                    window.location.reload();
+                }
+            });
+        } else {
+            toast.error("Cập nhật khoa thất bại!");
+        }
+    }
+
+    const confirmDelete = async () => {
+        let facultyId = dataFacultyDelete.id;
+        let res = await deleteFaculty(facultyId);
+
+        if (res && facultyId) {
+            toast.success("Xóa khoa thành công!", {
+                onClose: () => {
+                    window.location.reload();
+                }
+            });
+        } else {
+            toast.error("Xóa khoa thất bại!");
+        }
+    }
 
     return (
         <>
@@ -26,65 +127,89 @@ const FacultyPage = () => {
                             </div>
                         </div>
                     </div>
+
                     <div>
-                        <div className="row">
-                            <div className="col-sm-4 col-12">
-                            </div>
-                            <div className="col-sm-8 col-12 text-right add-btn-col">
-                                <Link to="#" className="btn btn-primary float-right btn-rounded"
-                                      data-toggle="modal" data-target="#add_subject">
-                                    <i className="fas fa-plus"></i> Thêm khoa</Link>
-                            </div>
-                        </div>
-                        <div className="content-page">
-                            <div className="row filter-row">
-                                <div className="col-sm-6 col-md-3"/>
-                                <div className="col-sm-6 col-md-3">
-                                    <div className="form-group form-focus">
-                                        <input type="number" className="form-control floating"/>
-                                        <label className="focus-label">Mã khoa</label>
+                        <div className="card flex-fill">
+                            <div className="card-header">
+                                <div className="row filter-row">
+                                    <div className="col-md-6">
+                                        <div className="form-focus">
+                                            <input type="text" className="form-control floating"
+                                                   onChange={(e) => setQuery(e.target.value)}/>
+                                            <label className="focus-label">Tên khoa</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <div className="text-right add-btn-col">
+                                            <Link to="#" className="btn btn-primary float-right btn-rounded"
+                                                  data-toggle="modal" data-target="#add_Facultie"
+                                                  style={{borderRadius: "50px", textTransform: "none"}}>
+                                                <i className="fas fa-plus"></i> Thêm khoa</Link>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="col-sm-6 col-md-3">
-                                    <div className="form-group form-focus">
-                                        <input type="text" className="form-control floating"/>
-                                        <label className="focus-label">Tên khoa</label>
-                                    </div>
-                                </div>
-                                <div className="col-sm-6 col-md-3">
-                                    <Link to="#" className="btn btn-search rounded btn-block mb-3"> Tìm kiếm </Link>
-                                </div>
                             </div>
-                            <div className="row">
-                                <div className="col-md-12 mb-3">
-                                    <div className="table-responsive">
-                                        <table className="table custom-table datatable">
-                                            <thead className="thead-light">
-                                            <tr>
-                                                <th>Mã khoa</th>
-                                                <th>Tên khoa</th>
-                                                <th className="text-right">Tính năng</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <td>145</td>
-                                                <td>
-                                                    <h2>Công nghệ thông tin</h2>
-                                                </td>
-                                                <td className="text-right">
-                                                    <button type="submit" data-toggle="modal" data-target="#edit_subject"
-                                                            className="btn btn-primary btn-sm mb-1">
-                                                        <i className="far fa-edit" title="Sửa"></i>
-                                                    </button>
-                                                    <button type="submit" data-toggle="modal" data-target="#delete_subject"
-                                                            className="btn btn-danger btn-sm mb-1" style={{marginLeft: '5px'}}>
-                                                        <i className="far fa-trash-alt" title="Xóa"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
+                            <div className="card-body">
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="table-responsive">
+                                            <table className="table custom-table mb-3 datatable">
+                                                <thead className="thead-light">
+                                                <tr>
+                                                    <th>Mã khoa</th>
+                                                    <th>Tên khoa</th>
+                                                    <th className="text-right">Tính năng</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {currentItems && currentItems.filter(current => current.name.toLowerCase().includes(query))
+                                                    .map((item, index) => {
+                                                        return (
+                                                            <tr key={`faculties-${index}`}>
+                                                                <td>{item.id}</td>
+                                                                <td>{item.name}</td>
+                                                                <td className="text-right">
+                                                                    <button type="submit" data-toggle="modal"
+                                                                            data-target="#edit_Facultie"
+                                                                            className="btn btn-primary btn-sm mb-1"
+                                                                            onClick={() => handleEditFaculty(item)}>
+                                                                        <i className="far fa-edit" title="Sửa"></i>
+                                                                    </button>
+                                                                    <button type="submit" data-toggle="modal"
+                                                                            data-target="#delete_Facultie"
+                                                                            className="btn btn-danger btn-sm mb-1"
+                                                                            onClick={() => handleDeleteFaculty(item)}
+                                                                            style={{marginLeft: '5px'}}>
+                                                                        <i className="far fa-trash-alt" title="Xóa"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+                                                </tbody>
+                                            </table>
+
+                                            <ReactPaginate
+                                                nextLabel="sau >"
+                                                onPageChange={handlePageClick}
+                                                pageRangeDisplayed={3}
+                                                marginPagesDisplayed={2}
+                                                pageCount={pageCount}
+                                                previousLabel="< trước"
+                                                pageClassName="page-item"
+                                                pageLinkClassName="page-link"
+                                                previousClassName="page-item"
+                                                previousLinkClassName="page-link"
+                                                nextClassName="page-item"
+                                                nextLinkClassName="page-link"
+                                                breakLabel="..."
+                                                breakClassName="page-item"
+                                                breakLinkClassName="page-link"
+                                                containerClassName="pagination"
+                                                activeClassName="active"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -94,7 +219,7 @@ const FacultyPage = () => {
             </div>
 
 
-            <div id="add_subject" className="modal" role="dialog">
+            <div id="add_Facultie" className="modal" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content modal-lg">
                         <div className="modal-header">
@@ -102,31 +227,26 @@ const FacultyPage = () => {
                             <button type="button" className="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div className="modal-body">
-                            <form>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Mã khoa</label>
-                                            <input type="number" className="form-control" required="required"/>
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Tên khoa</label>
-                                            <input type="text" className="form-control" required="required"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="m-t-20 text-center">
-                                    <button className="btn btn-primary btn-lg">Tạo khoa</button>
-                                </div>
-                            </form>
+                            <div className="form-group">
+                                <label>Tên khoa</label>
+                                <input type="text" className="form-control" required="required"
+                                       value={name}
+                                       onChange={(event) => {
+                                           setName(event.target.value);
+                                       }}
+                                />
+                            </div>
+                            <div className="m-t-20 text-center">
+                                <button className="btn btn-primary btn-lg"
+                                        onClick={() => handleSave()} data-dismiss="modal">Tạo khoa
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="edit_subject" className="modal" role="dialog">
+            <div id="edit_Facultie" className="modal" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content modal-lg">
                         <div className="modal-header">
@@ -134,48 +254,46 @@ const FacultyPage = () => {
                             <button type="button" className="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div className="modal-body">
-                            <form>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Mã khoa</label>
-                                            <input type="number" className="form-control" required="required" value="145"/>
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Tên khoa</label>
-                                            <input type="text" className="form-control" required="required" value="Công nghệ thông tin"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="m-t-20 text-center">
-                                    <button className="btn btn-primary btn-lg">Lưu thay đổi</button>
-                                </div>
-                            </form>
+                            <div className="form-group">
+                                <label>Tên khoa</label>
+                                <input type="text" className="form-control" required="required"
+                                       value={name}
+                                       onChange={(event) => {
+                                           setName(event.target.value);
+                                       }}
+                                />
+                            </div>
+                            <div className="m-t-20 text-center">
+                                <button className="btn btn-primary btn-lg"
+                                        onClick={() => handleUpdate()} data-dismiss="modal">Lưu thay đổi
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="delete_subject" className="modal" role="dialog">
+            <div id="delete_Facultie" className="modal" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content modal-md">
                         <div className="modal-header">
                             <h4 className="modal-title">Xóa khoa</h4>
                         </div>
-                        <form>
-                            <div className="modal-body">
-                                <p>Bạn có chắc muốn xóa khoa này?</p>
-                                <div className="m-t-20"><Link to="#" className="btn btn-white"
-                                                              data-dismiss="modal">Hủy</Link>
-                                    <button type="submit" className="btn btn-danger" style={{marginLeft: '10px'}}>Xóa</button>
-                                </div>
+                        <div className="modal-body">
+                            <p>Bạn có chắc muốn xóa khoa này?</p>
+                            <div className="m-t-20"><Link to="#" className="btn btn-white"
+                                                          data-dismiss="modal">Hủy</Link>
+                                <button type="submit" className="btn btn-danger"
+                                        data-dismiss="modal"
+                                        onClick={() => confirmDelete()}
+                                        style={{marginLeft: '10px'}}>Xóa
+                                </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
+            <ToastContainer/>
         </>
     )
 }
