@@ -4,7 +4,9 @@ namespace FITExamAPI.Models
 {
     public class Subject
     {
-        public int Id { get; set; }
+        [Key]
+        [Required]
+        public string Id { get; set; }
         [MaxLength(255)]
         public string? Name { get; set; } = string.Empty;
         public int? Credit { get; set; }
