@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>D:\Java_Backend\FITExam_API</_PublishTargetUrl>
+    <History>True|2024-05-05T14:01:03.0665473Z;True|2024-05-05T21:00:19.3448870+07:00;True|2024-05-05T20:57:55.2715870+07:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="FITExamDb">
+      <Value>Data Source=NGHIA-PC\SQLEXPRESS%3bInitial Catalog=FITExam%3bIntegrated Security=True%3bConnect Timeout=30%3bEncrypt=False%3bTrust Server Certificate=True%3bApplication Intent=ReadWrite%3bMulti Subnet Failover=False</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="FITExamAPI.Data.FitExamContext">
+      <Value>Data Source=NGHIA-PC\SQLEXPRESS%3bInitial Catalog=FITExam%3bIntegrated Security=True%3bConnect Timeout=30%3bEncrypt=False%3bTrust Server Certificate=True%3bApplication Intent=ReadWrite%3bMulti Subnet Failover=False</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>
