@@ -1,19 +1,20 @@
 import React, {useEffect, useState} from "react";
-import Header from "../Components/Header";
+import Header from "../components/Header";
 import {Link} from "react-router-dom";
-import {TabTitle} from "../Utils/DynamicTitle";
-import {fetchUserById, updateUser} from "../Service/UserService";
+import {TabTitle} from "../commons/DynamicTitle";
+import {fetchUserById, updateUser} from "../service/UserService";
 import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import moment from "moment";
 
 const EditProfilePage = () => {
     TabTitle('Hồ sơ của tôi | FIT Exam Admin');
 
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
-    const [dob, setDob] = useState("");
-    const [gender, setGender] = useState("");
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [dob, setDob] = useState('');
+    const [gender, setGender] = useState('');
 
     const userId = localStorage.getItem("id");
     const [user, setUser] = useState({});
@@ -122,11 +123,7 @@ const EditProfilePage = () => {
                                                 <div className="form-group">
                                                     <label>Email</label>
                                                     <input type="text" className="form-control" required="required"
-                                                           value={email}
-                                                           onChange={(event) => {
-                                                               setEmail(event.target.value);
-                                                           }}
-                                                    />
+                                                           value={email} disabled="disabled"/>
                                                 </div>
                                                 <div className="form-group">
                                                     <label>Giới tính</label>

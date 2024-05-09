@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import Header from "../Components/Header";
+import Header from "../components/Header";
 import {Link} from "react-router-dom";
-import {TabTitle} from "../Utils/DynamicTitle";
-import {fetchUserById} from "../Service/UserService";
+import {TabTitle} from "../commons/DynamicTitle";
+import {fetchUserById} from "../service/UserService";
 import moment from "moment";
 
 const ProfilePage = () => {

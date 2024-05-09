@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
-import {fetchUserById} from "../Service/UserService";
+import {fetchUserById} from "../service/UserService";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -10,7 +10,7 @@ const Header = () => {
 
     useEffect(() => {
         getUserInfo(userId);
-    }, [])
+    }, [userId])
 
     const getUserInfo = async (id) => {
         let res = await fetchUserById({id});
@@ -28,9 +28,9 @@ const Header = () => {
         <div className="main-wrapper">
             <div className="header-outer">
                 <div className="header">
-                    <Link id="mobile_btn" className="mobile_btn float-left" href="#sidebar"><i className="fas fa-bars"
+                    <Link id="mobile_btn" className="mobile_btn float-left" to="#sidebar"><i className="fas fa-bars"
                                                                                             aria-hidden="true"></i></Link>
-                    <Link id="toggle_btn" className="float-left" href="javascript:void(0);">
+                    <Link id="toggle_btn" className="float-left" to="javascript:void(0);">
                         <img src="assets/img/sidebar/icon-21.png" alt=""/>
                     </Link>
 
@@ -43,7 +43,7 @@ const Header = () => {
 
                     <ul className="nav user-menu float-right">
                         <li className="nav-item dropdown has-arrow">
-                            <Link href="#" className=" nav-link user-link" data-toggle="dropdown">
+                            <Link to="#" className=" nav-link user-link" data-toggle="dropdown">
                                 <span className="user-img">
                                     <img className="rounded-circle" src="assets/img/user-06.jpg" width="30" alt="Admin"/>
                                     <span className="status online"></span>
@@ -59,7 +59,7 @@ const Header = () => {
                         </li>
                     </ul>
                     <div className="dropdown mobile-user-menu float-right">
-                        <Link href="#" className="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fas fa-ellipsis-v"></i></Link>
+                        <Link to="#" className="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fas fa-ellipsis-v"></i></Link>
                         <div className="dropdown-menu dropdown-menu-right">
                             <Link to="/my-profile" className="dropdown-item">Hồ sơ cá nhân</Link>
                             <Link to="/edit-profile" className="dropdown-item">Chỉnh sửa hồ sơ</Link>
@@ -74,7 +74,7 @@ const Header = () => {
                                 <div className="header-left">
                                     <Link to="/" className="logo">
                                         <img src="assets/img/logo_fit.png" width="40" height="40" alt=""/>
-                                            <span className="text-uppercase">FIT NLU</span>
+                                            <span className="text-uppercase">FIT Exam</span>
                                     </Link>
                                 </div>
                                 <ul className="sidebar-ul">

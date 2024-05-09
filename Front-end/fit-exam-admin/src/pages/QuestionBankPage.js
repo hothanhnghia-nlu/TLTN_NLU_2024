@@ -1,7 +1,7 @@
 import React from "react";
-import {TabTitle} from "../Utils/DynamicTitle";
+import {TabTitle} from "../commons/DynamicTitle";
 import {Link} from "react-router-dom";
-import Header from "../Components/Header";
+import Header from "../components/Header";
 import ReactPaginate from "react-paginate";
 
 const ExamList = () => {

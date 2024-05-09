@@ -1817,7 +1817,7 @@
   /*
    * Sum or subtract the element scroll values (left and top) from a given rect object
    * @method
-   * @memberof Popper.Utils
+   * @memberof Popper.commons
    * @param {Object} rect - Rect object you want to change
    * @param {HTMLElement} element - The element from the function reads the scroll values
    * @param {Boolean} subtract - set to true if you want to subtract the scroll values
@@ -1839,7 +1839,7 @@
   /*
    * Helper to detect borders of a given element
    * @method
-   * @memberof Popper.Utils
+   * @memberof Popper.commons
    * @param {CSSStyleDeclaration} styles
    * Result of `getStyleComputedProperty` on the given element
    * @param {String} axis - `x` or `y`
@@ -3961,7 +3961,7 @@
    * @param {dataObject} data
    */
 
-  // Utils
+  // commons
   // Methods
   var Popper = function () {
     /**
@@ -4073,11 +4073,11 @@
       /**
        * Collection of utilities useful when writing custom modifiers.
        * Starting from version 1.7, this method is available only if you
-       * include `popper-utils.js` before `popper.js`.
+       * include `popper-commons.js` before `popper.js`.
        *
        * **DEPRECATION**: This way to access PopperUtils is deprecated
        * and will be removed in v2! Use the PopperUtils module directly instead.
-       * Due to the high instability of the methods contained in Utils, we can't
+       * Due to the high instability of the methods contained in commons, we can't
        * guarantee them to follow semver. Use them at your own risk!
        * @static
        * @private

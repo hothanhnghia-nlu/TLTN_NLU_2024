@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
 import Header from "./Header";
 import {Link} from "react-router-dom";
-import {TabTitle} from "../Utils/DynamicTitle";
-import {fetchAllSubject} from "../Service/SubjectService";
-import {fetchAllUser} from "../Service/UserService";
+import {TabTitle} from "../commons/DynamicTitle";
+import {fetchAllSubject} from "../service/SubjectService";
+import {fetchAllUser} from "../service/UserService";
 import moment from "moment";
+import {fetchAllExam} from "../service/ExamService";
 
 const Index = () => {
     TabTitle('Thống kê | FIT Exam Admin');
@@ -46,7 +47,7 @@ const Index = () => {
     }
 
     const getExams = async () => {
-        let res = await fetchAllSubject();
+        let res = await fetchAllExam();
         if (res && Array.isArray(res)) {
             setListExams(res);
             setTotalExams(res.length);

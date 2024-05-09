@@ -1,5 +1,5 @@
 import React from "react";
-import ExamList from "../Components/ExamList";
+import ExamList from "../components/ExamList";
 
 const ExamPage = () => {
     return (

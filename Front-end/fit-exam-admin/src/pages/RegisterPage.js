@@ -1,17 +1,19 @@
 import React, {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import {TabTitle} from "../Utils/DynamicTitle";
-import {registerApi} from "../Service/UserService";
+import {TabTitle} from "../commons/DynamicTitle";
+import {registerApi} from "../service/UserService";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 const RegisterPage = () => {
     TabTitle('Đăng ký | FIT Exam Admin');
 
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confPassword, setConfPassword] = useState("");
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confPassword, setConfPassword] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [confPasswordError, setConfPasswordError] = useState('');
     const [role, setRole] = useState(0);
     const navigate = useNavigate();
 
@@ -20,13 +22,34 @@ const RegisterPage = () => {
         setRole(value);
     };
 
+    function handlePasswordChange(event) {
+        const newPassword = event.target.value;
+        setPassword(newPassword);
+        if (!validatePassword(newPassword)) {
+            setPasswordError('Mật khẩu phải chứa ít nhất một chữ cái viết thường, một chữ cái viết hoa, một ký tự đặc biệt và có ít nhất 8 ký tự.');
+        } else {
+            setPasswordError('');
+        }
+    }
+
+    function handleConfPasswordChange(event) {
+        const newConfPassword = event.target.value;
+        setConfPassword(newConfPassword);
+        if (newConfPassword !== password) {
+            setConfPasswordError('Mật khẩu xác nhận không khớp.');
+        } else {
+            setConfPasswordError('');
+        }
+    }
+
+    function validatePassword(password) {
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return regex.test(password);
+    }
+
     const handleRegister = async () => {
         if (!name || !email || !password || !confPassword) {
             toast.error("Vui lòng điền đầy đủ thông tin!");
-            return;
-        }
-        if (confPassword !== password) {
-            toast.error("Mật khẩu xác nhận không đúng!");
             return;
         }
 
@@ -71,21 +94,25 @@ const RegisterPage = () => {
                             </div>
                             <div className="form-group">
                                 <label>Mật khẩu</label>
-                                <input type="password" className="form-control" id="password"
-                                       value={password}
-                                       onChange={(event) => {
-                                           setPassword(event.target.value);
-                                       }}
+                                <input
+                                    type="password"
+                                    className="form-control"
+                                    id="password"
+                                    value={password}
+                                    onChange={handlePasswordChange}
                                 />
+                                {passwordError && <div style={{ color: 'red' }}>{passwordError}</div>}
                             </div>
                             <div className="form-group">
                                 <label>Nhập lại mật khẩu</label>
-                                <input type="password" className="form-control" id="confPassword"
-                                       value={confPassword}
-                                       onChange={(event) => {
-                                           setConfPassword(event.target.value);
-                                       }}
+                                <input
+                                    type="password"
+                                    className="form-control"
+                                    id="confPassword"
+                                    value={confPassword}
+                                    onChange={handleConfPasswordChange}
                                 />
+                                {confPasswordError && <div style={{ color: 'red' }}>{confPasswordError}</div>}
                             </div>
                             <div className="form-group">
                                 <input type="checkbox" required="required"

@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {TabTitle} from "../Utils/DynamicTitle";
+import {TabTitle} from "../commons/DynamicTitle";
 import {Link} from "react-router-dom";
-import Header from "../Components/Header";
-import {deleteUser, fetchAllUser, updateUser} from "../Service/UserService";
+import Header from "../components/Header";
+import {deleteUser, fetchAllUser, updateUser} from "../service/UserService";
 import moment from "moment";
 import ReactPaginate from "react-paginate";
 import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const AccountPage = () => {
     TabTitle('Giảng viên | FIT Exam Admin');
@@ -15,15 +16,15 @@ const AccountPage = () => {
     const [dataTeacherEdit, setDataTeacherEdit] = useState({});
     const [dataTeacherDelete, setDataTeacherDelete] = useState({});
 
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
-    const [dob, setDob] = useState("");
-    const [gender, setGender] = useState("");
-    const [role, setRole] = useState("");
-    const [status, setStatus] = useState("");
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [dob, setDob] = useState('');
+    const [gender, setGender] = useState('');
+    const [role, setRole] = useState('');
+    const [status, setStatus] = useState('');
 
-    const [query, setQuery] = useState("");
+    const [query, setQuery] = useState('');
     const keys = ["name", "email", "phone"];
 
     useEffect(() => {

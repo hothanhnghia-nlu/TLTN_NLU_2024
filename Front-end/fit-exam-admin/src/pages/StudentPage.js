@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {TabTitle} from "../Utils/DynamicTitle";
+import {TabTitle} from "../commons/DynamicTitle";
 import {Link} from "react-router-dom";
-import Header from "../Components/Header";
-import {fetchAllUser, deleteUser, updateUser} from "../Service/UserService";
+import Header from "../components/Header";
+import {fetchAllUser, deleteUser, updateUser} from "../service/UserService";
 import moment from "moment/moment";
 import ReactPaginate from "react-paginate";
 import {toast, ToastContainer} from "react-toastify";
@@ -16,15 +16,15 @@ const AccountPage = () => {
     const [dataStudentEdit, setDataStudentEdit] = useState({});
     const [dataStudentDelete, setDataStudentDelete] = useState({});
 
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
-    const [dob, setDob] = useState("");
-    const [gender, setGender] = useState("");
-    const [role, setRole] = useState("");
-    const [status, setStatus] = useState("");
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [dob, setDob] = useState('');
+    const [gender, setGender] = useState('');
+    const [role, setRole] = useState('');
+    const [status, setStatus] = useState('');
 
-    const [query, setQuery] = useState("");
+    const [query, setQuery] = useState('');
     const keys = ["name", "email", "phone"];
 
     useEffect(() => {

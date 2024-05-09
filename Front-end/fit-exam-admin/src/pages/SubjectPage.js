@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {TabTitle} from "../Utils/DynamicTitle";
+import {TabTitle} from "../commons/DynamicTitle";
 import {Link} from "react-router-dom";
-import Header from "../Components/Header";
-import {createSubject, deleteSubject, fetchAllSubject, updateSubject} from "../Service/SubjectService";
+import Header from "../components/Header";
+import {createSubject, deleteSubject, fetchAllSubject, updateSubject} from "../service/SubjectService";
 import ReactPaginate from "react-paginate";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,10 +14,10 @@ const SubjectPage = () => {
     const [totalSubjects, setTotalSubjects] = useState(0);
     const [dataSubjectEdit, setDataSubjectEdit] = useState({});
     const [dataSubjectDelete, setDataSubjectDelete] = useState({});
-    const [id, setId] = useState("");
-    const [name, setName] = useState("");
-    const [credit, setCredit] = useState("");
-    const [query, setQuery] = useState("");
+    const [id, setId] = useState('');
+    const [name, setName] = useState('');
+    const [credit, setCredit] = useState('');
+    const [query, setQuery] = useState('');
     const keys = ["id", "name"];
 
     useEffect(() => {
@@ -279,7 +279,7 @@ const SubjectPage = () => {
                                     <div className="col-12">
                                         <div className="form-group">
                                             <label>Hình ảnh</label>
-                                            {/*<input type="file" className="form-control" required="required"/>*/}
+                                            <input type="file" className="form-control" required="required"/>
                                         </div>
                                     </div>
                                 </div>

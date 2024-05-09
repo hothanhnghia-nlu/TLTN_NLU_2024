@@ -1,7 +1,7 @@
 import axios from "./customizeAxios";
 
 const fetchAllExam = () => {
-    return axios.get("subjects");
+    return axios.get("exams");
 }
 
 export {fetchAllExam};

@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {TabTitle} from "../Utils/DynamicTitle";
+import {TabTitle} from "../commons/DynamicTitle";
 import {Link} from "react-router-dom";
-import Header from "../Components/Header";
+import Header from "../components/Header";
 import moment from "moment/moment";
-import {fetchAllLog} from "../Service/LogService";
+import {fetchAllLog} from "../service/LogService";
 import ReactPaginate from "react-paginate";
 
 const ExamList = () => {
@@ -11,7 +11,7 @@ const ExamList = () => {
     
     const [listLogs, setListLogs] = useState([]);
     const [totalLogs, setTotalLogs] = useState([]);
-    const [query, setQuery] = useState("");
+    const [query, setQuery] = useState('');
     const keys = ["source", "content"];
 
     useEffect(() => {

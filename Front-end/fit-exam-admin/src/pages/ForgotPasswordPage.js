@@ -1,13 +1,13 @@
 import React, {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import {TabTitle} from "../Utils/DynamicTitle";
+import {TabTitle} from "../commons/DynamicTitle";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 const ForgotPasswordPage = () => {
     TabTitle('Quên mật khẩu | FIT Exam Admin');
 
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState('');
     const navigate = useNavigate();
 
     const handleResetPassword = async () => {

@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {TabTitle} from "../Utils/DynamicTitle";
+import {TabTitle} from "../commons/DynamicTitle";
 import {Link} from "react-router-dom";
-import Header from "../Components/Header";
-import {createFaculty, fetchAllFaculty} from "../Service/FacultyService";
+import Header from "../components/Header";
+import {createFaculty, fetchAllFaculty} from "../service/FacultyService";
 import ReactPaginate from "react-paginate";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import {deleteFaculty, updateFaculty} from "../Service/FacultyService";
+import {deleteFaculty, updateFaculty} from "../service/FacultyService";
 
 const FacultyPage = () => {
     TabTitle('Quản lý khoa | FIT Exam Admin');
@@ -15,8 +15,8 @@ const FacultyPage = () => {
     const [totalFaculties, setTotalFaculties] = useState(0);
     const [dataFacultyEdit, setDataFacultyEdit] = useState({});
     const [dataFacultyDelete, setDataFacultyDelete] = useState({});
-    const [name, setName] = useState("");
-    const [query, setQuery] = useState("");
+    const [name, setName] = useState('');
+    const [query, setQuery] = useState('');
 
     useEffect(() => {
         getFaculties();
@@ -69,12 +69,12 @@ const FacultyPage = () => {
         }
     }, [dataFacultyEdit]);
 
-    const handleEditFaculty = (Faculty) => {
-        setDataFacultyEdit(Faculty);
+    const handleEditFaculty = (faculty) => {
+        setDataFacultyEdit(faculty);
     }
 
-    const handleDeleteFaculty = (Faculty) => {
-        setDataFacultyDelete(Faculty);
+    const handleDeleteFaculty = (faculty) => {
+        setDataFacultyDelete(faculty);
     }
 
     const handleUpdate = async () => {
