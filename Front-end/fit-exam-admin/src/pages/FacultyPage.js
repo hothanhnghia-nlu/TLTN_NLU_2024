@@ -7,6 +7,7 @@ import ReactPaginate from "react-paginate";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {deleteFaculty, updateFaculty} from "../service/FacultyService";
+import {CSVLink} from "react-csv";
 
 const FacultyPage = () => {
     TabTitle('Quản lý khoa | FIT Exam Admin');
@@ -15,6 +16,7 @@ const FacultyPage = () => {
     const [totalFaculties, setTotalFaculties] = useState(0);
     const [dataFacultyEdit, setDataFacultyEdit] = useState({});
     const [dataFacultyDelete, setDataFacultyDelete] = useState({});
+    const [dataExport, setDataExport] = useState([]);
     const [name, setName] = useState('');
     const [query, setQuery] = useState('');
 
@@ -107,6 +109,29 @@ const FacultyPage = () => {
         }
     }
 
+    const currentDate = () => {
+        const currentDate = new Date();
+        const day = currentDate.getDate();
+        const month = currentDate.getMonth() + 1;
+        const year = currentDate.getFullYear();
+        return `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
+    }
+
+    const getFacultiesExport = (event, done) => {
+        let result = [];
+        if (listFaculties && listFaculties.length > 0) {
+            result.push(["Mã khoa", "Tên khoa"])
+            listFaculties.map((item, index) => {
+                let arr = [];
+                arr[0] = item.id;
+                arr[1] = item.name;
+                result.push(arr);
+            });
+            setDataExport(result);
+            done();
+        }
+    }
+
     return (
         <>
             <Header/>
@@ -140,11 +165,22 @@ const FacultyPage = () => {
                                         </div>
                                     </div>
                                     <div className="col-md-6">
-                                        <div className="text-right add-btn-col">
+                                        <div>
                                             <Link to="#" className="btn btn-primary float-right btn-rounded"
                                                   data-toggle="modal" data-target="#add_Facultie"
                                                   style={{borderRadius: "50px", textTransform: "none"}}>
                                                 <i className="fas fa-plus"></i> Thêm khoa</Link>
+                                        </div>
+                                        <div>
+                                            <CSVLink
+                                                filename={"KHOA_" + currentDate() + ".csv"}
+                                                className="btn btn-success float-right btn-rounded mr-4"
+                                                style={{borderRadius: "50px", textTransform: "none"}}
+                                                data={dataExport}
+                                                asyncOnClick={true}
+                                                onClick={getFacultiesExport}>
+                                                <i className="fas fa-file-download"></i> Xuất File
+                                            </CSVLink>
                                         </div>
                                     </div>
                                 </div>

@@ -15,6 +15,7 @@ const EditProfilePage = () => {
     const [phone, setPhone] = useState('');
     const [dob, setDob] = useState('');
     const [gender, setGender] = useState('');
+    const [selectedImage, setSelectedImage] = useState(null);
 
     const userId = localStorage.getItem("id");
     const [user, setUser] = useState({});
@@ -44,7 +45,20 @@ const EditProfilePage = () => {
         }
     }, [user]);
 
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        setSelectedImage(file);
+
+        setSelectedImage({
+            file: file,
+            name: file.name,
+            preview: URL.createObjectURL(file)
+        });
+    };
+
     const handleUpdate = async (id) => {
+        const imageFile = selectedImage.name;
+        const imageFileName = selectedImage.name;
         let res = await updateUser({id}, name, email, phone, dob, gender);
 
         if (res) {
@@ -119,7 +133,7 @@ const EditProfilePage = () => {
                                                     />
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                                            <div className="col-lg-6 col-md-6 col-sm-6 col-12">
                                                 <div className="form-group">
                                                     <label>Email</label>
                                                     <input type="text" className="form-control" required="required"
@@ -142,16 +156,25 @@ const EditProfilePage = () => {
                                             <div className="col-lg-12 col-md-12 col-sm-12 col-12">
                                                 <div className="form-group">
                                                     <label>Ảnh đại diện</label>
-                                                    <input type="file" name="pic" accept="image/*"
-                                                           className="form-control" required="required"/>
+                                                    <input type="file" className="form-control" required="required"
+                                                           onChange={handleFileChange}
+                                                    />
+                                                </div>
+                                                <div className="form-group">
+                                                    {selectedImage && (
+                                                        <img src={selectedImage.preview} width="100" height="120" alt={name}/>
+                                                    )}
                                                 </div>
                                             </div>
-                                            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+
+                                            <div className="col-lg-12 col-md-12 col-sm-12 col-12">
                                                 <div className="form-group text-center custom-mt-form-group">
                                                     <button className="btn btn-primary mr-2" type="submit"
                                                             onClick={() => handleUpdate(user.id)}>Lưu
                                                     </button>
-                                                    <button className="btn btn-secondary" type="reset">Hủy</button>
+                                                    <Link to="/my-profile">
+                                                        <button className="btn btn-secondary" type="reset">Hủy</button>
+                                                    </Link>
                                                 </div>
                                             </div>
                                         </div>

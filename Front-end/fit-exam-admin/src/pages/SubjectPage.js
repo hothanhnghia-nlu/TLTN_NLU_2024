@@ -6,6 +6,7 @@ import {createSubject, deleteSubject, fetchAllSubject, updateSubject} from "../s
 import ReactPaginate from "react-paginate";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {CSVLink} from "react-csv";
 
 const SubjectPage = () => {
     TabTitle('Môn học | FIT Exam Admin');
@@ -14,9 +15,13 @@ const SubjectPage = () => {
     const [totalSubjects, setTotalSubjects] = useState(0);
     const [dataSubjectEdit, setDataSubjectEdit] = useState({});
     const [dataSubjectDelete, setDataSubjectDelete] = useState({});
+    const [dataExport, setDataExport] = useState([]);
+
     const [id, setId] = useState('');
     const [name, setName] = useState('');
     const [credit, setCredit] = useState('');
+    const [selectedImage, setSelectedImage] = useState(null);
+
     const [query, setQuery] = useState('');
     const keys = ["id", "name"];
 
@@ -50,12 +55,26 @@ const SubjectPage = () => {
         setItemOffset(newOffset);
     };
 
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        setSelectedImage(file);
+
+        setSelectedImage({
+            file: file,
+            name: file.name,
+            preview: URL.createObjectURL(file)
+        });
+    };
+
     const handleSave = async () => {
-        let res = await createSubject(id, name, credit);
+        const imageFile = selectedImage.name;
+        const imageFileName = selectedImage.name;
+        let res = await createSubject(id, name, credit, imageFile, imageFileName);
         if (res && res.id) {
             setId('');
             setName('');
             setCredit('');
+            setSelectedImage(null);
 
             toast.success("Tạo môn " + id + " thành công!", {
                 onClose: () => {
@@ -113,6 +132,30 @@ const SubjectPage = () => {
         }
     }
 
+    const currentDate = () => {
+        const currentDate = new Date();
+        const day = currentDate.getDate();
+        const month = currentDate.getMonth() + 1;
+        const year = currentDate.getFullYear();
+        return `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
+    }
+
+    const getSubjectsExport = (event, done) => {
+        let result = [];
+        if (listSubjects && listSubjects.length > 0) {
+            result.push(["Mã môn", "Tên môn học", "Số tín chỉ"])
+            listSubjects.map((item, index) => {
+                let arr = [];
+                arr[0] = item.id;
+                arr[1] = item.name;
+                arr[2] = item.credit;
+                result.push(arr);
+            });
+            setDataExport(result);
+            done();
+        }
+    }
+
     return (
         <>
             <Header/>
@@ -146,11 +189,22 @@ const SubjectPage = () => {
                                         </div>
                                     </div>
                                     <div className="col-md-6">
-                                        <div className="text-right add-btn-col">
+                                        <div>
                                             <Link to="#" className="btn btn-primary float-right btn-rounded"
                                                   data-toggle="modal" data-target="#add_subject"
                                                   style={{borderRadius: "50px", textTransform: "none"}}>
                                                 <i className="fas fa-plus"></i> Thêm môn học</Link>
+                                        </div>
+                                        <div>
+                                            <CSVLink
+                                                filename={"MON_HOC_" + currentDate() + ".csv"}
+                                                className="btn btn-success float-right btn-rounded mr-4"
+                                                style={{borderRadius: "50px", textTransform: "none"}}
+                                                data={dataExport}
+                                                asyncOnClick={true}
+                                                onClick={getSubjectsExport}>
+                                                <i className="fas fa-file-download"></i> Xuất File
+                                            </CSVLink>
                                         </div>
                                     </div>
                                 </div>
@@ -276,11 +330,18 @@ const SubjectPage = () => {
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-12">
+                                    <div className="col-sm-8">
                                         <div className="form-group">
                                             <label>Hình ảnh</label>
-                                            <input type="file" className="form-control" required="required"/>
+                                            <input type="file" className="form-control" required="required"
+                                                   onChange={handleFileChange}
+                                            />
                                         </div>
+                                    </div>
+                                    <div className="col-sm-4">
+                                        {selectedImage && (
+                                            <img src={selectedImage.preview} width="100" height="120"  alt={name}/>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="m-t-20 text-center">
@@ -338,11 +399,18 @@ const SubjectPage = () => {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-12">
+                                <div className="col-sm-8">
                                     <div className="form-group">
                                         <label>Hình ảnh</label>
-                                        <input type="file" className="form-control" required="required"/>
+                                        <input type="file" className="form-control" required="required"
+                                               onChange={handleFileChange}
+                                        />
                                     </div>
+                                </div>
+                                <div className="col-sm-4">
+                                    {selectedImage && (
+                                        <img src={selectedImage.preview} width="100" height="120" alt={name}/>
+                                    )}
                                 </div>
                             </div>
                             <div className="m-t-20 text-center">

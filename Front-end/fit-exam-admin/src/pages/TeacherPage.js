@@ -7,6 +7,7 @@ import moment from "moment";
 import ReactPaginate from "react-paginate";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {CSVLink} from "react-csv";
 
 const AccountPage = () => {
     TabTitle('Giảng viên | FIT Exam Admin');
@@ -15,6 +16,7 @@ const AccountPage = () => {
     const [totalTeachers, setTotalTeachers] = useState(0);
     const [dataTeacherEdit, setDataTeacherEdit] = useState({});
     const [dataTeacherDelete, setDataTeacherDelete] = useState({});
+    const [dataExport, setDataExport] = useState([]);
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -26,6 +28,13 @@ const AccountPage = () => {
 
     const [query, setQuery] = useState('');
     const keys = ["name", "email", "phone"];
+
+    const csvData = [
+        ["firstname", "lastname", "email"],
+        ["Ahmed", "Tomi", "ah@smthing.co.com"],
+        ["Raed", "Labes", "rl@smthing.co.com"],
+        ["Yezzi", "Min l3b", "ymin@cocococo.com"]
+    ];
 
     useEffect(() => {
         getTeachers(1);
@@ -42,6 +51,14 @@ const AccountPage = () => {
     const convertDate = ({date}) => {
         const dateMoment = moment(date);
         return dateMoment.format('DD/MM/YYYY');
+    }
+
+    const currentDate = () => {
+        const currentDate = new Date();
+        const day = currentDate.getDate();
+        const month = currentDate.getMonth() + 1;
+        const year = currentDate.getFullYear();
+        return `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
     }
 
     const getStatus = (item) => {
@@ -121,6 +138,25 @@ const AccountPage = () => {
             toast.error("Xóa giáo viên " + id + " thất bại!");
         }
     }
+    
+    const getUsersExport = (event, done) => {
+        let result = [];
+        if (listTeachers && listTeachers.length > 0) {
+            result.push(["Id", "Họ tên", "Email", "Số điện thoại", "Ngày sinh", "Giới tính"])
+            listTeachers.map((item, index) => {
+                let arr = [];
+                arr[0] = item.id;
+                arr[1] = item.name;
+                arr[2] = item.email;
+                arr[3] = item.phone;
+                arr[4] = convertDate({date: item.dob});
+                arr[5] = item.gender;
+                result.push(arr);
+            });
+            setDataExport(result);
+            done();
+        }
+    }
 
     return (
         <>
@@ -147,11 +183,22 @@ const AccountPage = () => {
                         <div className="card flex-fill">
                             <div className="card-header">
                                 <div className="row align-items-center">
-                                    <div className="col-md-6"/>
                                     <div className="col-md-6">
                                         <div className="form-focus">
                                             <input type="text" className="form-control floating" onChange={(e) => setQuery(e.target.value)}/>
                                             <label className="focus-label">Họ tên, email, SĐT</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <div className="text-right add-btn-col">
+                                            <CSVLink
+                                                filename={"GIANG_VIEN_" + currentDate() + ".csv"}
+                                                className="btn btn-success float-right btn-rounded"
+                                                data={dataExport}
+                                                asyncOnClick={true}
+                                                onClick={getUsersExport}>
+                                                <i className="fas fa-file-download"></i> Xuất File
+                                            </CSVLink>
                                         </div>
                                     </div>
                                 </div>

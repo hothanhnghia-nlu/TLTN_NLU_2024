@@ -4,8 +4,8 @@ const fetchAllSubject = () => {
     return axios.get("subjects");
 }
 
-const createSubject = (id, name, credit) => {
-    return axios.post("subjects", {id, name, credit});
+const createSubject = (id, name, credit, imageFile, imageFileName) => {
+    return axios.post("subjects", {id, name, credit, imageFile, imageFileName});
 }
 
 const updateSubject = (id, name, credit) => {

@@ -20,8 +20,8 @@ const ExamList = () => {
     const [subject, setSubject] = useState('');
     const [examTime, setExamTime] = useState('');
     const [numberOfQuestions, setNumberOfQuestions] = useState('');
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     const [query, setQuery] = useState('');
     const keys = ["name"];
@@ -66,13 +66,13 @@ const ExamList = () => {
             setSubject(dataExamEdit.subjectId);
             setExamTime(dataExamEdit.examTime);
             setNumberOfQuestions(dataExamEdit.numberOfQuestions);
-            setStartTime(dataExamEdit.startTime);
-            setEndTime(dataExamEdit.endTime);
+            setStartDate(dataExamEdit.startTime);
+            setEndDate(dataExamEdit.endTime);
 
             if (dataExamEdit.dob) {
                 const formattedDateTime = moment(dataExamEdit.dob).format('YYYY-MM-DDTHH:mm');
-                setStartTime(formattedDateTime);
-                setEndTime(formattedDateTime);
+                setStartDate(formattedDateTime);
+                setEndDate(formattedDateTime);
             }
         }
     }, [dataExamEdit]);
@@ -274,17 +274,13 @@ const ExamList = () => {
                             <div className="row">
                                 <div className="col-sm-6">
                                     <div className="form-group">
-                                        <label>Môn thi</label>
-                                        <select className="form-control select">
-                                            <option>-- Chọn môn thi --</option>
-                                            <option>Maths</option>
-                                            <option>Computer</option>
-                                            <option>Science</option>
-                                            <option>Maths</option>
-                                            <option>Tamil</option>
-                                            <option>English</option>
-                                            <option>Social Science</option>
-                                        </select>
+                                        <label>Mã môn thi</label>
+                                        <input type="number" className="form-control" required="required"
+                                               value={subject}
+                                               onChange={(event) => {
+                                                   setSubject(event.target.value);
+                                               }}
+                                        />
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
@@ -304,9 +300,9 @@ const ExamList = () => {
                                     <div className="form-group">
                                         <label>Ngày bắt đầu</label>
                                         <input type="datetime-local" className="form-control" required="required"
-                                               value={startTime}
+                                               value={startDate}
                                                onChange={(event) => {
-                                                   setStartTime(event.target.value);
+                                                   setStartDate(event.target.value);
                                                }}
                                         />
                                     </div>
@@ -315,9 +311,9 @@ const ExamList = () => {
                                     <div className="form-group">
                                         <label>Ngày kết thúc</label>
                                         <input type="datetime-local" className="form-control" required="required"
-                                               value={endTime}
+                                               value={endDate}
                                                onChange={(event) => {
-                                                   setEndTime(event.target.value);
+                                                   setEndDate(event.target.value);
                                                }}
                                         />
                                     </div>
@@ -368,16 +364,12 @@ const ExamList = () => {
                                 <div className="col-sm-6">
                                     <div className="form-group">
                                         <label>Môn thi</label>
-                                        <select className="form-control select">
-                                            <option>-- Chọn môn thi --</option>
-                                            <option>Maths</option>
-                                            <option>Computer</option>
-                                            <option>Science</option>
-                                            <option>Maths</option>
-                                            <option>Tamil</option>
-                                            <option>English</option>
-                                            <option>Social Science</option>
-                                        </select>
+                                        <input type="number" className="form-control" required="required"
+                                               value={subject}
+                                               onChange={(event) => {
+                                                   setSubject(event.target.value);
+                                               }}
+                                        />
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
@@ -397,9 +389,9 @@ const ExamList = () => {
                                     <div className="form-group">
                                         <label>Ngày bắt đầu</label>
                                         <input type="datetime-local" className="form-control" required="required"
-                                               value={startTime}
+                                               value={startDate}
                                                onChange={(event) => {
-                                                   setStartTime(event.target.value);
+                                                   setStartDate(event.target.value);
                                                }}
                                         />
                                     </div>
@@ -408,9 +400,9 @@ const ExamList = () => {
                                     <div className="form-group">
                                         <label>Ngày kết thúc</label>
                                         <input type="datetime-local" className="form-control" required="required"
-                                               value={endTime}
+                                               value={endDate}
                                                onChange={(event) => {
-                                                   setEndTime(event.target.value);
+                                                   setEndDate(event.target.value);
                                                }}
                                         />
                                     </div>
