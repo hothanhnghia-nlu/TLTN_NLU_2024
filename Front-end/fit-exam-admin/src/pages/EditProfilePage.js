@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Header from "../components/Header";
 import {Link} from "react-router-dom";
 import {TabTitle} from "../commons/DynamicTitle";
-import {fetchUserById, updateUser} from "../service/UserService";
+import {fetchUserById, updateUserWithAvatar} from "../service/UserService";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import moment from "moment";
@@ -47,7 +47,6 @@ const EditProfilePage = () => {
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-        setSelectedImage(file);
 
         setSelectedImage({
             file: file,
@@ -56,19 +55,23 @@ const EditProfilePage = () => {
         });
     };
 
-    const handleUpdate = async (id) => {
-        const imageFile = selectedImage.name;
-        const imageFileName = selectedImage.name;
-        let res = await updateUser({id}, name, email, phone, dob, gender);
+    const handleUpdate = async () => {
+        const userId = user.id;
+        const imageFile = selectedImage.file;
+        try {
+            let res = await updateUserWithAvatar(userId, name, email, phone, dob, gender, imageFile);
 
-        if (res) {
-            toast.success("Cập nhật tài khoản thành công!", {
-                onClose: () => {
-                    window.location.reload();
-                }
-            });
-        } else {
-            toast.error("Cập nhật tài khoản thất bại!");
+            if (res) {
+                toast.success("Cập nhật tài khoản thành công!", {
+                    onClose: () => {
+                        window.location.reload();
+                    }
+                });
+            } else {
+                toast.error("Cập nhật tài khoản thất bại!");
+            }
+        } catch (error) {
+            console.error("Error creating subject:", error);
         }
     }
 
@@ -156,7 +159,7 @@ const EditProfilePage = () => {
                                             <div className="col-lg-12 col-md-12 col-sm-12 col-12">
                                                 <div className="form-group">
                                                     <label>Ảnh đại diện</label>
-                                                    <input type="file" className="form-control" required="required"
+                                                    <input type="file" className="form-control" accept="image/*"
                                                            onChange={handleFileChange}
                                                     />
                                                 </div>
@@ -170,7 +173,7 @@ const EditProfilePage = () => {
                                             <div className="col-lg-12 col-md-12 col-sm-12 col-12">
                                                 <div className="form-group text-center custom-mt-form-group">
                                                     <button className="btn btn-primary mr-2" type="submit"
-                                                            onClick={() => handleUpdate(user.id)}>Lưu
+                                                            onClick={() => handleUpdate()}>Lưu
                                                     </button>
                                                     <Link to="/my-profile">
                                                         <button className="btn btn-secondary" type="reset">Hủy</button>

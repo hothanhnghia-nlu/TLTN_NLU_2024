@@ -4,12 +4,32 @@ const fetchAllSubject = () => {
     return axios.get("subjects");
 }
 
-const createSubject = (id, name, credit, imageFile, imageFileName) => {
-    return axios.post("subjects", {id, name, credit, imageFile, imageFileName});
+const createSubject = async (id, name, credit, imageFile) => {
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('name', name);
+    formData.append('credit', credit);
+    formData.append('imageFile', imageFile);
+
+    return await axios.post("subjects", formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
 }
 
-const updateSubject = (id, name, credit) => {
-    return axios.put(`subjects/${id}`, {id, name, credit});
+const updateSubject = async (id, name, credit, imageFile) => {
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('name', name);
+    formData.append('credit', credit);
+    formData.append('imageFile', imageFile);
+
+    return await axios.put(`subjects/${id}`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
 }
 
 const deleteSubject = (id) => {

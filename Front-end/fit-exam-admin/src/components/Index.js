@@ -203,11 +203,11 @@ const Index = () => {
                                             <tr>
                                                 <th>#</th>
                                                 <th>Họ tên</th>
-                                                <th>Ảnh đại diện</th>
+                                                <th className="text-center">Ảnh đại diện</th>
                                                 <th>Email</th>
                                                 <th>Số điện thoại</th>
                                                 <th>Ngày sinh</th>
-                                                <th>Giới tính</th>
+                                                <th className="text-center">Giới tính</th>
                                                 <th className="text-center">Trạng thái</th>
                                             </tr>
                                             </thead>
@@ -218,11 +218,17 @@ const Index = () => {
                                                         <tr key={`students-${index}`}>
                                                             <td>{item.id}</td>
                                                             <td>{item.name}</td>
-                                                            <td>{item.imageId}</td>
+                                                            <td className="text-center">
+                                                                {item.image && item.image.url ? (
+                                                                    <img src={item.image.url} alt={item.name} style={{ maxWidth: '50px', maxHeight: '70px' }} />
+                                                                ) : (
+                                                                    <span>No Image</span>
+                                                                )}
+                                                            </td>
                                                             <td>{item.email}</td>
                                                             <td>{item.phone}</td>
                                                             <td>{convertDate({ date: item.dob })}</td>
-                                                            <td>{item.gender}</td>
+                                                            <td className="text-center">{item.gender}</td>
                                                             <td className="text-center">{getStatus(item)}</td>
                                                         </tr>
                                                     )

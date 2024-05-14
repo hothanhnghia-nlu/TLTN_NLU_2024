@@ -45,7 +45,11 @@ const Header = () => {
                         <li className="nav-item dropdown has-arrow">
                             <Link to="#" className=" nav-link user-link" data-toggle="dropdown">
                                 <span className="user-img">
-                                    <img className="rounded-circle" src="assets/img/user-06.jpg" width="30" alt="Admin"/>
+                                    {user.image ? (
+                                        <img className="rounded-circle" src={user.image.url} alt={user.name} width="30"/>
+                                    ) : (
+                                        <img className="rounded-circle" src="assets/img/user-06.jpg" alt={user.name} width="30"/>
+                                    )}
                                     <span className="status online"></span>
                                 </span>
                                 <span className="user-name"> {user.name}</span>

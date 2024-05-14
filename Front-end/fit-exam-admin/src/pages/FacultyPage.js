@@ -121,6 +121,7 @@ const FacultyPage = () => {
         let result = [];
         if (listFaculties && listFaculties.length > 0) {
             result.push(["Mã khoa", "Tên khoa"])
+            // eslint-disable-next-line array-callback-return
             listFaculties.map((item, index) => {
                 let arr = [];
                 arr[0] = item.id;
@@ -174,7 +175,7 @@ const FacultyPage = () => {
                                         <div>
                                             <CSVLink
                                                 filename={"KHOA_" + currentDate() + ".csv"}
-                                                className="btn btn-success float-right btn-rounded mr-4"
+                                                className="btn btn-info float-right btn-rounded mr-4"
                                                 style={{borderRadius: "50px", textTransform: "none"}}
                                                 data={dataExport}
                                                 asyncOnClick={true}

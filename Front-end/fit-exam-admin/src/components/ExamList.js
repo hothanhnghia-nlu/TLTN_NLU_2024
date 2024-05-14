@@ -2,11 +2,12 @@ import React, {useEffect, useState} from "react";
 import {TabTitle} from "../commons/DynamicTitle";
 import {Link} from "react-router-dom";
 import Header from ".//Header";
-import {fetchAllExam} from "../service/ExamService";
+import {createExam, fetchAllExam} from "../service/ExamService";
 import ReactPaginate from "react-paginate";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import moment from "moment/moment";
+import {createFaculty} from "../service/FacultyService";
 
 const ExamList = () => {
     TabTitle('Bài thi | FIT Exam Admin');
@@ -17,7 +18,7 @@ const ExamList = () => {
     const [dataExamDelete, setDataExamDelete] = useState({});
 
     const [name, setName] = useState('');
-    const [subject, setSubject] = useState('');
+    const [subjectId, setSubjectId] = useState('');
     const [examTime, setExamTime] = useState('');
     const [numberOfQuestions, setNumberOfQuestions] = useState('');
     const [startDate, setStartDate] = useState('');
@@ -25,6 +26,8 @@ const ExamList = () => {
 
     const [query, setQuery] = useState('');
     const keys = ["name"];
+
+    const userId = localStorage.getItem("id");
 
     useEffect(() => {
         getExams();
@@ -57,13 +60,30 @@ const ExamList = () => {
     };
 
     const handleSave = async () => {
-        toast.success("Tạo bài thi thành công!");
+        const creatorId = userId;
+        let res = await createExam(name, subjectId, creatorId, examTime, numberOfQuestions, startDate, endDate);
+        if (res && res.id) {
+            setName('');
+            setSubjectId('');
+            setExamTime('');
+            setNumberOfQuestions('');
+            setStartDate('');
+            setEndDate('');
+
+            toast.success("Tạo bài thi thành công!", {
+                onClose: () => {
+                    window.location.reload();
+                }
+            });
+        } else {
+            toast.error("Tạo bài thi thất bại!");
+        }
     }
 
     useEffect(() => {
         if (dataExamEdit) {
             setName(dataExamEdit.name);
-            setSubject(dataExamEdit.subjectId);
+            setSubjectId(dataExamEdit.subjectId);
             setExamTime(dataExamEdit.examTime);
             setNumberOfQuestions(dataExamEdit.numberOfQuestions);
             setStartDate(dataExamEdit.startTime);
@@ -167,8 +187,8 @@ const ExamList = () => {
                                                     <th>STT</th>
                                                     <th>Tên bài thi</th>
                                                     <th>Môn thi</th>
-                                                    <th>Thời gian (p)</th>
-                                                    <th>Tổng số câu hỏi</th>
+                                                    <th className="text-center">Thời gian (p)</th>
+                                                    <th className="text-center">Tổng số câu hỏi</th>
                                                     <th>Người tạo</th>
                                                     <th className="text-right">Tính năng</th>
                                                 </tr>
@@ -180,14 +200,24 @@ const ExamList = () => {
                                                             <tr key={`exams-${index}`}>
                                                                 <td>{item.id}</td>
                                                                 <td>
-                                                                    <h2><Link to="exam-detail.html"
-                                                                              className="avatar text-white">J</Link><Link
-                                                                        to="exam-detail.html">{item.name}</Link></h2>
+                                                                    <h2>{item.name}</h2>
                                                                 </td>
-                                                                <td>{item.subjectId}</td>
-                                                                <td>{item.examTime}</td>
-                                                                <td>{item.numberOfQuestions}</td>
-                                                                <td>{item.creatorId}</td>
+                                                                <td>
+                                                                    {item.subject ? (
+                                                                        <h2>{item.subject.name}</h2>
+                                                                    ) : (
+                                                                        <span>Invalid subject</span>
+                                                                    )}
+                                                                </td>
+                                                                <td className="text-center">{item.examTime}</td>
+                                                                <td className="text-center">{item.numberOfQuestions}</td>
+                                                                <td>
+                                                                    {item.user ? (
+                                                                        <h2>{item.user.name}</h2>
+                                                                    ) : (
+                                                                        <span>Invalid creator</span>
+                                                                    )}
+                                                                </td>
                                                                 <td className="text-right">
                                                                     <button type="submit" data-toggle="modal"
                                                                             data-target="#edit_exam"
@@ -276,9 +306,9 @@ const ExamList = () => {
                                     <div className="form-group">
                                         <label>Mã môn thi</label>
                                         <input type="number" className="form-control" required="required"
-                                               value={subject}
+                                               value={subjectId}
                                                onChange={(event) => {
-                                                   setSubject(event.target.value);
+                                                   setSubjectId(event.target.value);
                                                }}
                                         />
                                     </div>
@@ -365,9 +395,9 @@ const ExamList = () => {
                                     <div className="form-group">
                                         <label>Môn thi</label>
                                         <input type="number" className="form-control" required="required"
-                                               value={subject}
+                                               value={subjectId}
                                                onChange={(event) => {
-                                                   setSubject(event.target.value);
+                                                   setSubjectId(event.target.value);
                                                }}
                                         />
                                     </div>

@@ -115,7 +115,7 @@ const ExamList = () => {
                                                     return (
                                                         <tr key={`logs-${index}`}>
                                                             <td>{item.id}</td>
-                                                            <td>{item.userId}</td>
+                                                            <td className="text-center">{item.userId}</td>
                                                             <td>{item.level}</td>
                                                             <td>{item.source}</td>
                                                             <td>{item.ip}</td>

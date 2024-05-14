@@ -62,7 +62,11 @@ const ProfilePage = () => {
                                 <div className="profile-view">
                                     <div className="profile-img-wrap">
                                         <div className="profile-img">
-                                            <Link href=""><img className="avatar" src="assets/img/user.jpg" alt=""/></Link>
+                                            {user.image ? (
+                                                <Link href=""><img className="avatar" src={user.image.url} alt={user.name}/></Link>
+                                            ) : (
+                                                <Link href=""><img className="avatar" src="assets/img/user.jpg" alt={user.name}/></Link>
+                                            )}
                                         </div>
                                     </div>
                                     <div className="profile-basic">

@@ -57,7 +57,6 @@ const SubjectPage = () => {
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-        setSelectedImage(file);
 
         setSelectedImage({
             file: file,
@@ -67,22 +66,25 @@ const SubjectPage = () => {
     };
 
     const handleSave = async () => {
-        const imageFile = selectedImage.name;
-        const imageFileName = selectedImage.name;
-        let res = await createSubject(id, name, credit, imageFile, imageFileName);
-        if (res && res.id) {
-            setId('');
-            setName('');
-            setCredit('');
-            setSelectedImage(null);
+        const imageFile = selectedImage.file;
+        try {
+            let res = await createSubject(id, name, credit, imageFile);
+            if (res && res.id) {
+                setId('');
+                setName('');
+                setCredit('');
+                setSelectedImage(null);
 
-            toast.success("Tạo môn " + id + " thành công!", {
-                onClose: () => {
-                    window.location.reload();
-                }
-            });
-        } else {
-            toast.error("Tạo môn " + id + " thất bại!");
+                toast.success("Tạo môn " + id + " thành công!", {
+                    onClose: () => {
+                        window.location.reload();
+                    }
+                });
+            } else {
+                toast.error("Tạo môn " + id + " thất bại!");
+            }
+        } catch (error) {
+            console.error("Error creating subject:", error);
         }
     }
 
@@ -104,16 +106,21 @@ const SubjectPage = () => {
 
     const handleUpdate = async () => {
         let subjectId = dataSubjectEdit.id;
-        let res = await updateSubject(subjectId, name, credit);
+        const imageFile = selectedImage.file;
+        try {
+            let res = await updateSubject(subjectId, name, credit, imageFile);
 
-        if (res && subjectId) {
-            toast.success("Cập nhật môn " + subjectId + " thành công!", {
-                onClose: () => {
-                    window.location.reload();
-                }
-            });
-        } else {
-            toast.error("Cập nhật môn " + subjectId + " thất bại!");
+            if (res && subjectId) {
+                toast.success("Cập nhật môn " + subjectId + " thành công!", {
+                    onClose: () => {
+                        window.location.reload();
+                    }
+                });
+            } else {
+                toast.error("Cập nhật môn " + subjectId + " thất bại!");
+            }
+        } catch (error) {
+            console.error("Error creating subject:", error);
         }
     }
 
@@ -144,6 +151,7 @@ const SubjectPage = () => {
         let result = [];
         if (listSubjects && listSubjects.length > 0) {
             result.push(["Mã môn", "Tên môn học", "Số tín chỉ"])
+            // eslint-disable-next-line array-callback-return
             listSubjects.map((item, index) => {
                 let arr = [];
                 arr[0] = item.id;
@@ -198,7 +206,7 @@ const SubjectPage = () => {
                                         <div>
                                             <CSVLink
                                                 filename={"MON_HOC_" + currentDate() + ".csv"}
-                                                className="btn btn-success float-right btn-rounded mr-4"
+                                                className="btn btn-info float-right btn-rounded mr-4"
                                                 style={{borderRadius: "50px", textTransform: "none"}}
                                                 data={dataExport}
                                                 asyncOnClick={true}
@@ -218,6 +226,7 @@ const SubjectPage = () => {
                                                 <tr>
                                                     <th>Mã môn học</th>
                                                     <th>Tên môn học</th>
+                                                    <th className="text-center">Hình ảnh</th>
                                                     <th className="text-center">Số tín chỉ</th>
                                                     <th className="text-right">Tính năng</th>
                                                 </tr>
@@ -230,6 +239,13 @@ const SubjectPage = () => {
                                                                 <td>{item.id}</td>
                                                                 <td>
                                                                     <h2>{item.name}</h2>
+                                                                </td>
+                                                                <td className="text-center">
+                                                                    {item.image.url ? (
+                                                                        <img src={item.image.url} alt={item.name} style={{ maxWidth: '50px', maxHeight: '70px' }} />
+                                                                    ) : (
+                                                                        <span>No Image</span>
+                                                                    )}
                                                                 </td>
                                                                 <td className="text-center">{item.credit}</td>
                                                                 <td className="text-right">
@@ -332,15 +348,18 @@ const SubjectPage = () => {
                                 <div className="row">
                                     <div className="col-sm-8">
                                         <div className="form-group">
-                                            <label>Hình ảnh</label>
-                                            <input type="file" className="form-control" required="required"
-                                                   onChange={handleFileChange}
+                                            < label>Hình ảnh</label>
+                                            <input
+                                                type="file"
+                                                className="form-control"
+                                                accept="image/*"
+                                                onChange={handleFileChange}
                                             />
                                         </div>
                                     </div>
                                     <div className="col-sm-4">
                                         {selectedImage && (
-                                            <img src={selectedImage.preview} width="100" height="120"  alt={name}/>
+                                            <img src={selectedImage.preview} width="100" height="120" alt={name}/>
                                         )}
                                     </div>
                                 </div>
@@ -402,14 +421,17 @@ const SubjectPage = () => {
                                 <div className="col-sm-8">
                                     <div className="form-group">
                                         <label>Hình ảnh</label>
-                                        <input type="file" className="form-control" required="required"
-                                               onChange={handleFileChange}
+                                        <input
+                                            type="file"
+                                            className="form-control"
+                                            accept="image/*"
+                                            onChange={handleFileChange}
                                         />
                                     </div>
                                 </div>
                                 <div className="col-sm-4">
                                     {selectedImage && (
-                                        <img src={selectedImage.preview} width="100" height="120" alt={name}/>
+                                        <img src={selectedImage.preview} width="100" height="120" alt={name} />
                                     )}
                                 </div>
                             </div>
