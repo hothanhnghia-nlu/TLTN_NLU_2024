@@ -4,19 +4,8 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
   <PropertyGroup>
-    <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>D:\Java_Backend\FITExam_API</_PublishTargetUrl>
-    <History>True|2024-05-05T14:01:03.0665473Z;True|2024-05-05T21:00:19.3448870+07:00;True|2024-05-05T20:57:55.2715870+07:00;</History>
+    <_PublishTargetUrl>D:\Java_Backend\FITExamAPI_Published</_PublishTargetUrl>
+    <History>True|2024-05-14T17:02:20.2829239Z;True|2024-05-14T23:30:56.3113449+07:00;True|2024-05-14T23:00:44.2306086+07:00;True|2024-05-13T14:53:24.8302016+07:00;True|2024-05-13T14:50:36.6348428+07:00;True|2024-05-12T23:10:50.5701816+07:00;True|2024-05-12T22:00:26.3044407+07:00;True|2024-05-12T21:00:42.4473731+07:00;True|2024-05-12T21:00:42.8298137+07:00;True|2024-05-12T00:01:13.5594946+07:00;True|2024-05-12T11:00:43.4410295+07:00;True|2024-05-09T11:30:36.8599285+07:00;True|2024-05-06T21:30:31.3000669+07:00;</History>
     <LastFailureDetails />
   </PropertyGroup>
-  <ItemGroup>
-    <DestinationConnectionStrings Include="FITExamDb">
-      <Value>Data Source=NGHIA-PC\SQLEXPRESS%3bInitial Catalog=FITExam%3bIntegrated Security=True%3bConnect Timeout=30%3bEncrypt=False%3bTrust Server Certificate=True%3bApplication Intent=ReadWrite%3bMulti Subnet Failover=False</Value>
-    </DestinationConnectionStrings>
-  </ItemGroup>
-  <ItemGroup>
-    <EFMigrations Include="FITExamAPI.Data.FitExamContext">
-      <Value>Data Source=NGHIA-PC\SQLEXPRESS%3bInitial Catalog=FITExam%3bIntegrated Security=True%3bConnect Timeout=30%3bEncrypt=False%3bTrust Server Certificate=True%3bApplication Intent=ReadWrite%3bMulti Subnet Failover=False</Value>
-    </EFMigrations>
-  </ItemGroup>
 </Project>

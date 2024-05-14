@@ -61,14 +61,12 @@ const AccountPage = () => {
 
     useEffect(() => {
         const endOffset = itemOffset + itemsPerPage;
-        console.log(`Loading items from ${itemOffset} to ${endOffset}`);
         setCurrentItems(listStudents.slice(itemOffset, endOffset));
         setPageCount(Math.ceil(totalStudents / itemsPerPage));
     }, [itemOffset, itemsPerPage, listStudents, totalStudents]);
 
     const handlePageClick = (event) => {
         const newOffset = (event.selected * itemsPerPage) % totalStudents;
-        console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
         setItemOffset(newOffset);
     };
 

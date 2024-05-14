@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
-import vn.edu.hcmuaf.fit.fitexam.R;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -15,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,21 +25,28 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import vn.edu.hcmuaf.fit.fitexam.adapter.HistoryAdapter;
 import vn.edu.hcmuaf.fit.fitexam.adapter.SubjectHomeAdapter;
 import vn.edu.hcmuaf.fit.fitexam.adapter.TakeExamAdapter;
+import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
+import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
 import vn.edu.hcmuaf.fit.fitexam.model.Exam;
 import vn.edu.hcmuaf.fit.fitexam.model.Image;
 import vn.edu.hcmuaf.fit.fitexam.model.Result;
 import vn.edu.hcmuaf.fit.fitexam.model.Subject;
+import vn.edu.hcmuaf.fit.fitexam.model.User;
 
 public class HomeFragment extends Fragment {
-    TextView btnSee1, btnSee2, btnSee3;
+    TextView tvName, btnSee1, btnSee2, btnSee3;
     RecyclerView recyclerSubject, recyclerTakeExam, recyclerExamHistory;
     ShimmerFrameLayout shimmerSubject, shimmerTakeExam, shimmerExamHistory;
     SubjectHomeAdapter subjectAdapter;
     TakeExamAdapter examAdapter;
     HistoryAdapter historyAdapter;
+    LoginSession session;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,9 +57,13 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        tvName = view.findViewById(R.id.fullName);
         btnSee1 = view.findViewById(R.id.btnSee1);
         btnSee2 = view.findViewById(R.id.btnSee2);
         btnSee3 = view.findViewById(R.id.btnSee3);
+
+        session = new LoginSession(getContext());
+        String id = LoginSession.getIdKey();
         
         recyclerSubject = view.findViewById(R.id.recycler_subjects);
         recyclerTakeExam = view.findViewById(R.id.recycler_take_exam);
@@ -75,6 +86,9 @@ public class HomeFragment extends Fragment {
         shimmerExamHistory.startShimmer();
 
         if (checkInternetPermission()) {
+            if (id != null) {
+                loadStudentName(Integer.parseInt(id));
+            }
             loadSubjectList();
             loadTakeExamList();
             loadHistoryList();
@@ -96,52 +110,74 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    private void loadStudentName(int id) {
+        Call<User> userInfo = ApiService.apiService.getUser(id);
+
+        userInfo.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body();
+
+                    if (user != null) {
+                        tvName.setText(user.getName());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
+            }
+        });
+    }
+
     private void loadSubjectList() {
-        Image image = new Image();
-        image.setUrl("https://logoart.vn/blog/wp-content/uploads/2013/08/logo-android.png");
-        Subject subject = new Subject();
-        subject.setName("Lập trình trên thiết bị di động");
-        subject.setImage(image);
+        Call<ArrayList<Subject>> subjectList = ApiService.apiService.getAllSubjects();
 
-        ArrayList<Subject> subjects = new ArrayList<>();
-        subjects.add(subject);
-        subjects.add(subject);
-        subjects.add(subject);
-        subjects.add(subject);
-        subjects.add(subject);
+        subjectList.enqueue(new Callback<ArrayList<Subject>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Subject>> call, Response<ArrayList<Subject>> response) {
+                if (response.isSuccessful()) {
+                    ArrayList<Subject> subjects = response.body();
 
-        shimmerSubject.stopShimmer();
-        shimmerSubject.setVisibility(View.GONE);
-        recyclerSubject.setVisibility(View.VISIBLE);
-        subjectAdapter = new SubjectHomeAdapter(getContext(), subjects);
-        recyclerSubject.setAdapter(subjectAdapter);
+                    shimmerSubject.stopShimmer();
+                    shimmerSubject.setVisibility(View.GONE);
+                    recyclerSubject.setVisibility(View.VISIBLE);
+                    subjectAdapter = new SubjectHomeAdapter(getContext(), subjects);
+                    recyclerSubject.setAdapter(subjectAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Subject>> call, Throwable t) {
+                Log.e("API_ERROR", "Error occurred: " + t.getMessage());
+            }
+        });
     }
 
     private void loadTakeExamList() {
-        Image image = new Image();
-        image.setUrl("https://logoart.vn/blog/wp-content/uploads/2013/08/logo-android.png");
-        Subject subject = new Subject();
-        subject.setName("Lập trình trên thiết bị di động");
-        subject.setImage(image);
-        Exam exam = new Exam();
-        exam.setName("Bài kiểm tra chương 1");
-        exam.setTime(1);
-        exam.setNumberOfQuestions(30);
-        exam.setSubject(subject);
-        exam.getSubject().setImage(image);
+        Call<ArrayList<Exam>> subjectList = ApiService.apiService.getAllExams();
 
-        ArrayList<Exam> exams = new ArrayList<>();
-        exams.add(exam);
-        exams.add(exam);
-        exams.add(exam);
-        exams.add(exam);
-        exams.add(exam);
+        subjectList.enqueue(new Callback<ArrayList<Exam>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Exam>> call, Response<ArrayList<Exam>> response) {
+                if (response.isSuccessful()) {
+                    ArrayList<Exam> exams = response.body();
 
-        shimmerTakeExam.stopShimmer();
-        shimmerTakeExam.setVisibility(View.GONE);
-        recyclerTakeExam.setVisibility(View.VISIBLE);
-        examAdapter = new TakeExamAdapter(getContext(), exams);
-        recyclerTakeExam.setAdapter(examAdapter);
+                    shimmerTakeExam.stopShimmer();
+                    shimmerTakeExam.setVisibility(View.GONE);
+                    recyclerTakeExam.setVisibility(View.VISIBLE);
+                    examAdapter = new TakeExamAdapter(getContext(), exams);
+                    recyclerTakeExam.setAdapter(examAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Exam>> call, Throwable t) {
+                Log.e("API_ERROR", "Error occurred: " + t.getMessage());
+            }
+        });
     }
 
     private void loadHistoryList() {

@@ -10,8 +10,8 @@ public class Exam implements Serializable {
     private int creatorId;
     private int examTime;
     private int numberOfQuestions;
-    private int minimumDifficulty;
-    private int maximumDifficulty;
+    private String startDate;
+    private String endDate;
     private Subject subject;
     private User user;
     private List<Result> results;
@@ -67,20 +67,20 @@ public class Exam implements Serializable {
         this.numberOfQuestions = numberOfQuestions;
     }
 
-    public int getMinimumDifficulty() {
-        return minimumDifficulty;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setMinimumDifficulty(int minimumDifficulty) {
-        this.minimumDifficulty = minimumDifficulty;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
-    public int getMaximumDifficulty() {
-        return maximumDifficulty;
+    public String getEndDate() {
+        return endDate;
     }
 
-    public void setMaximumDifficulty(int maximumDifficulty) {
-        this.maximumDifficulty = maximumDifficulty;
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
     public Subject getSubject() {
@@ -106,5 +106,4 @@ public class Exam implements Serializable {
     public void setResults(List<Result> results) {
         this.results = results;
     }
-
 }

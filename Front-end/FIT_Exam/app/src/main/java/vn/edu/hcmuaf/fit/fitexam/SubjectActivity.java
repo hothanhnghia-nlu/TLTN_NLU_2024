@@ -4,11 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import vn.edu.hcmuaf.fit.fitexam.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -18,7 +22,7 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import java.util.ArrayList;
 
 import vn.edu.hcmuaf.fit.fitexam.adapter.SubjectAdapter;
-import vn.edu.hcmuaf.fit.fitexam.model.Image;
+import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.model.Subject;
 
 public class SubjectActivity extends AppCompatActivity {
@@ -53,25 +57,27 @@ public class SubjectActivity extends AppCompatActivity {
     }
 
     private void loadSubjectList() {
-        Image image = new Image();
-        image.setUrl("https://logoart.vn/blog/wp-content/uploads/2013/08/logo-android.png");
-        Subject subject = new Subject();
-        subject.setId(1);
-        subject.setName("Lập trình trên thiết bị di động");
-        subject.setImage(image);
+        Call<ArrayList<Subject>> subjectList = ApiService.apiService.getAllSubjects();
 
-        ArrayList<Subject> subjects = new ArrayList<>();
-        subjects.add(subject);
-        subjects.add(subject);
-        subjects.add(subject);
-        subjects.add(subject);
-        subjects.add(subject);
+        subjectList.enqueue(new Callback<ArrayList<Subject>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Subject>> call, Response<ArrayList<Subject>> response) {
+                if (response.isSuccessful()) {
+                    ArrayList<Subject> subjects = response.body();
 
-        shimmerSubject.stopShimmer();
-        shimmerSubject.setVisibility(View.GONE);
-        recyclerSubject.setVisibility(View.VISIBLE);
-        adapter = new SubjectAdapter(this, subjects);
-        recyclerSubject.setAdapter(adapter);
+                    shimmerSubject.stopShimmer();
+                    shimmerSubject.setVisibility(View.GONE);
+                    recyclerSubject.setVisibility(View.VISIBLE);
+                    adapter = new SubjectAdapter(getApplicationContext(), subjects);
+                    recyclerSubject.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Subject>> call, Throwable t) {
+                Log.e("API_ERROR", "Error occurred: " + t.getMessage());
+            }
+        });
     }
 
     // Check internet permission

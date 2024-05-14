@@ -1,13 +1,17 @@
 package vn.edu.hcmuaf.fit.fitexam;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import vn.edu.hcmuaf.fit.fitexam.R;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +21,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.format.Formatter;
@@ -29,19 +34,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import vn.edu.hcmuaf.fit.fitexam.api.APIService;
+import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
+import vn.edu.hcmuaf.fit.fitexam.common.RealPathUtil;
+import vn.edu.hcmuaf.fit.fitexam.model.Faculty;
 import vn.edu.hcmuaf.fit.fitexam.model.Log;
 import vn.edu.hcmuaf.fit.fitexam.model.User;
 
@@ -52,12 +69,40 @@ public class EditProfileActivity extends AppCompatActivity {
     Button btnSave;
     AutoCompleteTextView acGender, acFaculty;
     CircleImageView cvProfileImage, cvCamera;
+    Uri mUri;
+    LoginSession session;
     String[] gender = new String[] {"Nam", "Nữ", "Khác"};
     String[] faculty;
+    int[] facultyId;
     String selectedGender, selectedFaculty;
+    HashMap<String, Integer> facultyMap = new HashMap<>();
     private static final int REQUEST_IMAGE_PICK = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
-    private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
+    private static final int PERMISSION_REQUEST_CODE = 100;
+    private static final String TAG = EditProfileActivity.class.getName();
+
+    private ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult o) {
+                    android.util.Log.e(TAG, "OnActivityResult");
+                    if (o.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = o.getData();
+                        if (data == null) {
+                            return;
+                        }
+                        Uri uri = data.getData();
+                        mUri = uri;
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                            cvProfileImage.setImageBitmap(bitmap);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -77,8 +122,11 @@ public class EditProfileActivity extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
         btnBack = findViewById(R.id.btnBack);
 
+        session = new LoginSession(getApplicationContext());
+        String userId = LoginSession.getIdKey();
+
         if (checkInternetPermission()) {
-//            getUserInformation(Integer.parseInt(id));
+            getUserInformation(Integer.parseInt(userId));
             getUserGender();
             getFaculty();
         } else {
@@ -103,8 +151,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         cvProfileImage.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(intent, REQUEST_IMAGE_PICK);
+            checkOpenGalleryPermission();
         });
 
         cvCamera.setOnClickListener(v -> {
@@ -112,8 +159,13 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         btnSave.setOnClickListener(view -> {
-//            updateProfile(Integer.parseInt(id));
-            updateProfile();
+            if (checkInternetPermission()) {
+                if (mUri != null) {
+                    updateProfile(Integer.parseInt(userId));
+                }
+            } else {
+                Toast.makeText(this, "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
+            }
         });
 
         btnBack.setOnClickListener(view -> {
@@ -129,13 +181,40 @@ public class EditProfileActivity extends AppCompatActivity {
         EditProfileActivity.this.getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
-    private void checkCameraPermission() {
-        if (ContextCompat.checkSelfPermission(this, "android.permission.CAMERA")
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{"android.permission.CAMERA"},
-                    CAMERA_PERMISSION_REQUEST_CODE);
+    private void checkOpenGalleryPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            openGallery();
+            return;
+        }
+
+        if (ContextCompat.checkSelfPermission(this, "android.permission.READ_EXTERNAL_STORAGE")
+                == PackageManager.PERMISSION_GRANTED) {
+            openGallery();
         } else {
+            ActivityCompat.requestPermissions(this, new String[]{"android.permission.READ_EXTERNAL_STORAGE"},
+                    PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    private void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        activityResultLauncher.launch(Intent.createChooser(intent, "Select Picture"));
+    }
+
+    private void checkCameraPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             openCamera();
+            return;
+        }
+
+        if (ContextCompat.checkSelfPermission(this, "android.permission.CAMERA")
+                == PackageManager.PERMISSION_GRANTED) {
+            openCamera();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{"android.permission.CAMERA"},
+                    PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -166,45 +245,85 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openGallery();
                 openCamera();
-            } else {
-                Toast.makeText(this, "Lỗi mở máy ảnh", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
+    private void getUserInformation(int id) {
+        Call<User> userInfo = ApiService.apiService.getUser(id);
+
+        userInfo.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body();
+
+                    if (user != null) {
+                        edName.setText(user.getName());
+                        edPhone.setText(user.getPhone());
+                        edEmail.setText(user.getEmail());
+                        edEmail.setFocusable(false);
+
+                        if (user.getImage() != null) {
+                            String imageUrl = user.getImage().getUrl();
+                            Glide.with(getApplicationContext()).load(imageUrl).into(cvProfileImage);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
+            }
+        });
+    }
+
     @SuppressLint("SetTextI18n")
-    private void updateProfile() {
-        String name = edName.getText().toString();
-        String phone = edPhone.getText().toString();
-        String email = edEmail.getText().toString();
+    private void updateProfile(int id) {
+        String name = edName.getText().toString().trim();
+        String phone = edPhone.getText().toString().trim();
+        String email = edEmail.getText().toString().trim();
         String dob = convertDateType(edDob.getText().toString());
         String gender = selectedGender;
-        String faculty = selectedFaculty;
+        int facultyId = getFacultyIdByName(selectedFaculty);
 
-        if (name.isEmpty() || phone.isEmpty() || email.isEmpty()
-                || dob.isEmpty() || gender.isEmpty() || faculty.isEmpty()) {
+        if (name.isEmpty() || phone.isEmpty() || email.isEmpty()) {
             tvMessage.setVisibility(View.VISIBLE);
             tvMessage.setText("Vui lòng điền đầy đủ thông tin.");
         } else {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            updateUser(id, name, phone, email, dob, gender, facultyId);
         }
     }
 
-    private void updateUser(int id, User user) {
-        String email = LoginSession.getEmailKey();
-        Call<Void> update = APIService.apiService.putUser(id, user);
+    private void updateUser(int id, String txtName, String txtPhone, String txtEmail, String txtDob, String txtGender, int txtFacultyId) {
+        String emailSession = LoginSession.getEmailKey();
+        String bodyType = "multipart/form-data";
+        RequestBody name = RequestBody.create(MediaType.parse(bodyType), txtName);
+        RequestBody phone = RequestBody.create(MediaType.parse(bodyType), txtPhone);
+        RequestBody email = RequestBody.create(MediaType.parse(bodyType), txtEmail);
+        RequestBody dob = RequestBody.create(MediaType.parse(bodyType), txtDob);
+        RequestBody gender = RequestBody.create(MediaType.parse(bodyType), txtGender);
+        RequestBody facultyId = RequestBody.create(MediaType.parse(bodyType), String.valueOf(txtFacultyId));
+
+        String strRealPath = RealPathUtil.getRealPath(this, mUri);
+        android.util.Log.e("MYTAG", strRealPath);
+        File file = new File(strRealPath);
+        RequestBody requestFile = RequestBody.create(MediaType.parse(bodyType), file);
+        MultipartBody.Part avatar = MultipartBody.Part.createFormData("avatar", file.getName(), requestFile);
+
+        Call<Void> update = ApiService.apiService.updateUser(id, name, phone, email, dob, gender, facultyId, avatar);
 
         update.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Log log = new Log(id, Log.ALERT, getPhoneIpAddress(), "Edit profile",
-                            "Email: " + email + " is edited successful", Log.SUCCESS);
+                            "Email: " + emailSession + " is edited successful", Log.SUCCESS);
                     addLog(log);
 
                     Toast.makeText(EditProfileActivity.this,
@@ -213,7 +332,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     finish();
                 } else {
                     Log log = new Log(id, Log.WARNING, getPhoneIpAddress(), "Edit profile",
-                            "Email: " + email + " is edited failed", Log.FAILED);
+                            "Email: " + emailSession + " is edited failed", Log.FAILED);
                     addLog(log);
 
                     Toast.makeText(EditProfileActivity.this,
@@ -224,14 +343,12 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
-                Toast.makeText(EditProfileActivity.this,
-                        "Get API Failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void addLog(Log log) {
-        Call<Log> editLog = APIService.apiService.postLog(log);
+        Call<Log> editLog = ApiService.apiService.createLog(log);
 
         editLog.enqueue(new Callback<Log>() {
             @Override
@@ -271,7 +388,36 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void getFaculty() {
-        displayFaculty();
+        Call<ArrayList<Faculty>> facultyList = ApiService.apiService.getAllFaculties();
+
+        facultyList.enqueue(new Callback<ArrayList<Faculty>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Faculty>> call, Response<ArrayList<Faculty>> response) {
+                if (response.isSuccessful()) {
+                    ArrayList<Faculty> faculties = response.body();
+
+                    if (faculties != null) {
+                        facultyId = new int[faculties.size()];
+                        faculty = new String[faculties.size()];
+                        for (int i = 0; i < faculties.size(); i++) {
+                            facultyId[i] = faculties.get(i).getId();
+                            faculty[i] = faculties.get(i).getName();
+                            facultyMap.put(faculty[i], facultyId[i]);
+                        }
+                        displayFaculty();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Faculty>> call, Throwable t) {
+                android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
+            }
+        });
+    }
+
+    private int getFacultyIdByName(String facultyName) {
+        return facultyMap.get(facultyName);
     }
 
     private void displayFaculty() {
@@ -302,7 +448,7 @@ public class EditProfileActivity extends AppCompatActivity {
     @SuppressLint("SimpleDateFormat")
     private String convertDateType(String inputDate) {
         SimpleDateFormat inputFormat = new SimpleDateFormat("d/M/yyyy");
-        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         try {
             Date date = inputFormat.parse(inputDate);
             assert date != null;

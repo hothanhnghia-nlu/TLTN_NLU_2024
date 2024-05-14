@@ -3,7 +3,8 @@ using FITExamAPI.Models;
 using FITExamAPI.Repository;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using BCryptNet = BCrypt.Net.BCrypt;
+using BCrypt.Net;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FITExamAPI.Service
 {
@@ -18,7 +19,7 @@ namespace FITExamAPI.Service
 
         public async Task<User> CreateUserAsync(User user)
         {
-            user.Password = BCryptNet.HashPassword(user.Password);
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             user.CreatedAt = DateTime.Now;
             user.Status = 1;
 

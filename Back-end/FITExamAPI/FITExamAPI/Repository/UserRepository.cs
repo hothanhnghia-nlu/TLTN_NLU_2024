@@ -9,6 +9,7 @@ namespace FITExamAPI.Repository
         Task<List<User>?> GetByRoleAsync(sbyte role);
         Task<string?> GetIdAsync(string email);
         Task<User?> UpdateAsync(int id, User user);
+        Task<User?> ChangePasswordAsync(int id, User user);
         Task<User?> DeleteAsync(int id);
 
     }

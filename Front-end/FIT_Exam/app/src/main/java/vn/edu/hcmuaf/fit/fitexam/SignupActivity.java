@@ -2,7 +2,6 @@ package vn.edu.hcmuaf.fit.fitexam;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import vn.edu.hcmuaf.fit.fitexam.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -18,10 +17,12 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import vn.edu.hcmuaf.fit.fitexam.api.APIService;
+import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.common.UserIdCallback;
 import vn.edu.hcmuaf.fit.fitexam.model.Log;
 import vn.edu.hcmuaf.fit.fitexam.model.User;
@@ -47,11 +48,7 @@ public class SignupActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
 
         btnSignup.setOnClickListener(view -> {
-            if (checkInternetPermission()) {
-                handleSignup();
-            } else {
-                Toast.makeText(this, "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
-            }
+            handleSignup();
         });
 
         btnLogin.setOnClickListener(view -> {
@@ -64,13 +61,11 @@ public class SignupActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void handleSignup() {
-        String name = edName.getText().toString();
-        String phone = edPhone.getText().toString();
-        String email = edEmail.getText().toString();
-        String password = edPassword.getText().toString();
-        String confPassword = edConfPassword.getText().toString();
-
-//        User user = new User(name, phone, email, password);
+        String name = edName.getText().toString().trim();
+        String phone = edPhone.getText().toString().trim();
+        String email = edEmail.getText().toString().trim();
+        String password = edPassword.getText().toString().trim();
+        String confPassword = edConfPassword.getText().toString().trim();
 
         if (name.isEmpty() || phone.isEmpty() || email.isEmpty()
                 || password.isEmpty() || confPassword.isEmpty()) {
@@ -80,53 +75,55 @@ public class SignupActivity extends AppCompatActivity {
             tvMessage.setVisibility(View.VISIBLE);
             tvMessage.setText("Mật khẩu xác nhận không đúng.");
         } else {
-            Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
+            addUser(name, email, phone, password);
         }
     }
 
-    private void addUser(User user, String email) {
-        Call<User> register = APIService.apiService.register(user);
+    private void addUser(String txtName, String txtEmail, String txtPhone, String txtPassword) {
+        String bodyType = "multipart/form-data";
+        RequestBody name = RequestBody.create(MediaType.parse(bodyType), txtName);
+        RequestBody email = RequestBody.create(MediaType.parse(bodyType), txtEmail);
+        RequestBody phone = RequestBody.create(MediaType.parse(bodyType), txtPhone);
+        RequestBody password = RequestBody.create(MediaType.parse(bodyType), txtPassword);
+
+        Call<User> register = ApiService.apiService.register(name, email, phone, password);
 
         register.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                getUserId(email, userId -> {
+                getUserId(txtEmail, userId -> {
                     assert userId != null;
-                    if (response.isSuccessful()) {
-                        Log log = new Log(Integer.parseInt(userId), Log.INFO, getPhoneIpAddress(),
-                                "Signup", "Email: " + email + " is signup successful", Log.SUCCESS);
-                        addLog(log);
+                if (response.isSuccessful()) {
+                    Log log = new Log(Integer.parseInt(userId), Log.INFO, getPhoneIpAddress(),
+                            "Signup", "Email: " + txtEmail + " is signup successful", Log.SUCCESS);
+                    addLog(log);
 
-                        Toast.makeText(SignupActivity.this,
-                                "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignupActivity.this,
+                            "Tạo tài khoản thành công!", Toast.LENGTH_SHORT).show();
 
-                        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Log log = new Log(Integer.parseInt(userId), Log.ALERT, getPhoneIpAddress(),
-                                "Signup", "Email: " + email + " is signup failed", Log.FAILED);
-                        addLog(log);
+                    Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Log log = new Log(Integer.parseInt(userId), Log.ALERT, getPhoneIpAddress(),
+                            "Signup", "Email: " + txtEmail + " is signup failed", Log.FAILED);
+                    addLog(log);
 
-                        Toast.makeText(SignupActivity.this,
-                                "Tạo tài khoản thất bại!", Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(SignupActivity.this,
+                            "Tạo tài khoản thất bại!", Toast.LENGTH_SHORT).show();
+                }
                 });
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
-                Toast.makeText(SignupActivity.this,
-                        "Get API Failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void getUserId(String email, final UserIdCallback callback) {
-        Call<String> call = APIService.apiService.getUserId(email);
+        Call<String> call = ApiService.apiService.getUserId(email);
 
         call.enqueue(new Callback<String>() {
             @Override
@@ -148,7 +145,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void addLog(Log log) {
-        Call<Log> loginLog = APIService.apiService.postLog(log);
+        Call<Log> loginLog = ApiService.apiService.createLog(log);
 
         loginLog.enqueue(new Callback<Log>() {
             @Override

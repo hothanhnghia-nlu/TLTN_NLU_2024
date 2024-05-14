@@ -9,7 +9,6 @@ public class User implements Serializable {
     private String phone;
     private String dob;
     private String gender;
-    private int imageId;
     private int facultyId;
     private String password;
     private int role;
@@ -20,17 +19,22 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String name, String phone, String email, String password) {
+    public User(String name, String email, String phone, String password) {
         this.name = name;
-        this.phone = phone;
         this.email = email;
+        this.phone = phone;
         this.password = password;
     }
 
-    public User(int id, String name, String phone) {
+    public User(int id, String name, String email, String phone, String dob, String gender, int facultyId) {
         this.id = id;
         this.name = name;
+        this.email = email;
         this.phone = phone;
+        this.dob = dob;
+        this.gender = gender;
+        this.facultyId = facultyId;
+        this.status = 1;
     }
 
     public User(int id, String password) {
@@ -91,12 +95,12 @@ public class User implements Serializable {
         this.gender = gender;
     }
 
-    public int getImageId() {
-        return imageId;
+    public int getFacultyId() {
+        return facultyId;
     }
 
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
+    public void setFacultyId(int facultyId) {
+        this.facultyId = facultyId;
     }
 
     public String getPassword() {
@@ -129,14 +133,6 @@ public class User implements Serializable {
 
     public void setImage(Image image) {
         this.image = image;
-    }
-
-    public int getFacultyId() {
-        return facultyId;
-    }
-
-    public void setFacultyId(int facultyId) {
-        this.facultyId = facultyId;
     }
 
     public Faculty getFaculty() {

@@ -70,7 +70,7 @@ namespace FITExamAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUserById(int id, User user)
+        public async Task<IActionResult> UpdateUserById(int id, [FromForm] User user)
         {
             var userModel = await _userRepository.UpdateAsync(id, user);
             if (userModel == null)
@@ -78,6 +78,17 @@ namespace FITExamAPI.Controllers
                 return NotFound();
             }
             return Ok("User " + id + " is updated successfully");
+        }
+        
+        [HttpPut("change-password/{id}")]
+        public async Task<IActionResult> ChangePassword(int id, [FromForm] User user)
+        {
+            var userModel = await _userRepository.ChangePasswordAsync(id, user);
+            if (userModel == null)
+            {
+                return NotFound();
+            }
+            return Ok("User " + id + " is changed password successfully");
         }
 
         [HttpDelete("{id}")]

@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Subject implements Serializable {
-    private int id;
+    private String id;
     private String name;
-    private int imageId;
+    private int credit;
     private Image image;
     private List<Exam> exams;
     private List<Question> questions;
@@ -14,11 +14,11 @@ public class Subject implements Serializable {
     public Subject() {
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -30,12 +30,12 @@ public class Subject implements Serializable {
         this.name = name;
     }
 
-    public int getImageId() {
-        return imageId;
+    public int getCredit() {
+        return credit;
     }
 
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
+    public void setCredit(int credit) {
+        this.credit = credit;
     }
 
     public Image getImage() {

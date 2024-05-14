@@ -18,9 +18,9 @@ namespace FITExamAPI.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.4")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("FITExamAPI.Models.Answer", b =>
                 {
@@ -28,13 +28,13 @@ namespace FITExamAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<bool?>("IsCorrect")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int?>("QuestionId")
                         .HasColumnType("int");
@@ -52,29 +52,29 @@ namespace FITExamAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("CreatorId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("EndTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("ExamTime")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int?>("NumberOfQuestions")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("StartTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("SubjectId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -91,11 +91,11 @@ namespace FITExamAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -108,16 +108,33 @@ namespace FITExamAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int?>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SubjectId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("SubjectId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Images");
                 });
@@ -128,27 +145,27 @@ namespace FITExamAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Ip")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Level")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Source")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
-                    b.Property<short?>("Status")
-                        .HasColumnType("smallint");
+                    b.Property<sbyte?>("Status")
+                        .HasColumnType("tinyint");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
@@ -166,28 +183,23 @@ namespace FITExamAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("DifficultyLevel")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("ImageId")
-                        .HasColumnType("int");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("QuestionType")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("SubjectId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ImageId");
 
                     b.HasIndex("SubjectId");
 
@@ -200,10 +212,10 @@ namespace FITExamAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("ExamDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("ExamId")
                         .HasColumnType("int");
@@ -212,7 +224,7 @@ namespace FITExamAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<double?>("Score")
-                        .HasColumnType("float");
+                        .HasColumnType("double");
 
                     b.Property<int?>("TotalCorrectAnswer")
                         .HasColumnType("int");
@@ -232,23 +244,16 @@ namespace FITExamAPI.Migrations
             modelBuilder.Entity("FITExamAPI.Models.Subject", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int?>("Credit")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ImageId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ImageId")
-                        .IsUnique()
-                        .HasFilter("[ImageId] IS NOT NULL");
 
                     b.ToTable("Subjects");
                 });
@@ -259,56 +264,49 @@ namespace FITExamAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("Dob")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(320)
-                        .HasColumnType("nvarchar(320)");
+                        .HasColumnType("varchar(320)");
 
                     b.Property<int?>("FacultyId")
                         .HasColumnType("int");
 
                     b.Property<string>("Gender")
                         .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
-
-                    b.Property<int?>("ImageId")
-                        .HasColumnType("int");
+                        .HasColumnType("varchar(5)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Password")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Phone")
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("varchar(10)");
 
-                    b.Property<short?>("Role")
-                        .HasColumnType("smallint");
+                    b.Property<sbyte?>("Role")
+                        .HasColumnType("tinyint");
 
-                    b.Property<short?>("Status")
-                        .HasColumnType("smallint");
+                    b.Property<sbyte?>("Status")
+                        .HasColumnType("tinyint");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("FacultyId");
-
-                    b.HasIndex("ImageId")
-                        .IsUnique()
-                        .HasFilter("[ImageId] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
@@ -337,6 +335,27 @@ namespace FITExamAPI.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FITExamAPI.Models.Image", b =>
+                {
+                    b.HasOne("FITExamAPI.Models.Question", "Question")
+                        .WithMany("Images")
+                        .HasForeignKey("QuestionId");
+
+                    b.HasOne("FITExamAPI.Models.Subject", "Subject")
+                        .WithOne("Image")
+                        .HasForeignKey("FITExamAPI.Models.Image", "SubjectId");
+
+                    b.HasOne("FITExamAPI.Models.User", "User")
+                        .WithOne("Image")
+                        .HasForeignKey("FITExamAPI.Models.Image", "UserId");
+
+                    b.Navigation("Question");
+
+                    b.Navigation("Subject");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FITExamAPI.Models.Log", b =>
                 {
                     b.HasOne("FITExamAPI.Models.User", "User")
@@ -348,15 +367,9 @@ namespace FITExamAPI.Migrations
 
             modelBuilder.Entity("FITExamAPI.Models.Question", b =>
                 {
-                    b.HasOne("FITExamAPI.Models.Image", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId");
-
                     b.HasOne("FITExamAPI.Models.Subject", "Subject")
                         .WithMany("Questions")
                         .HasForeignKey("SubjectId");
-
-                    b.Navigation("Image");
 
                     b.Navigation("Subject");
                 });
@@ -376,28 +389,13 @@ namespace FITExamAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FITExamAPI.Models.Subject", b =>
-                {
-                    b.HasOne("FITExamAPI.Models.Image", "Image")
-                        .WithOne("Subject")
-                        .HasForeignKey("FITExamAPI.Models.Subject", "ImageId");
-
-                    b.Navigation("Image");
-                });
-
             modelBuilder.Entity("FITExamAPI.Models.User", b =>
                 {
                     b.HasOne("FITExamAPI.Models.Faculty", "Faculty")
                         .WithMany("Users")
                         .HasForeignKey("FacultyId");
 
-                    b.HasOne("FITExamAPI.Models.Image", "Image")
-                        .WithOne("User")
-                        .HasForeignKey("FITExamAPI.Models.User", "ImageId");
-
                     b.Navigation("Faculty");
-
-                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("FITExamAPI.Models.Exam", b =>
@@ -410,21 +408,18 @@ namespace FITExamAPI.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("FITExamAPI.Models.Image", b =>
-                {
-                    b.Navigation("Subject");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("FITExamAPI.Models.Question", b =>
                 {
                     b.Navigation("Answers");
+
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("FITExamAPI.Models.Subject", b =>
                 {
                     b.Navigation("Exams");
+
+                    b.Navigation("Image");
 
                     b.Navigation("Questions");
                 });
@@ -432,6 +427,8 @@ namespace FITExamAPI.Migrations
             modelBuilder.Entity("FITExamAPI.Models.User", b =>
                 {
                     b.Navigation("Exams");
+
+                    b.Navigation("Image");
 
                     b.Navigation("Logs");
 

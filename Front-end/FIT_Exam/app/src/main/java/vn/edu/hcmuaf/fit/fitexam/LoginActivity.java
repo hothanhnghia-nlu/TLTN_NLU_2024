@@ -27,11 +27,12 @@ import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.material.textfield.TextInputEditText;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import vn.edu.hcmuaf.fit.fitexam.R;
-import vn.edu.hcmuaf.fit.fitexam.api.APIService;
+import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
 import vn.edu.hcmuaf.fit.fitexam.common.UserIdCallback;
 import vn.edu.hcmuaf.fit.fitexam.model.Log;
@@ -74,6 +75,13 @@ public class LoginActivity extends AppCompatActivity {
                 .setAutoSelectEnabled(true)
                 .build();
 
+        String email = LoginSession.getEmailKey();
+        if (email != null) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         btnLogin.setOnClickListener(view -> {
             if (checkInternetPermission()) {
                 handleLogin();
@@ -99,38 +107,38 @@ public class LoginActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void handleLogin() {
-        String email = edEmail.getText().toString();
-        String password = edPassword.getText().toString();
+        String email = edEmail.getText().toString().trim();
+        String password = edPassword.getText().toString().trim();
 
-//        if (email.isEmpty() || password.isEmpty()) {
-//            tvMessage.setVisibility(View.VISIBLE);
-//            tvMessage.setText("Vui lòng điền đầy đủ thông tin.");
-//        } else {
-//            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
-
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        if (email.isEmpty() || password.isEmpty()) {
+            tvMessage.setVisibility(View.VISIBLE);
+            tvMessage.setText("Vui lòng điền đầy đủ thông tin.");
+        } else {
+            addUser(email, password);
+        }
     }
 
-    private void addUser(String email, String password) {
-        User user = new User(email, password);
-        Call<User> login = APIService.apiService.loginUser(user);
+    private void addUser(String txtEmail, String txtPassword) {
+        String emailSession = LoginSession.getEmailKey();
+        String bodyType = "multipart/form-data";
+        RequestBody email = RequestBody.create(MediaType.parse(bodyType), txtEmail);
+        RequestBody password = RequestBody.create(MediaType.parse(bodyType), txtPassword);
+
+        Call<User> login = ApiService.apiService.login(email, password);
 
         login.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                getUserId(email, userId -> {
-                    assert userId != null;
+                getUserId(txtEmail, userId -> {
+                    if (userId == null) {
+                        return;
+                    }
                     if (response.isSuccessful()) {
-                        LoginSession.saveLoginSession(userId, email, password);
+                        LoginSession.saveLoginSession(userId, txtEmail, txtPassword);
 
                         Log log = new Log(Integer.parseInt(userId), Log.INFO, getPhoneIpAddress(), "Login",
-                                "Email: " + email + " is login successful", Log.SUCCESS);
-//                        addLog(log);
+                                "Email: " + txtEmail + " is login successful", Log.SUCCESS);
+                        addLog(log);
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
@@ -141,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
 
                         Log log = new Log(Integer.parseInt(userId), Log.ALERT, getPhoneIpAddress(),
-                                "Login", "Email: " + email + " is login failed", Log.FAILED);
+                                "Login", "Email: " + txtEmail + " is login failed", Log.FAILED);
                         addLog(log);
                     }
                 });
@@ -150,14 +158,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
-                Toast.makeText(LoginActivity.this,
-                        "Get API Failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void addLog(Log log) {
-        Call<Log> loginLog = APIService.apiService.postLog(log);
+        Call<Log> loginLog = ApiService.apiService.createLog(log);
 
         loginLog.enqueue(new Callback<Log>() {
             @Override
@@ -222,7 +228,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void getUserId(String email, final UserIdCallback callback) {
-        Call<String> call = APIService.apiService.getUserId(email);
+        Call<String> call = ApiService.apiService.getUserId(email);
 
         call.enqueue(new Callback<String>() {
             @Override

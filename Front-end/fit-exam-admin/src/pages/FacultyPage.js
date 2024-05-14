@@ -39,14 +39,12 @@ const FacultyPage = () => {
 
     useEffect(() => {
         const endOffset = itemOffset + itemsPerPage;
-        console.log(`Loading items from ${itemOffset} to ${endOffset}`);
         setCurrentItems(listFaculties.slice(itemOffset, endOffset));
         setPageCount(Math.ceil(totalFaculties / itemsPerPage));
     }, [itemOffset, itemsPerPage, listFaculties, totalFaculties]);
 
     const handlePageClick = (event) => {
         const newOffset = (event.selected * itemsPerPage) % totalFaculties;
-        console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
         setItemOffset(newOffset);
     };
 

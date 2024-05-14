@@ -27,6 +27,10 @@ namespace FITExamAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Exam>> CreateExam(Exam exam)
         {
+            if (_context.Exams == null)
+            {
+                return NotFound();
+            }
             await _examRepository.CreateAsync(exam);
             return Ok(exam);
         }

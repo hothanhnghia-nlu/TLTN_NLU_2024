@@ -2,7 +2,6 @@
 using FITExamAPI.Models;
 using FITExamAPI.Repository;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace FITExamAPI.Service
 {

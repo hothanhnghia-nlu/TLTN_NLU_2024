@@ -48,14 +48,12 @@ const ExamList = () => {
 
     useEffect(() => {
         const endOffset = itemOffset + itemsPerPage;
-        console.log(`Loading items from ${itemOffset} to ${endOffset}`);
         setCurrentItems(listExams.slice(itemOffset, endOffset));
         setPageCount(Math.ceil(totalExams / itemsPerPage));
     }, [itemOffset, itemsPerPage, listExams, totalExams]);
 
     const handlePageClick = (event) => {
         const newOffset = (event.selected * itemsPerPage) % totalExams;
-        console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
         setItemOffset(newOffset);
     };
 
@@ -329,7 +327,7 @@ const ExamList = () => {
                                 <div className="col-sm-6">
                                     <div className="form-group">
                                         <label>Ngày bắt đầu</label>
-                                        <input type="datetime-local" className="form-control" required="required"
+                                        <input type="date" className="form-control" required="required"
                                                value={startDate}
                                                onChange={(event) => {
                                                    setStartDate(event.target.value);
@@ -340,7 +338,7 @@ const ExamList = () => {
                                 <div className="col-sm-6">
                                     <div className="form-group">
                                         <label>Ngày kết thúc</label>
-                                        <input type="datetime-local" className="form-control" required="required"
+                                        <input type="date" className="form-control" required="required"
                                                value={endDate}
                                                onChange={(event) => {
                                                    setEndDate(event.target.value);
@@ -418,7 +416,7 @@ const ExamList = () => {
                                 <div className="col-sm-6">
                                     <div className="form-group">
                                         <label>Ngày bắt đầu</label>
-                                        <input type="datetime-local" className="form-control" required="required"
+                                        <input type="date" className="form-control" required="required"
                                                value={startDate}
                                                onChange={(event) => {
                                                    setStartDate(event.target.value);
@@ -429,7 +427,7 @@ const ExamList = () => {
                                 <div className="col-sm-6">
                                     <div className="form-group">
                                         <label>Ngày kết thúc</label>
-                                        <input type="datetime-local" className="form-control" required="required"
+                                        <input type="date" className="form-control" required="required"
                                                value={endDate}
                                                onChange={(event) => {
                                                    setEndDate(event.target.value);

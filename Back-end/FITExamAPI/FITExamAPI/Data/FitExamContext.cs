@@ -38,17 +38,22 @@ namespace FITExamAPI.Data
                 .HasOne(e => e.User)
                 .WithMany(s => s.Exams)
                 .HasForeignKey(e => e.CreatorId);
-           
+
+            modelBuilder.Entity<Image>()
+                .HasOne(i => i.User)
+                .WithOne(u => u.Image)
+                .HasForeignKey<Image>(i => i.UserId);
+            
             modelBuilder.Entity<Image>()
                 .HasOne(i => i.Subject)
                 .WithOne(s => s.Image)
-                .HasForeignKey<Subject>(i => i.ImageId);
-            
+                .HasForeignKey<Image>(i => i.SubjectId);
+
             modelBuilder.Entity<Image>()
-                .HasOne(i => i.User)
-                .WithOne(s => s.Image)
-                .HasForeignKey<User>(i => i.ImageId);
-                               
+                .HasOne(i => i.Question)
+                .WithMany(q => q.Images)
+                .HasForeignKey(i => i.QuestionId);
+
             modelBuilder.Entity<Result>()
                 .HasOne(s => s.Exam)
                 .WithMany(e => e.Results)
@@ -63,7 +68,7 @@ namespace FITExamAPI.Data
                 .HasOne(q => q.Subject)
                 .WithMany(s => s.Questions)
                 .HasForeignKey(q => q.SubjectId);
-
+            
             modelBuilder.Entity<Answer>()
                 .HasOne(a => a.Question)
                 .WithMany(q => q.Answers)

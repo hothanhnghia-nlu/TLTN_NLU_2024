@@ -1,5 +1,7 @@
 package vn.edu.hcmuaf.fit.fitexam;
 
+import static android.content.Context.WIFI_SERVICE;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
@@ -8,13 +10,18 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
-import vn.edu.hcmuaf.fit.fitexam.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,16 +31,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
+import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
+import vn.edu.hcmuaf.fit.fitexam.model.Log;
+import vn.edu.hcmuaf.fit.fitexam.model.User;
 
 public class ProfileFragment extends Fragment {
     TextView tvName, tvFaculty, tvEmail, tvPhone, tvDob, tvGender;
     RelativeLayout changePassword, editProfile, logout;
     CircleImageView cvProfileImage;
+    LoginSession session;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,10 +69,11 @@ public class ProfileFragment extends Fragment {
         editProfile = view.findViewById(R.id.editProfile);
         logout = view.findViewById(R.id.deleteAccount);
 
-        String id = "";
+        session = new LoginSession(getContext());
+        String id = LoginSession.getIdKey();
 
         if (checkInternetPermission()) {
-//            getUserInformation(Integer.parseInt(id));
+            getUserInformation(Integer.parseInt(id));
         } else {
             Toast.makeText(getActivity(), "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
         }
@@ -79,7 +94,42 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getUserInformation(int id) {
+        Call<User> userInfo = ApiService.apiService.getUser(id);
 
+        userInfo.enqueue(new Callback<User>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body();
+
+                    if (user != null) {
+                        tvName.setText(user.getName());
+                        tvEmail.setText(user.getEmail());
+                        tvPhone.setText(user.getPhone());
+                        tvGender.setText(user.getGender());
+
+                        if (user.getDob() != null) {
+                            tvDob.setText(convertDateType(user.getDob()));
+                        }
+
+                        if (user.getFaculty() != null) {
+                            tvFaculty.setText("Khoa " + user.getFaculty().getName());
+                        }
+
+                        if (user.getImage() != null) {
+                            String imageUrl = user.getImage().getUrl();
+                            Glide.with(getContext()).load(imageUrl).into(cvProfileImage);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
+            }
+        });
     }
 
     // Handle display logout dialog
@@ -99,13 +149,50 @@ public class ProfileFragment extends Fragment {
         tvMessage.setText("Bạn có chắc muốn đăng xuất?");
 
         btnYes.setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivity(intent);
-            getActivity().finish();
+            logout();
         });
 
         btnNo.setOnClickListener(view -> dialog.dismiss());
         dialog.show();
+    }
+
+    private void logout() {
+        String userId = LoginSession.getIdKey();
+        String email = LoginSession.getEmailKey();
+
+        Log log = new Log(Integer.parseInt(userId), Log.INFO, getPhoneIpAddress(), "Logout",
+                "Email: " + email + " is logout successful", Log.SUCCESS);
+        addLog(log);
+
+        LoginSession.clearSession();
+
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        startActivity(intent);
+        getActivity().finish();
+    }
+
+    private void addLog(Log log) {
+        Call<Log> logoutLog = ApiService.apiService.createLog(log);
+
+        logoutLog.enqueue(new Callback<Log>() {
+            @Override
+            public void onResponse(Call<Log> call, Response<Log> response) {
+                if (response.isSuccessful()) {
+                    android.util.Log.e("API_SUCCESS", "Logs: " + response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Log> call, Throwable t) {
+                android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
+            }
+        });
+    }
+
+    private String getPhoneIpAddress() {
+        WifiManager wifiManager = (WifiManager) getActivity()
+                .getApplicationContext().getSystemService(WIFI_SERVICE);
+        return Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
     }
 
     @SuppressLint("SimpleDateFormat")

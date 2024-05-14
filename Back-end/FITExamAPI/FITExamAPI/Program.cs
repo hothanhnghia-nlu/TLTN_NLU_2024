@@ -1,7 +1,10 @@
+using CloudinaryDotNet;
 using FITExamAPI.Data;
 using FITExamAPI.Repository;
 using FITExamAPI.Service;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,15 +17,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Connect SQL Server Database
+var connectionString = builder.Configuration.GetConnectionString("FITExamDb");
 builder.Services.AddDbContext<FitExamContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("FITExamDb"));
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
-builder.Services.AddCors(p => p.AddPolicy("MyCors", build =>
+builder.Services.AddCors(options =>
 {
-    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
-}));
+    options.AddPolicy("MyCors",
+        builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
 
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
@@ -36,6 +44,15 @@ builder.Services.AddScoped<SubjectRepository, SubjectService>();
 builder.Services.AddScoped<ExamRepository, ExamService>();
 builder.Services.AddScoped<ResultRepository, ResultService>();
 builder.Services.AddScoped<LogRepository, LogService>();
+
+// Cloudinary configuration
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+builder.Services.AddSingleton(sp =>
+{
+    var config = sp.GetRequiredService<IOptions<CloudinarySettings>>().Value;
+    var account = new Account(config.CloudName, config.ApiKey, config.ApiSecret);
+    return new Cloudinary(account);
+});
 
 var app = builder.Build();
 
@@ -51,9 +68,13 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+
 app.UseCors("MyCors");
 
 app.UseAuthorization();
+
+app.UseStaticFiles();
 
 app.MapControllers();
 

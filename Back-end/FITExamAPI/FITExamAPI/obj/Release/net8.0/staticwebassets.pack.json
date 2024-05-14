@@ -1,0 +1,37 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\wwwroot\\images\\android-logo.png",
+      "PackagePath": "staticwebassets\\images\\android-logo.png"
+    },
+    {
+      "Id": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\wwwroot\\images\\ccna-logo.png",
+      "PackagePath": "staticwebassets\\images\\ccna-logo.png"
+    },
+    {
+      "Id": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\wwwroot\\images\\html5-logo.png",
+      "PackagePath": "staticwebassets\\images\\html5-logo.png"
+    },
+    {
+      "Id": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\wwwroot\\images\\java-logo.png",
+      "PackagePath": "staticwebassets\\images\\java-logo.png"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.FITExamAPI.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.build.FITExamAPI.props",
+      "PackagePath": "build\\FITExamAPI.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.FITExamAPI.props",
+      "PackagePath": "buildMultiTargeting\\FITExamAPI.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.buildTransitive.FITExamAPI.props",
+      "PackagePath": "buildTransitive\\FITExamAPI.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

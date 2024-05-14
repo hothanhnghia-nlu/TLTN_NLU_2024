@@ -2,7 +2,6 @@
 using FITExamAPI.Models;
 using FITExamAPI.Repository;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace FITExamAPI.Service
 {
@@ -24,12 +23,15 @@ namespace FITExamAPI.Service
 
         public async Task<List<Exam>> GetAllAsync()
         {
-            return await _context.Exams.ToListAsync();
+            return await _context.Exams.Include(e => e.Subject).ThenInclude(s => s.Image)
+                .Include(e => e.User)
+                .ToListAsync();
         }
 
         public async Task<Exam?> GetByIdAsync(int id)
         {
-            return await _context.Exams.FindAsync(id);
+            return await _context.Exams.Include(e => e.Subject).ThenInclude(s => s.Image)
+                .Include(e => e.User).FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public async Task<Exam?> UpdateAsync(int id, Exam exam)
@@ -45,6 +47,11 @@ namespace FITExamAPI.Service
                 existingExam.Name = exam.Name;
             }
 
+            if (!string.IsNullOrEmpty(exam.SubjectId))
+            {
+                existingExam.SubjectId = exam.SubjectId;
+            }
+
             if (exam.ExamTime.HasValue)
             {
                 existingExam.ExamTime = exam.ExamTime;
@@ -55,14 +62,14 @@ namespace FITExamAPI.Service
                 existingExam.NumberOfQuestions = exam.NumberOfQuestions;
             }
             
-            if (exam.StartTime.HasValue)
+            if (exam.StartDate.HasValue)
             {
-                existingExam.StartTime = exam.StartTime;
+                existingExam.StartDate = exam.StartDate;
             }
             
-            if (exam.EndTime.HasValue)
+            if (exam.EndDate.HasValue)
             {
-                existingExam.EndTime = exam.EndTime;
+                existingExam.EndDate = exam.EndDate;
             }
 
             await _context.SaveChangesAsync();

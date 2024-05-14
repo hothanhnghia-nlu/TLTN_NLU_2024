@@ -48,7 +48,7 @@ public class SubjectHomeAdapter extends RecyclerView.Adapter<SubjectHomeAdapter.
         holder.bindData(subject);
 
         holder.cvSubject.setOnClickListener(view -> {
-            int subjectId = subject.getId();
+            String subjectId = subject.getId();
             Intent intent = new Intent(context, TakeExamActivity.class);
             intent.putExtra("subjectId", subjectId);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

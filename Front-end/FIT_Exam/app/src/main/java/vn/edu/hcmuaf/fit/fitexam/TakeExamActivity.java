@@ -4,12 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import vn.edu.hcmuaf.fit.fitexam.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -18,7 +18,11 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import vn.edu.hcmuaf.fit.fitexam.adapter.TakeExamAdapter;
+import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.model.Exam;
 import vn.edu.hcmuaf.fit.fitexam.model.Image;
 import vn.edu.hcmuaf.fit.fitexam.model.Subject;
@@ -56,30 +60,27 @@ public class TakeExamActivity extends AppCompatActivity {
     }
 
     private void loadTakeExamList() {
-        Image image = new Image();
-        image.setUrl("https://logoart.vn/blog/wp-content/uploads/2013/08/logo-android.png");
-        Subject subject = new Subject();
-        subject.setName("Lập trình trên thiết bị di động");
-        subject.setImage(image);
-        Exam exam = new Exam();
-        exam.setName("Bài kiểm tra chương 1");
-        exam.setTime(1);
-        exam.setNumberOfQuestions(30);
-        exam.setSubject(subject);
-        exam.getSubject().setImage(image);
+        Call<ArrayList<Exam>> subjectList = ApiService.apiService.getAllExams();
 
-        ArrayList<Exam> exams = new ArrayList<>();
-        exams.add(exam);
-        exams.add(exam);
-        exams.add(exam);
-        exams.add(exam);
-        exams.add(exam);
+        subjectList.enqueue(new Callback<ArrayList<Exam>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Exam>> call, Response<ArrayList<Exam>> response) {
+                if (response.isSuccessful()) {
+                    ArrayList<Exam> exams = response.body();
 
-        shimmerTakeExam.stopShimmer();
-        shimmerTakeExam.setVisibility(View.GONE);
-        recyclerTakeExam.setVisibility(View.VISIBLE);
-        examAdapter = new TakeExamAdapter(this, exams);
-        recyclerTakeExam.setAdapter(examAdapter);
+                    shimmerTakeExam.stopShimmer();
+                    shimmerTakeExam.setVisibility(View.GONE);
+                    recyclerTakeExam.setVisibility(View.VISIBLE);
+                    examAdapter = new TakeExamAdapter(getApplicationContext(), exams);
+                    recyclerTakeExam.setAdapter(examAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Exam>> call, Throwable t) {
+                Log.e("API_ERROR", "Error occurred: " + t.getMessage());
+            }
+        });
     }
 
     // Check internet permission

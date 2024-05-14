@@ -11,8 +11,8 @@ namespace FITExamAPI.Models
         public int? CreatorId { get; set; }
         public int? ExamTime { get; set; }
         public int? NumberOfQuestions { get; set; }
-        public DateTime? StartTime { get; set; }
-        public DateTime? EndTime { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public virtual Subject? Subject { get; set; }
         public virtual User? User { get; set; }
         public virtual ICollection<Result>? Results { get; set; } = new List<Result>();

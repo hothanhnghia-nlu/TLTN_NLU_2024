@@ -25,10 +25,14 @@ namespace FITExamAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Subject>> CreateSubject(Subject subject)
+        public async Task<ActionResult<Subject>> CreateSubject([FromForm] Subject subject)
         {
-            await _subjectRepository.CreateAsync(subject);
-            return Ok(subject);
+            var existingSubject = await _context.Subjects.FindAsync(subject.Id);
+            if (existingSubject != null)
+            {
+                return Ok("Subject is existed!");
+            }
+            return await _subjectRepository.CreateAsync(subject);
         }
 
         [HttpGet]
@@ -54,7 +58,7 @@ namespace FITExamAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSubject(string id, Subject subject)
+        public async Task<IActionResult> UpdateSubject(string id, [FromForm] Subject subject)
         {
             var subjectModel = await _subjectRepository.UpdateAsync(id, subject);
             if (subjectModel == null)

@@ -21,6 +21,10 @@ namespace FITExamAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Image>> CreateImage(Image image)
         {
+            if (_context.Images == null)
+            {
+                return NotFound();
+            }
             await _imageRepository.CreateAsync(image);
             return Ok(image);
         }

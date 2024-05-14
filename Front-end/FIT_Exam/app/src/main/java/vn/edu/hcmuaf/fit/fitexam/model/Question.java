@@ -7,11 +7,10 @@ public class Question implements Serializable {
     private int id;
     private String content;
     private String questionType;
-    private int imageId;
     private int subjectId;
     private String difficultyLevel;
-    private Image image;
     private Subject subject;
+    private List<Image> images;
     private List<Answer> answers;
 
     public Question() {
@@ -41,14 +40,6 @@ public class Question implements Serializable {
         this.questionType = questionType;
     }
 
-    public int getImageId() {
-        return imageId;
-    }
-
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
-    }
-
     public int getSubjectId() {
         return subjectId;
     }
@@ -65,20 +56,20 @@ public class Question implements Serializable {
         this.difficultyLevel = difficultyLevel;
     }
 
-    public Image getImage() {
-        return image;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
     public Subject getSubject() {
         return subject;
     }
 
     public void setSubject(Subject subject) {
         this.subject = subject;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 
     public List<Answer> getAnswers() {
@@ -88,5 +79,4 @@ public class Question implements Serializable {
     public void setAnswers(List<Answer> answers) {
         this.answers = answers;
     }
-
 }

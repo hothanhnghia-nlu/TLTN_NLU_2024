@@ -44,14 +44,12 @@ const SubjectPage = () => {
 
     useEffect(() => {
         const endOffset = itemOffset + itemsPerPage;
-        console.log(`Loading items from ${itemOffset} to ${endOffset}`);
         setCurrentItems(listSubjects.slice(itemOffset, endOffset));
         setPageCount(Math.ceil(totalSubjects / itemsPerPage));
     }, [itemOffset, itemsPerPage, listSubjects, totalSubjects]);
 
     const handlePageClick = (event) => {
         const newOffset = (event.selected * itemsPerPage) % totalSubjects;
-        console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
         setItemOffset(newOffset);
     };
 

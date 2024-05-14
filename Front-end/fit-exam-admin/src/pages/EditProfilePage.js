@@ -57,9 +57,9 @@ const EditProfilePage = () => {
 
     const handleUpdate = async () => {
         const userId = user.id;
-        const imageFile = selectedImage.file;
+        const avatar = selectedImage.file;
         try {
-            let res = await updateUserWithAvatar(userId, name, email, phone, dob, gender, imageFile);
+            let res = await updateUserWithAvatar(userId, name, email, phone, dob, gender, avatar);
 
             if (res) {
                 toast.success("Cập nhật tài khoản thành công!", {

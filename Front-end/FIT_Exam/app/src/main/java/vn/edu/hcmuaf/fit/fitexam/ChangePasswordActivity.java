@@ -17,11 +17,13 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
-import vn.edu.hcmuaf.fit.fitexam.R;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import vn.edu.hcmuaf.fit.fitexam.api.APIService;
+import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
+import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
 import vn.edu.hcmuaf.fit.fitexam.common.UserIdCallback;
 import vn.edu.hcmuaf.fit.fitexam.model.Log;
 import vn.edu.hcmuaf.fit.fitexam.model.User;
@@ -31,6 +33,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     TextView tvMessage;
     ImageView btnBack;
     Button btnSave;
+    LoginSession session;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -45,12 +48,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
         btnBack = findViewById(R.id.btnBack);
 
-        btnSave.setOnClickListener(view -> {
-            handleChangePassword();
-        });
+        session = new LoginSession(getApplicationContext());
+        String id = LoginSession.getIdKey();
+        String email = LoginSession.getEmailKey();
 
-        btnBack.setOnClickListener(view -> {
-            showCancelDialog();
+        btnSave.setOnClickListener(view -> {
+            handleChangePassword(Integer.parseInt(id), email);
         });
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -63,29 +66,29 @@ public class ChangePasswordActivity extends AppCompatActivity {
     }
 
     @SuppressLint("SetTextI18n")
-    private void handleChangePassword() {
-        String oldPassword = edOldPassword.getText().toString();
-        String password = edPassword.getText().toString();
-        String confPassword = edConfPassword.getText().toString();
+    private void handleChangePassword(int id, String email) {
+        String oldPassword = edOldPassword.getText().toString().trim();
+        String password = edPassword.getText().toString().trim();
+        String confPassword = edConfPassword.getText().toString().trim();
 
         if (oldPassword.isEmpty() || password.isEmpty() || confPassword.isEmpty()) {
             tvMessage.setVisibility(View.VISIBLE);
             tvMessage.setText("Vui lòng điền đầy đủ thông tin.");
-        } else if (!password.equals(confPassword)) {
+        } else if (!confPassword.equals(password)) {
             tvMessage.setVisibility(View.VISIBLE);
             tvMessage.setText("Mật khẩu xác nhận không đúng.");
         } else {
-            Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
+            updatePassword(id, email, password);
         }
     }
 
-    private void updatePassword(int id, String email, String password) {
-        User user = new User(id, password);
-        Call<Void> update = APIService.apiService.putUser(id, user);
+    private void updatePassword(int id, String email, String txtPassword) {
+        String bodyType = "multipart/form-data";
+        RequestBody password = RequestBody.create(MediaType.parse(bodyType), txtPassword);
 
-        update.enqueue(new Callback<Void>() {
+        Call<Void> changePassword = ApiService.apiService.changePassword(id, password);
+
+        changePassword.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
@@ -93,12 +96,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
                             "Email: " + email + " changes password successful", Log.SUCCESS);
                     addLog(log);
 
+                    Toast.makeText(ChangePasswordActivity.this,
+                            "Đổi mật khẩu thành công!", Toast.LENGTH_SHORT).show();
+
                     Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
                     startActivity(intent);
                     finish();
-
-                    Toast.makeText(ChangePasswordActivity.this,
-                            "Đổi mật khẩu thành công!", Toast.LENGTH_SHORT).show();
                 } else {
                     Log log = new Log(id, Log.WARNING, getPhoneIpAddress(), "Change password",
                             "Email: " + email + " changes password failed", Log.FAILED);
@@ -112,14 +115,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
-                Toast.makeText(ChangePasswordActivity.this,
-                        "Get API Failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void getUserPassword(int userId, final UserIdCallback callback) {
-        Call<User> information = APIService.apiService.getUser(userId);
+        Call<User> information = ApiService.apiService.getUser(userId);
 
         information.enqueue(new Callback<User>() {
             @Override
@@ -139,14 +140,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
-                Toast.makeText(ChangePasswordActivity.this,
-                        "Get API Failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void addLog(Log log) {
-        Call<Log> passwordLog = APIService.apiService.postLog(log);
+        Call<Log> passwordLog = ApiService.apiService.createLog(log);
 
         passwordLog.enqueue(new Callback<Log>() {
             @Override

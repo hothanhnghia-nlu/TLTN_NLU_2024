@@ -12,7 +12,7 @@ const updateUser = ({id}, name, email, phone, dob, gender, role, status) => {
     return axios.put(`users/${id}`, {name, email, phone, dob, gender, role, status});
 }
 
-const updateUserWithAvatar = async (id, name, email, phone, dob, gender, imageFile) => {
+const updateUserWithAvatar = async (id, name, email, phone, dob, gender, avatar) => {
     const formData = new FormData();
     formData.append('id', id);
     formData.append('name', name);
@@ -20,7 +20,7 @@ const updateUserWithAvatar = async (id, name, email, phone, dob, gender, imageFi
     formData.append('phone', phone);
     formData.append('dob', dob);
     formData.append('gender', gender);
-    formData.append('imageFile', imageFile);
+    formData.append('avatar', avatar);
 
     return await axios.put(`users/${id}`, formData, {
         headers: {

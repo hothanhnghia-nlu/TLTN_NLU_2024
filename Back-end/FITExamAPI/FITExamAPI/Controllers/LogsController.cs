@@ -28,6 +28,10 @@ namespace FITExamAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Log>> CreateLog(Log log)
         {
+            if (_context.Logs == null)
+            {
+                return NotFound();
+            }
             await _logRepository.CreateAsync(log);
             return Ok(log);
         }

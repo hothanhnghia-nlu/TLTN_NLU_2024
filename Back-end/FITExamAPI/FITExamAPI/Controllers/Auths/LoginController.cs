@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FITExamAPI.Data;
 using FITExamAPI.Models;
-using BCryptNet = BCrypt.Net.BCrypt;
+using BCrypt.Net;
 
 namespace FITExamAPI.Controllers.Auths
 {
@@ -22,24 +22,20 @@ namespace FITExamAPI.Controllers.Auths
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> Login(User user)
+        public async Task<ActionResult<User>> Login([FromForm] User user)
         {
-            User? existingUser = null;
-
-            if (user.Password != null && user.Email != null)
+            if (user.Email == null || user.Password == null)
             {
-                existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
-                if (existingUser == null || !BCryptNet.Verify(user.Password, existingUser.Password))
-                {
-                    existingUser = null;
-                    return BadRequest("Email or Password is wrong.");
-                }
+                return BadRequest("Email and password are required.");
             }
 
-            if (existingUser == null)
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+
+            if (existingUser == null || !BCrypt.Net.BCrypt.Verify(user.Password, existingUser.Password))
             {
-                return NotFound();
+                return BadRequest("Email or password is wrong.");
             }
+
             return existingUser;
         }
 

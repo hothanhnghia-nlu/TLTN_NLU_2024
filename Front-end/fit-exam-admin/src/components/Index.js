@@ -155,8 +155,8 @@ const Index = () => {
                                                         <th>STT</th>
                                                         <th>Tên bài thi</th>
                                                         <th>Môn thi</th>
-                                                        <th>Thời gian (p)</th>
-                                                        <th>Tổng số câu hỏi</th>
+                                                        <th className="text-center">Thời gian (p)</th>
+                                                        <th className="text-center">Tổng số câu hỏi</th>
                                                         <th>Người tạo</th>
                                                     </tr>
                                                     </thead>
@@ -167,10 +167,22 @@ const Index = () => {
                                                                 <tr key={`exams-${index}`}>
                                                                     <td>{item.id}</td>
                                                                     <td>{item.name}</td>
-                                                                    <td>{item.subjectId}</td>
-                                                                    <td>{item.examTime}</td>
-                                                                    <td>{item.numberOfQuestions}</td>
-                                                                    <td>{item.creatorId}</td>
+                                                                    <td>
+                                                                        {item.subject ? (
+                                                                            <h2>{item.subject.name}</h2>
+                                                                        ) : (
+                                                                            <span>Invalid subject</span>
+                                                                        )}
+                                                                    </td>
+                                                                    <td className="text-center">{item.examTime}</td>
+                                                                    <td className="text-center">{item.numberOfQuestions}</td>
+                                                                    <td>
+                                                                        {item.user ? (
+                                                                            <h2>{item.user.name}</h2>
+                                                                        ) : (
+                                                                            <span>Invalid creator</span>
+                                                                        )}
+                                                                    </td>
                                                                 </tr>
                                                             )
                                                         })
