@@ -20,6 +20,7 @@ import retrofit2.Response;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
@@ -47,11 +48,17 @@ public class ProfileFragment extends Fragment {
     TextView tvName, tvFaculty, tvEmail, tvPhone, tvDob, tvGender;
     RelativeLayout changePassword, editProfile, logout;
     CircleImageView cvProfileImage;
+    SwipeRefreshLayout swipeRefreshLayout;
     LoginSession session;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.green_nlu));
+
+        return view;
     }
 
     @Override
@@ -73,6 +80,8 @@ public class ProfileFragment extends Fragment {
         String id = LoginSession.getIdKey();
 
         if (checkInternetPermission()) {
+            swipeRefreshLayout.setOnRefreshListener(() -> getUserInformation(Integer.parseInt(id)));
+
             getUserInformation(Integer.parseInt(id));
         } else {
             Toast.makeText(getActivity(), "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
@@ -121,13 +130,21 @@ public class ProfileFragment extends Fragment {
                             String imageUrl = user.getImage().getUrl();
                             Glide.with(getContext()).load(imageUrl).into(cvProfileImage);
                         }
+                    } else {
+                        tvName.setText("Trống");
+                        tvEmail.setText("Trống");
+                        tvPhone.setText("Trống");
+                        tvGender.setText("Trống");
+                        tvDob.setText("Trống");
                     }
                 }
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }

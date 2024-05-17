@@ -22,12 +22,17 @@ import vn.edu.hcmuaf.fit.fitexam.TakeExamActivity;
 import vn.edu.hcmuaf.fit.fitexam.model.Subject;
 
 public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectViewHolder> {
-    private final List<Subject> subjectList;
+    private List<Subject> subjectList;
     static Context context;
 
     public SubjectAdapter(Context context, List<Subject> subjectList) {
         this.context = context;
         this.subjectList = subjectList;
+    }
+
+    public void setFilteredList(List<Subject> filteredList) {
+        this.subjectList = filteredList;
+        notifyDataSetChanged();
     }
 
     @NonNull

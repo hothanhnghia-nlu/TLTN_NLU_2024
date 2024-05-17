@@ -41,11 +41,30 @@
             </com.google.android.material.appbar.AppBarLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_search"
+            android:layout_margin="8dp"
+            app:queryHint="Tìm kiếm bài thi..."
+            app:iconifiedByDefault="false"/>
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:gravity="center"
+            android:text="Chưa có bài thi nào"
+            android:textSize="18sp"
+            android:textColor="@color/gray_custom"/>
+
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmer_take_exam"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="2dp"
             android:layout_marginBottom="24dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp">
@@ -67,7 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="2dp"
             android:layout_marginBottom="24dp"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"/>

@@ -58,9 +58,15 @@ public class QuestionActivity extends AppCompatActivity {
         btnSubmit = findViewById(R.id.btnSubmit);
         rlTwoButton = findViewById(R.id.twoButton);
 
-        int time = 1;
-        timeLeftInMillis = time * 60000;
-        startCountDown();
+        Intent intent = getIntent();
+        int examId = intent.getIntExtra("examId", -1);
+        String examName = intent.getStringExtra("examName");
+        int examTime = intent.getIntExtra("examTime", -1);
+
+        if (examTime != -1) {
+            timeLeftInMillis = examTime * 60000L;
+            startCountDown();
+        }
 
         if (checkInternetPermission()) {
             loadQuestion();

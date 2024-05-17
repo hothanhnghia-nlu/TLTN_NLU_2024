@@ -22,12 +22,17 @@ import vn.edu.hcmuaf.fit.fitexam.ResultActivity;
 import vn.edu.hcmuaf.fit.fitexam.model.Result;
 
 public class ExamHistoryAdapter extends RecyclerView.Adapter<ExamHistoryAdapter.HistoryViewHolder> {
-    private final List<Result> historyList;
+    private List<Result> historyList;
     static Context context;
 
     public ExamHistoryAdapter(Context context, List<Result> historyList) {
         this.context = context;
         this.historyList = historyList;
+    }
+
+    public void setData(List<Result> resultList) {
+        this.historyList = resultList;
+        notifyDataSetChanged();
     }
 
     @NonNull

@@ -1,6 +1,7 @@
 package vn.edu.hcmuaf.fit.fitexam.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -25,15 +26,24 @@ import java.util.List;
 import vn.edu.hcmuaf.fit.fitexam.QuestionActivity;
 import vn.edu.hcmuaf.fit.fitexam.R;
 import vn.edu.hcmuaf.fit.fitexam.model.Exam;
+import vn.edu.hcmuaf.fit.fitexam.model.Subject;
 
 public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeExamViewHolder> {
-    private final List<Exam> examList;
-    static Context context;
+    private List<Exam> examList;
+    private static Context context;
     private Dialog dialog;
 
     public TakeExamAdapter(Context context, List<Exam> examList) {
+        if (!(context instanceof Activity)) {
+            throw new IllegalArgumentException("Context must be an Activity context");
+        }
         this.context = context;
         this.examList = examList;
+    }
+
+    public void setFilteredList(List<Exam> filteredList) {
+        this.examList = filteredList;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -56,17 +66,23 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
             int examId = exam.getId();
             String examName = exam.getName();
             int time = exam.getExamTime();
+
             showStartDialog(examId, examName, time);
         });
     }
 
     @SuppressLint("SetTextI18n")
-    private void showStartDialog(int examId, String examName, int time) {
+    private void showStartDialog(int examId, String examName, int examTime) {
         dismissDialog();
 
-        dialog = new Dialog(context);
+        Activity activity = (Activity) context;
+
+        if (activity.isFinishing()) {
+            return;
+        }
+
+        dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
         dialog.setContentView(R.layout.custom_start_dialog);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -80,13 +96,15 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
         tvExamName.setText(examName);
         tvMessage.setText("Hãy chọn câu trả lời của bạn bằng cách nhấn chọn " +
                 "một trong các đáp án trong mỗi câu hỏi.");
-        tvTime.setText(time + " phút");
+        tvTime.setText(examTime + " phút");
 
         btnYes.setOnClickListener(view -> {
-            Intent intent = new Intent(context, QuestionActivity.class);
+            Intent intent = new Intent(activity, QuestionActivity.class);
             intent.putExtra("examId", examId);
+            intent.putExtra("examName", examName);
+            intent.putExtra("examTime", examTime);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+            activity.startActivity(intent);
             dismissDialog();
         });
 

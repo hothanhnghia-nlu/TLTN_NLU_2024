@@ -21,6 +21,7 @@ import retrofit2.http.Query;
 import vn.edu.hcmuaf.fit.fitexam.model.Exam;
 import vn.edu.hcmuaf.fit.fitexam.model.Faculty;
 import vn.edu.hcmuaf.fit.fitexam.model.Log;
+import vn.edu.hcmuaf.fit.fitexam.model.Result;
 import vn.edu.hcmuaf.fit.fitexam.model.Subject;
 import vn.edu.hcmuaf.fit.fitexam.model.User;
 import vn.edu.hcmuaf.fit.fitexam.model.utils.UserConst;
@@ -74,14 +75,21 @@ public interface ApiService {
     Call<Void> changePassword(@Path(UserConst.KEY_ID) int id,
             @Part(UserConst.KEY_PASSWORD) RequestBody password);
 
+    @GET("faculties")
+    Call<ArrayList<Faculty>> getAllFaculties();
+
     @GET("subjects")
     Call<ArrayList<Subject>> getAllSubjects();
 
     @GET("exams")
     Call<ArrayList<Exam>> getAllExams();
+    @GET("exams/subject")
+    Call<ArrayList<Exam>> getAllExamsBySubjectId(@Query("id") String id);
 
-    @GET("faculties")
-    Call<ArrayList<Faculty>> getAllFaculties();
+    @GET("results")
+    Call<ArrayList<Result>> getAllResults();
+    @GET("exams/user")
+    Call<ArrayList<Result>> getAllResultsByUserId(@Query("id") String id);
 
     @POST("logs")
     Call<Log> createLog(@Body Log log);

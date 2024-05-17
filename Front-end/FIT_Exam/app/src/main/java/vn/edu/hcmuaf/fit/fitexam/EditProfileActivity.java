@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import android.Manifest;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -38,7 +39,6 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.StringTokenizer;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
@@ -71,22 +70,20 @@ public class EditProfileActivity extends AppCompatActivity {
     CircleImageView cvProfileImage, cvCamera;
     Uri mUri;
     LoginSession session;
-    String[] gender = new String[] {"Nam", "Nữ", "Khác"};
+    String[] gender = new String[]{"Nam", "Nữ", "Khác"};
     String[] faculty;
     int[] facultyId;
-    String selectedGender, selectedFaculty;
+    String selectedGender, selectedFaculty, selectedDate;
     HashMap<String, Integer> facultyMap = new HashMap<>();
     private static final int REQUEST_IMAGE_PICK = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private static final int PERMISSION_REQUEST_CODE = 100;
-    private static final String TAG = EditProfileActivity.class.getName();
 
     private ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult o) {
-                    android.util.Log.e(TAG, "OnActivityResult");
                     if (o.getResultCode() == Activity.RESULT_OK) {
                         Intent data = o.getData();
                         if (data == null) {
@@ -151,7 +148,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         cvProfileImage.setOnClickListener(v -> {
-            checkOpenGalleryPermission();
+            openGallery();
         });
 
         cvCamera.setOnClickListener(v -> {
@@ -160,9 +157,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         btnSave.setOnClickListener(view -> {
             if (checkInternetPermission()) {
-                if (mUri != null) {
-                    updateProfile(Integer.parseInt(userId));
-                }
+                updateProfile(Integer.parseInt(userId));
             } else {
                 Toast.makeText(this, "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
             }
@@ -181,21 +176,6 @@ public class EditProfileActivity extends AppCompatActivity {
         EditProfileActivity.this.getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
-    private void checkOpenGalleryPermission() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            openGallery();
-            return;
-        }
-
-        if (ContextCompat.checkSelfPermission(this, "android.permission.READ_EXTERNAL_STORAGE")
-                == PackageManager.PERMISSION_GRANTED) {
-            openGallery();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{"android.permission.READ_EXTERNAL_STORAGE"},
-                    PERMISSION_REQUEST_CODE);
-        }
-    }
-
     private void openGallery() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -209,12 +189,11 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
-        if (ContextCompat.checkSelfPermission(this, "android.permission.CAMERA")
-                == PackageManager.PERMISSION_GRANTED) {
+        if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             openCamera();
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{"android.permission.CAMERA"},
-                    PERMISSION_REQUEST_CODE);
+            String[] permission = {Manifest.permission.CAMERA};
+            requestPermissions(permission, PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -268,6 +247,21 @@ public class EditProfileActivity extends AppCompatActivity {
                         edEmail.setText(user.getEmail());
                         edEmail.setFocusable(false);
 
+                        String gender = user.getGender();
+                        acGender.setText(gender);
+                        selectedGender = gender;
+                        getUserGender();
+
+                        selectedDate = convertSelectedDateType(user.getDob());
+                        edDob.setText(selectedDate);
+
+                        if (user.getFaculty() != null) {
+                            String facultyName = user.getFaculty().getName();
+                            acFaculty.setText(facultyName);
+                            selectedFaculty = facultyName;
+                            getFaculty();
+                        }
+
                         if (user.getImage() != null) {
                             String imageUrl = user.getImage().getUrl();
                             Glide.with(getApplicationContext()).load(imageUrl).into(cvProfileImage);
@@ -288,7 +282,7 @@ public class EditProfileActivity extends AppCompatActivity {
         String name = edName.getText().toString().trim();
         String phone = edPhone.getText().toString().trim();
         String email = edEmail.getText().toString().trim();
-        String dob = convertDateType(edDob.getText().toString());
+        String dob = convertDateType(selectedDate);
         String gender = selectedGender;
         int facultyId = getFacultyIdByName(selectedFaculty);
 
@@ -301,7 +295,6 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void updateUser(int id, String txtName, String txtPhone, String txtEmail, String txtDob, String txtGender, int txtFacultyId) {
-        String emailSession = LoginSession.getEmailKey();
         String bodyType = "multipart/form-data";
         RequestBody name = RequestBody.create(MediaType.parse(bodyType), txtName);
         RequestBody phone = RequestBody.create(MediaType.parse(bodyType), txtPhone);
@@ -310,11 +303,25 @@ public class EditProfileActivity extends AppCompatActivity {
         RequestBody gender = RequestBody.create(MediaType.parse(bodyType), txtGender);
         RequestBody facultyId = RequestBody.create(MediaType.parse(bodyType), String.valueOf(txtFacultyId));
 
-        String strRealPath = RealPathUtil.getRealPath(this, mUri);
-        android.util.Log.e("MYTAG", strRealPath);
-        File file = new File(strRealPath);
-        RequestBody requestFile = RequestBody.create(MediaType.parse(bodyType), file);
-        MultipartBody.Part avatar = MultipartBody.Part.createFormData("avatar", file.getName(), requestFile);
+        if (mUri != null) {
+            String strRealPath = RealPathUtil.getRealPath(this, mUri);
+            File file = new File(strRealPath);
+
+            if (file.exists() && file.canRead()) {
+                RequestBody requestFile = RequestBody.create(MediaType.parse(bodyType), file);
+                MultipartBody.Part avatar = MultipartBody.Part.createFormData("avatar", file.getName(), requestFile);
+
+                handleUpdateUser(id, name, phone, email, dob, gender, facultyId, avatar);
+            } else {
+                Toast.makeText(this, "Tệp không tồn tại hoặc không đọc được", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            handleUpdateUser(id, name, phone, email, dob, gender, facultyId, null);
+        }
+    }
+
+    private void handleUpdateUser(int id, RequestBody name, RequestBody phone, RequestBody email, RequestBody dob, RequestBody gender, RequestBody facultyId, MultipartBody.Part avatar) {
+        String emailSession = LoginSession.getEmailKey();
 
         Call<Void> update = ApiService.apiService.updateUser(id, name, phone, email, dob, gender, facultyId, avatar);
 
@@ -438,7 +445,7 @@ public class EditProfileActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(new ContextThemeWrapper(
                 EditProfileActivity.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth),
                 (view, year1, monthOfYear, dayOfMonth1) -> {
-                    String selectedDate = dayOfMonth1 + "/" + (monthOfYear + 1) + "/" + year1;
+                    selectedDate = dayOfMonth1 + "/" + (monthOfYear + 1) + "/" + year1;
                     edDob.setText(selectedDate);
                 }, year, month, dayOfMonth);
 
@@ -449,6 +456,20 @@ public class EditProfileActivity extends AppCompatActivity {
     private String convertDateType(String inputDate) {
         SimpleDateFormat inputFormat = new SimpleDateFormat("d/M/yyyy");
         SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            Date date = inputFormat.parse(inputDate);
+            assert date != null;
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private String convertSelectedDateType(String inputDate) {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("d/M/yyyy");
         try {
             Date date = inputFormat.parse(inputDate);
             assert date != null;

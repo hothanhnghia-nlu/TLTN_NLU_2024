@@ -11,15 +11,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import vn.edu.hcmuaf.fit.fitexam.adapter.ExamHistoryAdapter;
 import vn.edu.hcmuaf.fit.fitexam.model.Exam;
@@ -27,20 +31,31 @@ import vn.edu.hcmuaf.fit.fitexam.model.Image;
 import vn.edu.hcmuaf.fit.fitexam.model.Result;
 import vn.edu.hcmuaf.fit.fitexam.model.Subject;
 
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     RecyclerView recyclerExamHistory;
     ShimmerFrameLayout shimmerExamHistory;
     ExamHistoryAdapter historyAdapter;
+    TextView tvMessage;
+    SwipeRefreshLayout swipeRefreshLayout;
+    private ArrayList<Result> results;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_history, container, false);
+        View view = inflater.inflate(R.layout.fragment_history, container, false);
+
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.green_nlu));
+
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        tvMessage = view.findViewById(R.id.message);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         recyclerExamHistory = view.findViewById(R.id.recycler_exam_history);
         shimmerExamHistory = view.findViewById(R.id.shimmer_exam_history);
 
@@ -49,6 +64,8 @@ public class HistoryFragment extends Fragment {
         shimmerExamHistory.startShimmer();
 
         if (checkInternetPermission()) {
+            swipeRefreshLayout.setOnRefreshListener(() -> loadHistoryList());
+
             loadHistoryList();
         } else {
             Toast.makeText(getActivity(), "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
@@ -76,15 +93,23 @@ public class HistoryFragment extends Fragment {
         r2.setTotalCorrectAnswer(14);
         r2.setScore(4.7);
 
-        ArrayList<Result> results = new ArrayList<>();
+        results = new ArrayList<>();
         results.add(r1);
         results.add(r2);
 
-        shimmerExamHistory.stopShimmer();
-        shimmerExamHistory.setVisibility(View.GONE);
-        recyclerExamHistory.setVisibility(View.VISIBLE);
-        historyAdapter = new ExamHistoryAdapter(getContext(), results);
-        recyclerExamHistory.setAdapter(historyAdapter);
+        Collections.reverse(results);
+
+        if (results != null && !results.isEmpty()) {
+            shimmerExamHistory.stopShimmer();
+            shimmerExamHistory.setVisibility(View.GONE);
+            recyclerExamHistory.setVisibility(View.VISIBLE);
+            historyAdapter = new ExamHistoryAdapter(getContext(), results);
+            recyclerExamHistory.setAdapter(historyAdapter);
+        } else {
+            tvMessage.setVisibility(View.VISIBLE);
+        }
+
+        onRefresh();
     }
 
     // Check internet permission
@@ -93,5 +118,12 @@ public class HistoryFragment extends Fragment {
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
+    }
+
+    @Override
+    public void onRefresh() {
+        historyAdapter.setData(results);
+        Handler handler = new Handler();
+        handler.postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
     }
 }

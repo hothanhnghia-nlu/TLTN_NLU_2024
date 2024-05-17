@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -141,11 +142,13 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful()) {
                     ArrayList<Subject> subjects = response.body();
 
-                    shimmerSubject.stopShimmer();
-                    shimmerSubject.setVisibility(View.GONE);
-                    recyclerSubject.setVisibility(View.VISIBLE);
-                    subjectAdapter = new SubjectHomeAdapter(getContext(), subjects);
-                    recyclerSubject.setAdapter(subjectAdapter);
+                    if (subjects != null && !subjects.isEmpty()) {
+                        shimmerSubject.stopShimmer();
+                        shimmerSubject.setVisibility(View.GONE);
+                        recyclerSubject.setVisibility(View.VISIBLE);
+                        subjectAdapter = new SubjectHomeAdapter(getContext(), subjects);
+                        recyclerSubject.setAdapter(subjectAdapter);
+                    }
                 }
             }
 
@@ -165,11 +168,13 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful()) {
                     ArrayList<Exam> exams = response.body();
 
-                    shimmerTakeExam.stopShimmer();
-                    shimmerTakeExam.setVisibility(View.GONE);
-                    recyclerTakeExam.setVisibility(View.VISIBLE);
-                    examAdapter = new TakeExamAdapter(getContext(), exams);
-                    recyclerTakeExam.setAdapter(examAdapter);
+                    if (exams != null && !exams.isEmpty()) {
+                        shimmerTakeExam.stopShimmer();
+                        shimmerTakeExam.setVisibility(View.GONE);
+                        recyclerTakeExam.setVisibility(View.VISIBLE);
+                        examAdapter = new TakeExamAdapter(getContext(), exams);
+                        recyclerTakeExam.setAdapter(examAdapter);
+                    }
                 }
             }
 
@@ -181,31 +186,31 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadHistoryList() {
-        Image image = new Image();
-        image.setUrl("https://logoart.vn/blog/wp-content/uploads/2013/08/logo-android.png");
-        Subject subject = new Subject();
-        subject.setName("Lập trình trên thiết bị di động");
-        subject.setImage(image);
-        Exam exam = new Exam();
-        exam.setName("Bài kiểm tra chương 1");
-        exam.setNumberOfQuestions(30);
-        exam.setSubject(subject);
-        exam.getSubject().setImage(image);
-        Result result = new Result();
-        result.setExam(exam);
-        result.setTotalCorrectAnswer(28);
+        Call<ArrayList<Result>> resultList = ApiService.apiService.getAllResults();
 
-        ArrayList<Result> results = new ArrayList<>();
-        results.add(result);
-        results.add(result);
-        results.add(result);
-        results.add(result);
+        resultList.enqueue(new Callback<ArrayList<Result>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Result>> call, Response<ArrayList<Result>> response) {
+                if (response.isSuccessful()) {
+                    ArrayList<Result> results = response.body();
 
-        shimmerExamHistory.stopShimmer();
-        shimmerExamHistory.setVisibility(View.GONE);
-        recyclerExamHistory.setVisibility(View.VISIBLE);
-        historyAdapter = new HistoryAdapter(getContext(), results);
-        recyclerExamHistory.setAdapter(historyAdapter);
+                    if (results != null && !results.isEmpty()) {
+                        Collections.reverse(results);
+
+                        shimmerExamHistory.stopShimmer();
+                        shimmerExamHistory.setVisibility(View.GONE);
+                        recyclerExamHistory.setVisibility(View.VISIBLE);
+                        historyAdapter = new HistoryAdapter(getContext(), results);
+                        recyclerExamHistory.setAdapter(historyAdapter);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Result>> call, Throwable t) {
+                Log.e("API_ERROR", "Error occurred: " + t.getMessage());
+            }
+        });
     }
 
     // Replace a fragment

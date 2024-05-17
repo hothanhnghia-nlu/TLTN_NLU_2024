@@ -38,7 +38,6 @@
                         android:id="@+id/fullName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Student name"
                         android:textColor="@color/green_nlu"
                         android:textSize="18sp"
                         android:textStyle="bold"/>

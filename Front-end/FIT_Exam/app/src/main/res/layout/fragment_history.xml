@@ -6,73 +6,91 @@
     android:background="@color/white"
     tools:context=".HistoryFragment">
 
-    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <com.google.android.material.card.MaterialCardView
+        <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="0dp"
-            app:cardElevation="10dp"
-            app:strokeWidth="0dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <com.google.android.material.appbar.AppBarLayout
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                app:cardCornerRadius="0dp"
+                app:cardElevation="10dp"
+                app:strokeWidth="0dp">
 
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar"
+                <com.google.android.material.appbar.AppBarLayout
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize">
+                    android:layout_height="wrap_content"
+                    android:background="@color/white">
 
-                    <TextView
-                        android:id="@+id/toolbar_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/history"
-                        android:textColor="@color/green_nlu"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </androidx.appcompat.widget.Toolbar>
-            </com.google.android.material.appbar.AppBarLayout>
-        </com.google.android.material.card.MaterialCardView>
+                    <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize">
 
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/shimmer_exam_history"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="24dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp">
+                        <TextView
+                            android:id="@+id/toolbar_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="@string/history"
+                            android:textColor="@color/green_nlu"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+                    </androidx.appcompat.widget.Toolbar>
+                </com.google.android.material.appbar.AppBarLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-            <LinearLayout
+
+            <TextView
+                android:id="@+id/message"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:visibility="gone"
+                android:gravity="center"
+                android:text="Chưa có lịch sử thi nào"
+                android:textSize="18sp"
+                android:textColor="@color/gray_custom"/>
 
-                <include layout="@layout/shimmer_history_item"/>
-                <include layout="@layout/shimmer_history_item"/>
-                <include layout="@layout/shimmer_history_item"/>
-                <include layout="@layout/shimmer_history_item"/>
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_exam_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="24dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp">
 
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-        </com.facebook.shimmer.ShimmerFrameLayout>
+                    <include layout="@layout/shimmer_history_item"/>
+                    <include layout="@layout/shimmer_history_item"/>
+                    <include layout="@layout/shimmer_history_item"/>
+                    <include layout="@layout/shimmer_history_item"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_exam_history"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="24dp"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"/>
-    </LinearLayout>
+                </LinearLayout>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_exam_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="24dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"/>
+        </LinearLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>
