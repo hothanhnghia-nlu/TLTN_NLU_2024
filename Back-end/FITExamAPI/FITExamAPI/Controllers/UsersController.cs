@@ -9,6 +9,8 @@ using FITExamAPI.Data;
 using FITExamAPI.Models;
 using FITExamAPI.Repository;
 using System.Collections;
+using FITExamAPI.Helpter;
+using FITExamAPI.Service;
 
 namespace FITExamAPI.Controllers
 {
@@ -18,11 +20,13 @@ namespace FITExamAPI.Controllers
     {
         private readonly FitExamContext _context;
         private readonly UserRepository _userRepository;
+        private readonly EmailRepository _emailRepository;
 
-        public UsersController(FitExamContext context, UserRepository userRepository)
+        public UsersController(FitExamContext context, UserRepository userRepository, EmailRepository emailRepository)
         {
             _context = context;
             _userRepository = userRepository;
+            _emailRepository = emailRepository;
         }
 
         [HttpGet]
@@ -67,6 +71,27 @@ namespace FITExamAPI.Controllers
                 return NotFound();
             }
             return await _userRepository.GetIdAsync(email);
+        }
+
+        [HttpPost("send-mail")]
+        public async Task<IActionResult> SendMail([FromForm] User user)
+        {
+            string body = "<html><body>Xin chào,<br/>Chào mừng bạn quay trở lại FIT Exam. " +
+        "Vui lòng nhấn vào <a href='https://fit-exam-admin.vercel.app/new-password'>đây</a> để đặt lại mật khẩu.</body></html>";
+
+            try
+            {
+                MailRequest mailRequest = new MailRequest();
+                mailRequest.ToEmail = user.Email;
+                mailRequest.Subject = "Đặt lại mật khẩu";
+                mailRequest.Body = body;
+                await _emailRepository.SendEmailAsync(mailRequest);
+                return Ok("Email is sent to you.");
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
 
         [HttpPut("{id}")]

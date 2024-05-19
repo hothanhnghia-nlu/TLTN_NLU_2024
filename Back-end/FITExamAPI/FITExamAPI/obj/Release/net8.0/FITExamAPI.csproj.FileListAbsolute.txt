@@ -235,3 +235,6 @@ D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Release\net8.0\SixLabors.Ima
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Release\net8.0\BCrypt.Net-Core.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Release\net8.0\CloudinaryDotNet.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Release\net8.0\dotenv.net.dll
+D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Release\net8.0\BouncyCastle.Cryptography.dll
+D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Release\net8.0\MailKit.dll
+D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Release\net8.0\MimeKit.dll

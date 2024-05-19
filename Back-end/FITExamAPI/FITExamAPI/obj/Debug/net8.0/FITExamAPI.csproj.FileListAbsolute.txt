@@ -266,3 +266,6 @@ D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Debug\net8.0\refint\FITExamA
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Debug\net8.0\FITExamAPI.pdb
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Debug\net8.0\FITExamAPI.genruntimeconfig.cache
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Debug\net8.0\ref\FITExamAPI.dll
+D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\MailKit.dll
+D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\MimeKit.dll

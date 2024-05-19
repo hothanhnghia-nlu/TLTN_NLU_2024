@@ -5,6 +5,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -30,6 +34,19 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\appsettings.json",
+              "RelativeDocumentMoniker": "FITExamAPI\\appsettings.json",
+              "ToolTip": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\appsettings.json",
+              "RelativeToolTip": "FITExamAPI\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-05-15T08:40:35.167Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Program.cs",
@@ -38,7 +55,7 @@
               "RelativeToolTip": "FITExamAPI\\Program.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAXAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-14T16:57:01.999Z",
+              "WhenOpened": "2024-05-17T16:15:54.48Z",
               "EditorCaption": ""
             }
           ]

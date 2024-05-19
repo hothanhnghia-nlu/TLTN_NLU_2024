@@ -5,9 +5,11 @@ D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\FI
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\FITExamAPI.runtimeconfig.json
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\FITExamAPI.pdb
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\BCrypt.Net-Core.dll
+D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\BouncyCastle.Cryptography.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\CloudinaryDotNet.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\dotenv.net.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\Humanizer.dll
+D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\MailKit.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\Microsoft.AspNetCore.Razor.Language.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\Microsoft.Bcl.AsyncInterfaces.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\Microsoft.Build.dll
@@ -38,6 +40,7 @@ D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\Mi
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\Microsoft.Win32.SystemEvents.dll
+D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\MimeKit.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\Mono.TextTemplating.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\MySqlConnector.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Release\net8.0\PubTmp\Out\Newtonsoft.Json.dll

@@ -24,12 +24,51 @@ namespace FITExamAPI.Service
 
         public async Task<List<Log>> GetAllAsync()
         {
-            return await _context.Logs.ToListAsync();
+            var logs = await _context.Logs
+                .Select(l => new Log
+                {
+                    Id = l.Id,
+                    UserId = l.UserId,
+                    Level = l.Level,
+                    Source = l.Source,
+                    Ip = l.Ip,
+                    Content = l.Content,
+                    Status = l.Status,
+                    CreatedAt = l.CreatedAt,
+                    User = new User
+                    {
+                        Id = l.User.Id,
+                        Name = l.User.Name
+                    }
+                })
+                .ToListAsync();
+
+            return logs;
         }
 
         public async Task<Log?> GetByIdAsync(int id)
         {
-            return await _context.Logs.FindAsync(id);
+            var log = await _context.Logs
+                .Where(l => l.Id == id)
+                .Select(l => new Log
+                {
+                    Id = l.Id,
+                    UserId = l.UserId,
+                    Level = l.Level,
+                    Source = l.Source,
+                    Ip = l.Ip,
+                    Content = l.Content,
+                    Status = l.Status,
+                    CreatedAt = l.CreatedAt,
+                    User = new User
+                    {
+                        Id = l.User.Id,
+                        Name = l.User.Name
+                    }
+                })
+                .FirstOrDefaultAsync();
+
+            return log;
         }
 
     }

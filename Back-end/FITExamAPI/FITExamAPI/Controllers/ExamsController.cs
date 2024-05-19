@@ -45,6 +45,18 @@ namespace FITExamAPI.Controllers
             return await _examRepository.GetAllAsync();
         }
 
+        [HttpGet("subject")]
+        public async Task<ActionResult<IEnumerable<Exam>>> GetAllExamsBySubjectId([FromQuery] string id)
+        {
+            var exams = await _examRepository.GetAllBySubjectIdAsync(id);
+
+            if (exams == null)
+            {
+                return NotFound();
+            }
+            return exams;
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Exam>> GetExamById(int id)
         {

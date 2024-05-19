@@ -38,11 +38,33 @@ namespace FITExamAPI.Controllers
             }
             return await _resultRepository.GetAllAsync();
         }
+        
+        [HttpGet("list")]
+        public async Task<ActionResult<IEnumerable<Result>>> GetAllResultsByUserId([FromQuery] int userId)
+        {
+            if (_context.Results == null)
+            {
+                return NotFound();
+            }
+            return await _resultRepository.GetAllByUserIdAsync(userId);
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Result>> GetResultById(int id)
         {
             var result = await _resultRepository.GetByIdAsync(id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return result;
+        }
+        
+        [HttpGet("user")]
+        public async Task<ActionResult<Result>> GetResultByUserId([FromQuery] int userId)
+        {
+            var result = await _resultRepository.GetByUserIdAsync(userId);
 
             if (result == null)
             {

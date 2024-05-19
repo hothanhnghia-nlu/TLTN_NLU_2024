@@ -1,5 +1,6 @@
 using CloudinaryDotNet;
 using FITExamAPI.Data;
+using FITExamAPI.Helpter;
 using FITExamAPI.Repository;
 using FITExamAPI.Service;
 using Microsoft.AspNetCore.Builder;
@@ -38,6 +39,7 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 // Add Scope
 builder.Services.AddScoped<AuthRepository, AuthService>();
 builder.Services.AddScoped<UserRepository, UserService>();
+builder.Services.AddScoped<EmailRepository, EmailService>();
 builder.Services.AddScoped<ImageRepository, ImageService>();
 builder.Services.AddScoped<FacultyRepository, FacultyService>();
 builder.Services.AddScoped<SubjectRepository, SubjectService>();
@@ -53,6 +55,9 @@ builder.Services.AddSingleton(sp =>
     var account = new Account(config.CloudName, config.ApiKey, config.ApiSecret);
     return new Cloudinary(account);
 });
+
+// SMTP configuration
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 var app = builder.Build();
 

@@ -26,9 +26,20 @@ namespace FITExamAPI.Service
             return await _context.Results.ToListAsync();
         }
 
+        public async Task<List<Result>> GetAllByUserIdAsync(int userId)
+        {
+            return await _context.Results.Where(r => r.UserId == userId)
+                .ToListAsync();
+        }
+
         public async Task<Result?> GetByIdAsync(int id)
         {
             return await _context.Results.FindAsync(id);
+        }
+        
+        public async Task<Result?> GetByUserIdAsync(int userId)
+        {
+            return await _context.Results.FirstOrDefaultAsync(r => r.UserId == userId);
         }
 
     }

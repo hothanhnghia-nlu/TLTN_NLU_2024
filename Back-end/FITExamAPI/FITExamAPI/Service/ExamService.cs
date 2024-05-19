@@ -23,15 +23,85 @@ namespace FITExamAPI.Service
 
         public async Task<List<Exam>> GetAllAsync()
         {
-            return await _context.Exams.Include(e => e.Subject).ThenInclude(s => s.Image)
-                .Include(e => e.User)
+            var exams = await _context.Exams
+                .Include(e => e.Subject)
+                .ThenInclude(s => s.Image)
+                .Select(e => new Exam
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    SubjectId = e.SubjectId,
+                    CreatorId = e.CreatorId,
+                    ExamTime = e.ExamTime,
+                    NumberOfQuestions = e.NumberOfQuestions,
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate,
+                    Subject = e.Subject,
+                    User = new User
+                    {
+                        Id = e.User.Id,
+                        Name = e.User.Name
+                    }
+                })
                 .ToListAsync();
+
+            return exams;
+        }
+
+        public async Task<List<Exam>> GetAllBySubjectIdAsync(string subjectId)
+        {
+            var exams = await _context.Exams
+                .Include(e => e.Subject)
+                .ThenInclude(s => s.Image)
+                .Where(e => e.SubjectId == subjectId)
+                .Select(e => new Exam
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    SubjectId = e.SubjectId,
+                    CreatorId = e.CreatorId,
+                    ExamTime = e.ExamTime,
+                    NumberOfQuestions = e.NumberOfQuestions,
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate,
+                    Subject = e.Subject,
+                    User = new User
+                    {
+                        Id = e.User.Id,
+                        Name = e.User.Name
+                    }
+                })
+                .ToListAsync();
+
+            return exams;
         }
 
         public async Task<Exam?> GetByIdAsync(int id)
         {
-            return await _context.Exams.Include(e => e.Subject).ThenInclude(s => s.Image)
-                .Include(e => e.User).FirstOrDefaultAsync(e => e.Id == id);
+            var exam = await _context.Exams
+                .Include(e => e.Subject)
+                .ThenInclude(s => s.Image)
+                .Where(e => e.Id == id)
+                .Select(e => new Exam
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    SubjectId = e.SubjectId,
+                    CreatorId = e.CreatorId,
+                    ExamTime = e.ExamTime,
+                    NumberOfQuestions = e.NumberOfQuestions,
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate,
+                    Subject = e.Subject,
+                    User = new User
+                    {
+                        Id = e.User.Id,
+                        Name = e.User.Name
+                    }
+                })
+                .FirstOrDefaultAsync();
+
+            return exam;
         }
 
         public async Task<Exam?> UpdateAsync(int id, Exam exam)

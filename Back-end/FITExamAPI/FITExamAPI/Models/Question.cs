@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FITExamAPI.Models
 {
@@ -14,5 +15,8 @@ namespace FITExamAPI.Models
         public virtual Subject? Subject { get; set; }
         public virtual ICollection<Image>? Images { get; set; } = new List<Image>();
         public virtual ICollection<Answer>? Answers { get; set; } = new List<Answer>();
+
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
     }
 }
