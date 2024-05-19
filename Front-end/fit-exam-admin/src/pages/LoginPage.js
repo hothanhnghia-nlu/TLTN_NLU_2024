@@ -26,11 +26,15 @@ const LoginPage = () => {
         }
 
         let res = await loginApi(email, password);
-        if (res) {
-            if (res.status !== 400) {
+        if (res && res.id) {
+            if (res.role !== 0) {
                 localStorage.setItem("id", res.id);
                 navigate("/");
             } else {
+                toast.error("Bạn không có quyền truy cập vào trang này!");
+            }
+        } else {
+            if (res && res.status === 400) {
                 toast.error("Email hoặc mật khẩu không đúng!");
             }
         }

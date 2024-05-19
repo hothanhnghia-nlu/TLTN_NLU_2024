@@ -103,7 +103,7 @@ const AccountPage = () => {
     }
 
     const handleUpdate = async (id) => {
-        let res = await updateUser({id}, name, email, phone, dob, gender, role, status);
+        let res = await updateUser(id, name, email, phone, dob, gender, role, status);
 
         if (res) {
             toast.success("Cập nhật giáo viên " + id + " thành công!", {
@@ -181,14 +181,15 @@ const AccountPage = () => {
                                         </div>
                                     </div>
                                     <div className="col-md-6">
-                                        <div className="text-right add-btn-col">
+                                        <div className="text-right">
                                             <CSVLink
                                                 filename={"GIANG_VIEN_" + currentDate() + ".csv"}
-                                                className="btn btn-success float-right btn-rounded"
+                                                className="btn btn-outline-primary mr-2"
                                                 data={dataExport}
                                                 asyncOnClick={true}
                                                 onClick={getUsersExport}>
-                                                <i className="fas fa-file-download"></i> Xuất File
+                                                <img src="assets/img/excel.png" alt=""/>
+                                                <span className="ml-2">Excel</span>
                                             </CSVLink>
                                         </div>
                                     </div>
@@ -203,12 +204,11 @@ const AccountPage = () => {
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Họ tên</th>
-                                                    <th className="text-center">Ảnh đại diện</th>
                                                     <th>Email</th>
                                                     <th>Số điện thoại</th>
                                                     <th>Ngày sinh</th>
                                                     <th className="text-center">Giới tính</th>
-                                                    <th>Trạng thái</th>
+                                                    <th className="text-center">Trạng thái</th>
                                                     <th className="text-right">Tính năng</th>
                                                 </tr>
                                                 </thead>
@@ -218,13 +218,17 @@ const AccountPage = () => {
                                                         return (
                                                             <tr key={`teachers-${index}`}>
                                                                 <td>{item.id}</td>
-                                                                <td>{item.name}</td>
-                                                                <td className="text-center">
-                                                                    {item.image && item.image.url ? (
-                                                                        <img src={item.image.url} alt={item.name} style={{ maxWidth: '50px', maxHeight: '70px' }} />
-                                                                    ) : (
-                                                                        <span>No Image</span>
-                                                                    )}
+                                                                <td>
+                                                                    <h2>
+                                                                        {item.image && item.image.url ? (
+                                                                            <div className="avatar text-white">
+                                                                                <img src={item.image.url} alt={item.name} style={{maxWidth: '50px', maxHeight: '70px'}}/>
+                                                                            </div>
+                                                                        ) : (
+                                                                            <span></span>
+                                                                        )}
+                                                                        {item.name}
+                                                                    </h2>
                                                                 </td>
                                                                 <td>{item.email}</td>
                                                                 <td>{item.phone}</td>
@@ -284,7 +288,7 @@ const AccountPage = () => {
             </div>
 
 
-            <div id="edit_user" className="modal" role="dialog">
+            <div id="edit_user" className="modal fade" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content modal-lg">
                         <div className="modal-header">
@@ -394,7 +398,7 @@ const AccountPage = () => {
                 </div>
             </div>
 
-            <div id="delete_user" className="modal" role="dialog">
+            <div id="delete_user" className="modal fade" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content modal-md">
                         <div className="modal-header">

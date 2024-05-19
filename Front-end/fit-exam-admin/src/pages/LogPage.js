@@ -28,7 +28,7 @@ const ExamList = () => {
 
     const convertDate = ({date}) => {
         const dateMoment = moment(date);
-        return dateMoment.format('DD/MM/YYYY HH:mm:ss');
+        return dateMoment.format('DD-MM-YYYY HH:mm:ss');
     }
 
     const getLogStatus = (item) => {
@@ -46,14 +46,12 @@ const ExamList = () => {
 
     useEffect(() => {
         const endOffset = itemOffset + itemsPerPage;
-        console.log(`Loading items from ${itemOffset} to ${endOffset}`);
         setCurrentItems(listLogs.slice(itemOffset, endOffset));
         setPageCount(Math.ceil(totalLogs / itemsPerPage));
     }, [itemOffset, itemsPerPage, listLogs, totalLogs]);
 
     const handlePageClick = (event) => {
         const newOffset = (event.selected * itemsPerPage) % totalLogs;
-        console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
         setItemOffset(newOffset);
     };
 
@@ -100,7 +98,7 @@ const ExamList = () => {
                                                 <thead className="thead-light">
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Mã tài khoản</th>
+                                                    <th>Tên tài khoản</th>
                                                     <th>Cấp độ</th>
                                                     <th>Thông tin</th>
                                                     <th>Địa chỉ IP</th>
@@ -115,7 +113,13 @@ const ExamList = () => {
                                                     return (
                                                         <tr key={`logs-${index}`}>
                                                             <td>{item.id}</td>
-                                                            <td className="text-center">{item.userId}</td>
+                                                            <td>
+                                                                {item.user ? (
+                                                                    <h2>{item.user.name}</h2>
+                                                                ) : (
+                                                                    <span>Invalid user</span>
+                                                                )}
+                                                            </td>
                                                             <td>{item.level}</td>
                                                             <td>{item.source}</td>
                                                             <td>{item.ip}</td>

@@ -1,11 +1,22 @@
-import React from "react";
+import React, {useState} from "react";
 import {TabTitle} from "../commons/DynamicTitle";
 import {Link} from "react-router-dom";
 import Header from "../components/Header";
 import ReactPaginate from "react-paginate";
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const ExamList = () => {
     TabTitle('Ngân hàng câu hỏi | FIT Exam Admin');
+
+    const [listQuestions, setListQuestions] = useState([]);
+    const [question, setQuestion] = useState('');
+    const [optionA, setOptionA] = useState('');
+    const [optionB, setOptionB] = useState('');
+    const [optionC, setOptionC] = useState('');
+    const [optionD, setOptionD] = useState('');
+    const [answer, setAnswer] = useState('');
+    const [examTime, setExamTime] = useState('');
 
     return (
         <>
@@ -41,11 +52,19 @@ const ExamList = () => {
                                         </div>
                                     </div>
                                     <div className="col-md-6">
-                                        <div className="text-right add-btn-col">
-                                            <Link to="#" className="btn btn-primary float-right btn-rounded"
-                                                  data-toggle="modal" data-target="#add_question"
-                                                  style={{borderRadius: "50px", textTransform: "none"}}>
-                                                <i className="fas fa-plus"></i> Thêm câu hỏi</Link>
+                                        <div className="text-right">
+                                            <div className="dropdown">
+                                                <Link className="btn btn-outline-primary float-right mr-4 dropdown-toggle"
+                                                      to="#" role="button" data-toggle="dropdown" aria-expanded="false"
+                                                      style={{borderRadius: "50px", textTransform: "none"}}>
+                                                    Thêm câu hỏi <span></span>
+                                                </Link>
+
+                                                <div className="dropdown-menu">
+                                                    <Link to="#" className="dropdown-item" data-toggle="modal" data-target="#add_question">Thêm thủ công</Link>
+                                                    <Link to="#" className="dropdown-item" data-toggle="modal" data-target="#add_question">Thêm từ file</Link>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -113,143 +132,209 @@ const ExamList = () => {
             </div>
 
 
-            <div id="add_question" className="modal" role="dialog">
+            <div id="add_question" className="modal fade" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content modal-lg">
+                    <div className="modal-content">
                         <div className="modal-header">
                             <h4 className="modal-title">Thêm câu hỏi</h4>
                             <button type="button" className="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div className="modal-body">
-                            <form>
-                                <div className="row">
-                                    <div className="col-sm-12">
-                                        <div className="form-group">
-                                            <label>Câu hỏi</label>
-                                            <input type="text" className="form-control" required="required"/>
-                                        </div>
+                            <div className="row">
+                                <div className="col-sm-12">
+                                    <div className="form-group">
+                                        <label>Câu hỏi</label>
+                                        <input type="text" className="form-control" required="required"
+                                               value={question}
+                                               onChange={(event) => {
+                                                   setQuestion(event.target.value);
+                                               }}
+                                        />
                                     </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Lựa chọn A</label>
-                                            <input type="text" className="form-control" required="required"/>
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Lựa chọn B</label>
-                                            <input type="text" className="form-control" required="required"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Lựa chọn C</label>
-                                            <input type="text" className="form-control" required="required"/>
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Lựa chọn D</label>
-                                            <input type="text" className="form-control" required="required"/>
-                                        </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="form-group">
+                                        <label>Lựa chọn A</label>
+                                        <input type="text" className="form-control" required="required"
+                                               value={optionA}
+                                               onChange={(event) => {
+                                                   setOptionA(event.target.value);
+                                               }}
+                                        />
                                     </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Đáp án</label>
-                                            <input type="text" className="form-control" required="required"/>
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Thời gian</label>
-                                            <input type="number" className="form-control" required="required"/>
-                                        </div>
+                                <div className="col-sm-6">
+                                    <div className="form-group">
+                                        <label>Lựa chọn B</label>
+                                        <input type="text" className="form-control" required="required"
+                                               value={optionB}
+                                               onChange={(event) => {
+                                                   setOptionB(event.target.value);
+                                               }}
+                                        />
                                     </div>
                                 </div>
-                                <div className="m-t-20 text-center">
-                                    <button className="btn btn-primary btn-lg">Tạo câu hỏi</button>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="form-group">
+                                        <label>Lựa chọn C</label>
+                                        <input type="text" className="form-control" required="required"
+                                               value={optionC}
+                                               onChange={(event) => {
+                                                   setOptionC(event.target.value);
+                                               }}
+                                        />
+                                    </div>
                                 </div>
-                            </form>
+                                <div className="col-sm-6">
+                                    <div className="form-group">
+                                        <label>Lựa chọn D</label>
+                                        <input type="text" className="form-control" required="required"
+                                               value={optionD}
+                                               onChange={(event) => {
+                                                   setOptionD(event.target.value);
+                                               }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="form-group">
+                                        <label>Đáp án</label>
+                                        <input type="text" className="form-control" required="required"
+                                               value={answer}
+                                               onChange={(event) => {
+                                                   setAnswer(event.target.value);
+                                               }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col-sm-6">
+                                    <div className="form-group">
+                                        <label>Thời gian</label>
+                                        <input type="number" className="form-control" required="required"
+                                               value={examTime}
+                                               onChange={(event) => {
+                                                   setExamTime(event.target.value);
+                                               }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="m-t-20 text-center">
+                                <button type="submit" className="btn btn-primary btn-lg">Tạo câu hỏi</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="edit_question" className="modal" role="dialog">
+            <div id="edit_question" className="modal fade" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content modal-lg">
+                    <div className="modal-content">
                         <div className="modal-header">
                             <h4 className="modal-title">Chỉnh sửa câu hỏi</h4>
                             <button type="button" className="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div className="modal-body">
-                            <form>
-                                <div className="row">
-                                    <div className="col-sm-12">
-                                        <div className="form-group">
-                                            <label>Câu hỏi</label>
-                                            <input type="text" className="form-control" required="required" value="Định nghĩa ngôn ngữ lâp trình Java?"/>
-                                        </div>
+                            <div className="row">
+                                <div className="col-sm-12">
+                                    <div className="form-group">
+                                        <label>Câu hỏi</label>
+                                        <input type="text" className="form-control" required="required"
+                                               value={question}
+                                               onChange={(event) => {
+                                                   setQuestion(event.target.value);
+                                               }}
+                                        />
                                     </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Lựa chọn A</label>
-                                            <input type="text" className="form-control" required="required" value="Ngôn ngữ bậc thấp"/>
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Lựa chọn B</label>
-                                            <input type="text" className="form-control" required="required" value="Ngôn ngữ bậc cao"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Lựa chọn C</label>
-                                            <input type="text" className="form-control" required="required" value="Ngôn ngữ tự nhiên"/>
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Lựa chọn D</label>
-                                            <input type="text" className="form-control" required="required" value="Ngôn ngữ máy"/>
-                                        </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="form-group">
+                                        <label>Lựa chọn A</label>
+                                        <input type="text" className="form-control" required="required"
+                                               value={optionA}
+                                               onChange={(event) => {
+                                                   setOptionA(event.target.value);
+                                               }}
+                                        />
                                     </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Đáp án</label>
-                                            <input type="text" className="form-control" required="required" value="Ngôn ngữ bậc cao"/>
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Thời gian thi</label>
-                                            <input type="number" className="form-control" required="required" value="75"/>
-                                        </div>
+                                <div className="col-sm-6">
+                                    <div className="form-group">
+                                        <label>Lựa chọn B</label>
+                                        <input type="text" className="form-control" required="required"
+                                               value={optionB}
+                                               onChange={(event) => {
+                                                   setOptionB(event.target.value);
+                                               }}
+                                        />
                                     </div>
                                 </div>
-                                <div className="m-t-20 text-center">
-                                    <button className="btn btn-primary btn-lg">Lưu thay đổi</button>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="form-group">
+                                        <label>Lựa chọn C</label>
+                                        <input type="text" className="form-control" required="required"
+                                               value={optionC}
+                                               onChange={(event) => {
+                                                   setOptionC(event.target.value);
+                                               }}
+                                        />
+                                    </div>
                                 </div>
-                            </form>
+                                <div className="col-sm-6">
+                                    <div className="form-group">
+                                        <label>Lựa chọn D</label>
+                                        <input type="text" className="form-control" required="required"
+                                               value={optionD}
+                                               onChange={(event) => {
+                                                   setOptionD(event.target.value);
+                                               }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="form-group">
+                                        <label>Đáp án</label>
+                                        <input type="text" className="form-control" required="required"
+                                               value={answer}
+                                               onChange={(event) => {
+                                                   setAnswer(event.target.value);
+                                               }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col-sm-6">
+                                    <div className="form-group">
+                                        <label>Thời gian</label>
+                                        <input type="number" className="form-control" required="required"
+                                               value={examTime}
+                                               onChange={(event) => {
+                                                   setExamTime(event.target.value);
+                                               }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="m-t-20 text-center">
+                                <button type="submit" className="btn btn-primary btn-lg">Lưu thay đổi</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="delete_question" className="modal" role="dialog">
+            <div id="delete_question" className="modal fade" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content modal-md">
                         <div className="modal-header">
@@ -267,6 +352,7 @@ const ExamList = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer/>
         </>
     )
 }

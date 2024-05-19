@@ -204,12 +204,13 @@ const SubjectPage = () => {
                                         <div>
                                             <CSVLink
                                                 filename={"MON_HOC_" + currentDate() + ".csv"}
-                                                className="btn btn-info float-right btn-rounded mr-4"
-                                                style={{borderRadius: "50px", textTransform: "none"}}
+                                                className="btn btn-outline-primary float-right mr-4"
+                                                style={{borderRadius: "5px", textTransform: "none"}}
                                                 data={dataExport}
                                                 asyncOnClick={true}
                                                 onClick={getSubjectsExport}>
-                                                <i className="fas fa-file-download"></i> Xuất File
+                                                <img src="assets/img/excel.png" alt=""/>
+                                                <span className="ml-2">Excel</span>
                                             </CSVLink>
                                         </div>
                                     </div>
@@ -298,7 +299,7 @@ const SubjectPage = () => {
             </div>
 
 
-            <div id="add_subject" className="modal" role="dialog">
+            <div id="add_subject" className="modal fade" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content modal-lg">
                         <div className="modal-header">
@@ -370,7 +371,7 @@ const SubjectPage = () => {
                 </div>
             </div>
 
-            <div id="edit_subject" className="modal" role="dialog">
+            <div id="edit_subject" className="modal fade" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content modal-lg">
                         <div className="modal-header">
@@ -442,7 +443,7 @@ const SubjectPage = () => {
                 </div>
             </div>
 
-            <div id="delete_subject" className="modal" role="dialog">
+            <div id="delete_subject" className="modal fade" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content modal-md">
                         <div className="modal-header">

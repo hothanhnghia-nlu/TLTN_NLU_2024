@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
@@ -33,6 +34,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,6 +54,8 @@ public class ProfileFragment extends Fragment {
     RelativeLayout changePassword, editProfile, logout;
     CircleImageView cvProfileImage;
     SwipeRefreshLayout swipeRefreshLayout;
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
     LoginSession session;
 
     @Override
@@ -76,6 +83,13 @@ public class ProfileFragment extends Fragment {
         editProfile = view.findViewById(R.id.editProfile);
         logout = view.findViewById(R.id.deleteAccount);
 
+        // Google Sign in
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        gsc = GoogleSignIn.getClient(getActivity(), gso);
+
         session = new LoginSession(getContext());
         String id = LoginSession.getIdKey();
 
@@ -83,6 +97,7 @@ public class ProfileFragment extends Fragment {
             swipeRefreshLayout.setOnRefreshListener(() -> getUserInformation(Integer.parseInt(id)));
 
             getUserInformation(Integer.parseInt(id));
+            googleLogIn();
         } else {
             Toast.makeText(getActivity(), "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
         }
@@ -148,14 +163,26 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+    // Google log-in
+    private void googleLogIn() {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
+        if (account != null) {
+            Uri photoUrl = account.getPhotoUrl();
 
-    // Handle display logout dialog
+            if (photoUrl != null) {
+                String avatar = photoUrl.toString();
+                Glide.with(getContext()).load(avatar).into(cvProfileImage);
+            }
+        }
+    }
+
+    // Handle logout dialog
     @SuppressLint("SetTextI18n")
     private void handleLogoutDialog() {
         Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
-        dialog.setContentView(R.layout.custom_logout_dialog);
+        dialog.setContentView(R.layout.custom_notification_dialog);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
@@ -182,6 +209,7 @@ public class ProfileFragment extends Fragment {
         addLog(log);
 
         LoginSession.clearSession();
+        gsc.signOut();
 
         Intent intent = new Intent(getActivity(), MainActivity.class);
         startActivity(intent);

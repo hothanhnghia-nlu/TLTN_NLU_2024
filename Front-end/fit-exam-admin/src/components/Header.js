@@ -7,17 +7,25 @@ const Header = () => {
     const navigate = useNavigate();
     const userId = localStorage.getItem("id");
     const [user, setUser] = useState([]);
+    const [show, setShow] = useState(false);
 
     useEffect(() => {
-        getUserInfo(userId);
-    }, [userId])
+        const getUserInfo = async (id) => {
+            let res = await fetchUserById({ id });
+            if (res) {
+                setUser(res);
+                if (res.role === 2) {
+                    setShow(true);
+                } else {
+                    setShow(false);
+                }
+            }
+        };
 
-    const getUserInfo = async (id) => {
-        let res = await fetchUserById({id});
-        if (res) {
-            setUser(res);
+        if (userId) {
+            getUserInfo(userId);
         }
-    }
+    }, [userId]);
 
     const handleLogout = () => {
         localStorage.removeItem("id");
@@ -28,9 +36,10 @@ const Header = () => {
         <div className="main-wrapper">
             <div className="header-outer">
                 <div className="header">
-                    <Link id="mobile_btn" className="mobile_btn float-left" to="#sidebar"><i className="fas fa-bars"
-                                                                                            aria-hidden="true"></i></Link>
-                    <Link id="toggle_btn" className="float-left" to="javascript:void(0);">
+                    <Link id="mobile_btn" className="mobile_btn float-left" to="#sidebar">
+                        <i className="fas fa-bars" aria-hidden="true"></i>
+                    </Link>
+                    <Link id="toggle_btn" className="float-left" to="">
                         <img src="assets/img/sidebar/icon-21.png" alt=""/>
                     </Link>
 
@@ -57,6 +66,7 @@ const Header = () => {
                             <div className="dropdown-menu">
                                 <Link to="/my-profile" className="dropdown-item">Hồ sơ cá nhân</Link>
                                 <Link to="/edit-profile" className="dropdown-item">Chỉnh sửa hồ sơ</Link>
+                                <Link to="/change-password" className="dropdown-item">Đổi mật khẩu</Link>
                                 <h5 className="dropdown-item" style={{cursor: "pointer"}}
                                     onClick={() => handleLogout()}>Đăng xuất</h5>
                             </div>
@@ -67,6 +77,7 @@ const Header = () => {
                         <div className="dropdown-menu dropdown-menu-right">
                             <Link to="/my-profile" className="dropdown-item">Hồ sơ cá nhân</Link>
                             <Link to="/edit-profile" className="dropdown-item">Chỉnh sửa hồ sơ</Link>
+                            <Link to="/change-password" className="dropdown-item">Đổi mật khẩu</Link>
                             <h5 className="dropdown-item" style={{cursor: "pointer"}}
                                 onClick={() => handleLogout()}>Đăng xuất</h5>
                         </div>
@@ -83,29 +94,42 @@ const Header = () => {
                                 </div>
                                 <ul className="sidebar-ul">
                                     <li className="submenu active">
-                                        <Link to="/"><img src="assets/img/sidebar/icon-1.png" alt="icon"/><span>Thống kê</span></Link>
+                                        <Link to="/"><img src="assets/img/sidebar/icon-1.png"
+                                                          alt="icon"/><span>Thống kê</span></Link>
                                     </li>
                                     <li className="submenu">
-                                        <Link to="/teachers"><img src="assets/img/sidebar/icon-2.png" alt="icon"/> <span> Giảng viên</span> </Link>
+                                        <Link to="/students"><img src="assets/img/sidebar/icon-3.png" alt="icon"/>
+                                            <span> Sinh viên</span></Link>
                                     </li>
                                     <li className="submenu">
-                                        <Link to="/students"><img src="assets/img/sidebar/icon-3.png" alt="icon"/> <span> Sinh viên</span> </Link>
+                                        <Link to="/exams"><img src="assets/img/sidebar/icon-7.png" alt="icon"/> <span>Bài thi</span>
+                                        </Link>
                                     </li>
                                     <li className="submenu">
-                                        <Link to="/faculties"><img src="assets/img/sidebar/icon-18.png" alt="icon"/> <span> Khoa</span> </Link>
+                                        <Link to="/question-bank"><img src="assets/img/sidebar/icon-7.png" alt="icon"/>
+                                            <span>Ngân hàng câu hỏi</span> </Link>
                                     </li>
-                                    <li className="submenu">
-                                        <Link to="/subjects"><img src="assets/img/sidebar/icon-4.png" alt="icon"/> <span> Môn học</span> </Link>
-                                    </li>
-                                    <li className="submenu">
-                                        <Link to="/exams"><img src="assets/img/sidebar/icon-7.png" alt="icon"/> <span>Bài thi</span> </Link>
-                                    </li>
-                                    <li className="submenu">
-                                        <Link to="/question-bank"><img src="assets/img/sidebar/icon-7.png" alt="icon"/> <span>Ngân hàng câu hỏi</span> </Link>
-                                    </li>
-                                    <li className="submenu">
-                                        <Link to="/logs"><img src="assets/img/sidebar/icon-12.png" alt="icon"/> <span>Nhật ký</span> </Link>
-                                    </li>
+                                    {show && (
+                                        <>
+                                            <li className="submenu">
+                                                <Link to="/teachers"><img src="assets/img/sidebar/icon-2.png"
+                                                                          alt="icon"/> <span> Giảng viên</span></Link>
+                                            </li>
+
+                                            <li className="submenu">
+                                                <Link to="/faculties"><img src="assets/img/sidebar/icon-18.png"
+                                                                           alt="icon"/> <span> Khoa</span></Link>
+                                            </li>
+                                            <li className="submenu">
+                                                <Link to="/subjects"><img src="assets/img/sidebar/icon-4.png"
+                                                                          alt="icon"/> <span> Môn học</span></Link>
+                                            </li>
+                                            <li className="submenu">
+                                                <Link to="/logs"><img src="assets/img/sidebar/icon-12.png" alt="icon"/>
+                                                    <span>Nhật ký</span> </Link>
+                                            </li>
+                                        </>
+                                    )}
                                 </ul>
                             </div>
                         </div>

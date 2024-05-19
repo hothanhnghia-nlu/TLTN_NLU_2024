@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Header from "../components/Header";
 import {Link} from "react-router-dom";
 import {TabTitle} from "../commons/DynamicTitle";
-import {fetchUserById, updateUserWithAvatar} from "../service/UserService";
+import {fetchUserById, updateUser} from "../service/UserService";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import moment from "moment";
@@ -15,7 +15,11 @@ const EditProfilePage = () => {
     const [phone, setPhone] = useState('');
     const [dob, setDob] = useState('');
     const [gender, setGender] = useState('');
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImage, setSelectedImage] = useState({
+        file: null,
+        name: '',
+        preview: ''
+    });
 
     const userId = localStorage.getItem("id");
     const [user, setUser] = useState({});
@@ -47,19 +51,23 @@ const EditProfilePage = () => {
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-
-        setSelectedImage({
-            file: file,
-            name: file.name,
-            preview: URL.createObjectURL(file)
-        });
+        if (file) {
+            setSelectedImage({
+                file: file,
+                name: file.name,
+                preview: URL.createObjectURL(file)
+            });
+        }
     };
 
     const handleUpdate = async () => {
         const userId = user.id;
-        const avatar = selectedImage.file;
+        const avatar = selectedImage?.file || null;
+        const role = user.role;
+        const status = user.status;
+
         try {
-            let res = await updateUserWithAvatar(userId, name, email, phone, dob, gender, avatar);
+            let res = await updateUser(userId, name, email, phone, dob, gender, role, status, avatar);
 
             if (res) {
                 toast.success("Cập nhật tài khoản thành công!", {
@@ -71,9 +79,9 @@ const EditProfilePage = () => {
                 toast.error("Cập nhật tài khoản thất bại!");
             }
         } catch (error) {
-            console.error("Error creating subject:", error);
+            console.error("Error updating user:", error);
         }
-    }
+    };
 
     return (
         <>
@@ -165,7 +173,7 @@ const EditProfilePage = () => {
                                                 </div>
                                                 <div className="form-group">
                                                     {selectedImage && (
-                                                        <img src={selectedImage.preview} width="100" height="120" alt={name}/>
+                                                        <img src={selectedImage.preview} width="100" height="120" alt={selectedImage.name}/>
                                                     )}
                                                 </div>
                                             </div>

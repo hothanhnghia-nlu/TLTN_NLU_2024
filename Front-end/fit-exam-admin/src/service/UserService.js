@@ -8,11 +8,11 @@ const fetchUserById = ({id}) => {
     return axios.get(`users/${id}`);
 }
 
-const updateUser = ({id}, name, email, phone, dob, gender, role, status) => {
-    return axios.put(`users/${id}`, {name, email, phone, dob, gender, role, status});
+const fetchUserIdByEmail = ({email}) => {
+    return axios.get(`users/id?email=${email}`);
 }
 
-const updateUserWithAvatar = async (id, name, email, phone, dob, gender, avatar) => {
+const updateUser = async (id, name, email, phone, dob, gender, role, status, avatar = null) => {
     const formData = new FormData();
     formData.append('id', id);
     formData.append('name', name);
@@ -20,9 +20,37 @@ const updateUserWithAvatar = async (id, name, email, phone, dob, gender, avatar)
     formData.append('phone', phone);
     formData.append('dob', dob);
     formData.append('gender', gender);
-    formData.append('avatar', avatar);
+    formData.append('role', role);
+    formData.append('status', status);
+
+    if (avatar) {
+        formData.append('avatar', avatar);
+    }
 
     return await axios.put(`users/${id}`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+}
+
+const changePassword = async (id, password) => {
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('password', password);
+
+    return await axios.put(`users/change-password/${id}`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+}
+
+const sendEmail = async (email) => {
+    const formData = new FormData();
+    formData.append('email', email);
+
+    return await axios.post("users/send-mail", formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
@@ -59,4 +87,5 @@ const loginApi = async (email, password) => {
     });
 }
 
-export {fetchAllUser, fetchUserById, updateUser, updateUserWithAvatar, deleteUser, registerApi, loginApi};
+export {fetchAllUser, fetchUserById, fetchUserIdByEmail, updateUser, sendEmail,
+    changePassword, deleteUser, registerApi, loginApi};

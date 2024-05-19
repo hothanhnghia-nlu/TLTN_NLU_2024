@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,10 +24,11 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import vn.edu.hcmuaf.fit.fitexam.LoginActivity;
 import vn.edu.hcmuaf.fit.fitexam.QuestionActivity;
 import vn.edu.hcmuaf.fit.fitexam.R;
+import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
 import vn.edu.hcmuaf.fit.fitexam.model.Exam;
-import vn.edu.hcmuaf.fit.fitexam.model.Subject;
 
 public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeExamViewHolder> {
     private List<Exam> examList;
@@ -73,6 +75,8 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
 
     @SuppressLint("SetTextI18n")
     private void showStartDialog(int examId, String examName, int examTime) {
+        String email = LoginSession.getEmailKey();
+
         dismissDialog();
 
         Activity activity = (Activity) context;
@@ -80,7 +84,10 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
         if (activity.isFinishing()) {
             return;
         }
-
+        if (email == null) {
+            handleAlertDialog();
+            return;
+        }
         dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_start_dialog);
@@ -109,6 +116,38 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
         });
 
         btnNo.setOnClickListener(view -> dismissDialog());
+        dialog.show();
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void handleAlertDialog() {
+        dismissDialog();
+
+        Activity activity = (Activity) context;
+
+        if (activity.isFinishing()) {
+            return;
+        }
+
+        dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_alert_dialog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+
+        TextView tvMessage = dialog.findViewById(R.id.message);
+        Button btnYes = dialog.findViewById(R.id.btnContinuous);
+
+        tvMessage.setText("Vui lòng đăng nhập để luyện thi tuyệt vời hơn");
+        btnYes.setText("Đăng nhập ngay");
+
+        btnYes.setOnClickListener(view -> {
+            Intent intent = new Intent(activity, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(intent);
+            dismissDialog();
+        });
+
         dialog.show();
     }
 

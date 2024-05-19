@@ -1,14 +1,14 @@
 import React, {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {TabTitle} from "../commons/DynamicTitle";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {sendEmail} from "../service/UserService";
 
 const ForgotPasswordPage = () => {
     TabTitle('Quên mật khẩu | FIT Exam Admin');
 
     const [email, setEmail] = useState('');
-    const navigate = useNavigate();
 
     const handleResetPassword = async () => {
         if (!email) {
@@ -16,20 +16,14 @@ const ForgotPasswordPage = () => {
             return;
         }
 
-        // let res = await loginApi(email, password);
-        // if (res) {
-        //     if (res.status !== 400) {
-        //         localStorage.setItem("id", res.id);
-        //         navigate("/");
-        //     } else {
-        //         toast.error("Email hoặc mật khẩu không đúng!");
-        //     }
-        // }
-
-        if (email) {
-            toast.success("Đang gửi OTP đến email của bạn!");
-        } else {
-            toast.error("Email không đúng!");
+        let res = await sendEmail(email);
+        if (res) {
+            if (res.status !== 400) {
+                localStorage.setItem("email", email);
+                toast.success("Đang gửi link đến Email của bạn!");
+            } else {
+                toast.error("Email không đúng!");
+            }
         }
     }
 

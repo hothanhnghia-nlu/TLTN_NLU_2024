@@ -166,19 +166,20 @@ const FacultyPage = () => {
                                     <div className="col-md-6">
                                         <div>
                                             <Link to="#" className="btn btn-primary float-right btn-rounded"
-                                                  data-toggle="modal" data-target="#add_Facultie"
+                                                  data-toggle="modal" data-target="#add_faculty"
                                                   style={{borderRadius: "50px", textTransform: "none"}}>
                                                 <i className="fas fa-plus"></i> Thêm khoa</Link>
                                         </div>
                                         <div>
                                             <CSVLink
                                                 filename={"KHOA_" + currentDate() + ".csv"}
-                                                className="btn btn-info float-right btn-rounded mr-4"
-                                                style={{borderRadius: "50px", textTransform: "none"}}
+                                                className="btn btn-outline-primary float-right mr-4"
+                                                style={{borderRadius: "5px", textTransform: "none"}}
                                                 data={dataExport}
                                                 asyncOnClick={true}
                                                 onClick={getFacultiesExport}>
-                                                <i className="fas fa-file-download"></i> Xuất File
+                                                <img src="assets/img/excel.png" alt=""/>
+                                                <span className="ml-2">Excel</span>
                                             </CSVLink>
                                         </div>
                                     </div>
@@ -205,13 +206,13 @@ const FacultyPage = () => {
                                                                 <td>{item.name}</td>
                                                                 <td className="text-right">
                                                                     <button type="submit" data-toggle="modal"
-                                                                            data-target="#edit_Facultie"
+                                                                            data-target="#edit_faculty"
                                                                             className="btn btn-primary btn-sm mb-1"
                                                                             onClick={() => handleEditFaculty(item)}>
                                                                         <i className="far fa-edit" title="Sửa"></i>
                                                                     </button>
                                                                     <button type="submit" data-toggle="modal"
-                                                                            data-target="#delete_Facultie"
+                                                                            data-target="#delete_faculty"
                                                                             className="btn btn-danger btn-sm mb-1"
                                                                             onClick={() => handleDeleteFaculty(item)}
                                                                             style={{marginLeft: '5px'}}>
@@ -254,7 +255,7 @@ const FacultyPage = () => {
             </div>
 
 
-            <div id="add_Facultie" className="modal" role="dialog">
+            <div id="add_faculty" className="modal fade" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content modal-lg">
                         <div className="modal-header">
@@ -281,7 +282,7 @@ const FacultyPage = () => {
                 </div>
             </div>
 
-            <div id="edit_Facultie" className="modal" role="dialog">
+            <div id="edit_faculty" className="modal fade" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content modal-lg">
                         <div className="modal-header">
@@ -308,7 +309,7 @@ const FacultyPage = () => {
                 </div>
             </div>
 
-            <div id="delete_Facultie" className="modal" role="dialog">
+            <div id="delete_faculty" className="modal fade" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content modal-md">
                         <div className="modal-header">

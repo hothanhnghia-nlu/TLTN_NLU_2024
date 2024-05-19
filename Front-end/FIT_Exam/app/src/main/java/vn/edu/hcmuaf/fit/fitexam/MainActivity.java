@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import vn.edu.hcmuaf.fit.fitexam.R;
 import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
 
 import android.annotation.SuppressLint;
@@ -66,12 +65,12 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    // Handle display logout dialog
+    // Handle logout dialog
     @SuppressLint("SetTextI18n")
     private void handleAlertDialog() {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.custom_logout_dialog);
+        dialog.setContentView(R.layout.custom_notification_dialog);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 

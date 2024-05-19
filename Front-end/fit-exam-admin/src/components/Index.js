@@ -3,7 +3,7 @@ import Header from "./Header";
 import {Link} from "react-router-dom";
 import {TabTitle} from "../commons/DynamicTitle";
 import {fetchAllSubject} from "../service/SubjectService";
-import {fetchAllUser} from "../service/UserService";
+import {fetchAllUser, fetchUserById} from "../service/UserService";
 import moment from "moment";
 import {fetchAllExam} from "../service/ExamService";
 
@@ -16,6 +16,25 @@ const Index = () => {
     const [totalTeachers, setTotalTeachers] = useState(0);
     const [totalSubjects, setTotalSubjects] = useState(0);
     const [totalExams, setTotalExams] = useState(0);
+
+    let userId = localStorage.getItem("id");
+    const [show, setShow] = useState(false);
+
+    useEffect(() => {
+        const getUserInfo = async (id) => {
+            let res = await fetchUserById({ id });
+            if (res && res.role === 2) {
+                setShow(true);
+            } else {
+                setShow(false);
+            }
+        };
+
+        if (userId) {
+            getUserInfo(userId);
+        }
+    }, [userId]);
+
 
     useEffect(() => {
         getStudents(0);
@@ -95,30 +114,37 @@ const Index = () => {
                                 </div>
                             </Link>
                         </div>
-                        <div className="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                            <Link to="/teachers">
-                                <div className="dash-widget dash-widget5">
-                                    <div className="dash-widget-info text-left d-inline-block">
-                                        <span>Giảng viên</span>
-                                        <h3>{totalTeachers}</h3>
-                                    </div>
-                                    <span className="float-right"><img src="assets/img/dash/dash-2.png" width="80"
-                                                                       alt=""/></span>
+
+                        {show && (
+                            <>
+                                <div className="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                                    <Link to="/teachers">
+                                        <div className="dash-widget dash-widget5">
+                                            <div className="dash-widget-info text-left d-inline-block">
+                                                <span>Giảng viên</span>
+                                                <h3>{totalTeachers}</h3>
+                                            </div>
+                                            <span className="float-right"><img src="assets/img/dash/dash-2.png"
+                                                                               width="80"
+                                                                               alt=""/></span>
+                                        </div>
+                                    </Link>
                                 </div>
-                            </Link>
-                        </div>
-                        <div className="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                            <Link to="/subjects">
-                                <div className="dash-widget dash-widget5">
+                                <div className="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                                    <Link to="/subjects">
+                                        <div className="dash-widget dash-widget5">
                                     <span className="float-left"><img src="assets/img/dash/dash-3.png" alt=""
                                                                       width="80"/></span>
-                                    <div className="dash-widget-info text-right">
-                                        <span>Môn học</span>
-                                        <h3>{totalSubjects}</h3>
-                                    </div>
+                                            <div className="dash-widget-info text-right">
+                                                <span>Môn học</span>
+                                                <h3>{totalSubjects}</h3>
+                                            </div>
+                                        </div>
+                                    </Link>
                                 </div>
-                            </Link>
-                        </div>
+                            </>
+                        )}
+
                         <div className="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                             <Link to="/exams">
                                 <div className="dash-widget dash-widget5">
@@ -161,8 +187,8 @@ const Index = () => {
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    {listExams && listExams.length <= 5 &&
-                                                        listExams.map((item, index) => {
+                                                    {listExams && listExams.length > 0 &&
+                                                        listExams.slice(-5).reverse().map((item, index) => {
                                                             return (
                                                                 <tr key={`exams-${index}`}>
                                                                     <td>{item.id}</td>
@@ -215,33 +241,36 @@ const Index = () => {
                                             <tr>
                                                 <th>#</th>
                                                 <th>Họ tên</th>
-                                                <th className="text-center">Ảnh đại diện</th>
                                                 <th>Email</th>
                                                 <th>Số điện thoại</th>
                                                 <th>Ngày sinh</th>
                                                 <th className="text-center">Giới tính</th>
-                                                <th className="text-center">Trạng thái</th>
+                                                <th>Trạng thái</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {listStudents && listStudents.length <= 5 &&
-                                                listStudents.map((item, index) => {
+                                            {listStudents && listStudents.length > 0 &&
+                                                listStudents.slice(-5).reverse().map((item, index) => {
                                                     return (
                                                         <tr key={`students-${index}`}>
                                                             <td>{item.id}</td>
-                                                            <td>{item.name}</td>
-                                                            <td className="text-center">
-                                                                {item.image && item.image.url ? (
-                                                                    <img src={item.image.url} alt={item.name} style={{ maxWidth: '50px', maxHeight: '70px' }} />
-                                                                ) : (
-                                                                    <span>No Image</span>
-                                                                )}
+                                                            <td>
+                                                                <h2>
+                                                                    {item.image && item.image.url ? (
+                                                                        <div className="avatar text-white">
+                                                                            <img src={item.image.url} alt={item.name} style={{maxWidth: '50px', maxHeight: '70px'}}/>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <span></span>
+                                                                    )}
+                                                                    {item.name}
+                                                                </h2>
                                                             </td>
                                                             <td>{item.email}</td>
                                                             <td>{item.phone}</td>
                                                             <td>{convertDate({ date: item.dob })}</td>
                                                             <td className="text-center">{item.gender}</td>
-                                                            <td className="text-center">{getStatus(item)}</td>
+                                                            <td>{getStatus(item)}</td>
                                                         </tr>
                                                     )
                                                 })

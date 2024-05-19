@@ -252,8 +252,10 @@ public class EditProfileActivity extends AppCompatActivity {
                         selectedGender = gender;
                         getUserGender();
 
-                        selectedDate = convertSelectedDateType(user.getDob());
-                        edDob.setText(selectedDate);
+                        if (user.getDob() != null) {
+                            selectedDate = convertSelectedDateType(user.getDob());
+                            edDob.setText(selectedDate);
+                        }
 
                         if (user.getFaculty() != null) {
                             String facultyName = user.getFaculty().getName();

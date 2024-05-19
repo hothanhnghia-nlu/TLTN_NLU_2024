@@ -1,5 +1,6 @@
 package vn.edu.hcmuaf.fit.fitexam;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -14,7 +15,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.format.Formatter;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -27,6 +27,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -46,7 +47,8 @@ public class LoginActivity extends AppCompatActivity {
     Button btnLogin;
     TextView tvMessage, btnSignup, btnForgotPassword;
     RelativeLayout btnLoginGoogle;
-    GoogleSignInClient mGoogleSignInClient;
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
     private static final int RC_SIGN_IN = 9001;
 
     @SuppressLint("MissingInflatedId")
@@ -64,11 +66,11 @@ public class LoginActivity extends AppCompatActivity {
         btnLoginGoogle = findViewById(R.id.btnLoginGoogle);
 
         // Google Sign in
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        gsc = GoogleSignIn.getClient(this, gso);
 
         String email = LoginSession.getEmailKey();
         if (email != null) {
@@ -184,7 +186,21 @@ public class LoginActivity extends AppCompatActivity {
 
     // Login with Google
     private void handleLoginGoogle() {
-        Intent intent = mGoogleSignInClient.getSignInIntent();
+        gsc.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@Nullable Task<Void> task) {
+                gsc.revokeAccess().addOnCompleteListener(LoginActivity.this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@Nullable Task<Void> task) {
+                        signIn();
+                    }
+                });
+            }
+        });
+    }
+
+    private void signIn() {
+        Intent intent = gsc.getSignInIntent();
         startActivityForResult(intent, RC_SIGN_IN);
     }
 
@@ -253,9 +269,17 @@ public class LoginActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         LoginSession.saveLoginSession(userId, txtEmail, txtPassword);
 
+                        Log log = new Log(Integer.parseInt(userId), Log.INFO, getPhoneIpAddress(), "Login",
+                                "Email: " + txtEmail + " is login successful", Log.SUCCESS);
+                        addLog(log);
+
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
+                    } else {
+                        Log log = new Log(Integer.parseInt(userId), Log.ALERT, getPhoneIpAddress(),
+                                "Login", "Email: " + txtEmail + " is login failed", Log.FAILED);
+                        addLog(log);
                     }
                 });
             }
@@ -289,7 +313,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    // Handle display logout dialog
+    // Handle alert dialog
     @SuppressLint("SetTextI18n")
     private void handleAlertDialog(GoogleSignInAccount account) {
         Dialog dialog = new Dialog(this);

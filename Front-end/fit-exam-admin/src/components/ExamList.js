@@ -2,12 +2,11 @@ import React, {useEffect, useState} from "react";
 import {TabTitle} from "../commons/DynamicTitle";
 import {Link} from "react-router-dom";
 import Header from ".//Header";
-import {createExam, fetchAllExam} from "../service/ExamService";
+import {createExam, deleteExam, fetchAllExam, updateExam} from "../service/ExamService";
 import ReactPaginate from "react-paginate";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import moment from "moment/moment";
-import {createFaculty} from "../service/FacultyService";
 
 const ExamList = () => {
     TabTitle('Bài thi | FIT Exam Admin');
@@ -58,8 +57,8 @@ const ExamList = () => {
     };
 
     const handleSave = async () => {
-        const creatorId = userId;
-        let res = await createExam(name, subjectId, creatorId, examTime, numberOfQuestions, startDate, endDate);
+        let res = await createExam(name, subjectId, userId, examTime, numberOfQuestions, startDate, endDate);
+
         if (res && res.id) {
             setName('');
             setSubjectId('');
@@ -84,13 +83,12 @@ const ExamList = () => {
             setSubjectId(dataExamEdit.subjectId);
             setExamTime(dataExamEdit.examTime);
             setNumberOfQuestions(dataExamEdit.numberOfQuestions);
-            setStartDate(dataExamEdit.startTime);
-            setEndDate(dataExamEdit.endTime);
 
-            if (dataExamEdit.dob) {
-                const formattedDateTime = moment(dataExamEdit.dob).format('YYYY-MM-DDTHH:mm');
-                setStartDate(formattedDateTime);
-                setEndDate(formattedDateTime);
+            if (dataExamEdit.startDate && dataExamEdit.endDate) {
+                const formattedStartDate = moment(dataExamEdit.startDate).format('YYYY-MM-DDTHH:mm');
+                const formattedEndDate = moment(dataExamEdit.endDate).format('YYYY-MM-DDTHH:mm');
+                setStartDate(formattedStartDate);
+                setEndDate(formattedEndDate);
             }
         }
     }, [dataExamEdit]);
@@ -104,33 +102,33 @@ const ExamList = () => {
     }
 
     const handleUpdate = async () => {
-        // let examId = dataExamEdit.id;
-        // let res = await updateExam(examId, name);
-        //
-        // if (res && examId) {
-        //     toast.success("Cập nhật bài thi thành công!", {
-        //         onClose: () => {
-        //             window.location.reload();
-        //         }
-        //     });
-        // } else {
-        //     toast.error("Cập nhật bài thi thất bại!");
-        // }
+        let examId = dataExamEdit.id;
+        let res = await updateExam(examId, name, subjectId, examTime, numberOfQuestions, startDate, endDate);
+
+        if (res && examId) {
+            toast.success("Cập nhật bài thi thành công!", {
+                onClose: () => {
+                    window.location.reload();
+                }
+            });
+        } else {
+            toast.error("Cập nhật bài thi thất bại!");
+        }
     }
 
     const confirmDelete = async () => {
-        // let examId = dataExamDelete.id;
-        // let res = await deleteExam(examId);
-        //
-        // if (res && examId) {
-        //     toast.success("Xóa bài thi thành công!", {
-        //         onClose: () => {
-        //             window.location.reload();
-        //         }
-        //     });
-        // } else {
-        //     toast.error("Xóa bài thi thất bại!");
-        // }
+        let examId = dataExamDelete.id;
+        let res = await deleteExam(examId);
+
+        if (res && examId) {
+            toast.success("Xóa bài thi thành công!", {
+                onClose: () => {
+                    window.location.reload();
+                }
+            });
+        } else {
+            toast.error("Xóa bài thi thất bại!");
+        }
     }
 
     return (
@@ -267,7 +265,7 @@ const ExamList = () => {
             </div>
 
 
-            <div id="add_exam" className="modal" role="dialog">
+            <div id="add_exam" className="modal fade" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content modal-lg">
                         <div className="modal-header">
@@ -327,7 +325,7 @@ const ExamList = () => {
                                 <div className="col-sm-6">
                                     <div className="form-group">
                                         <label>Ngày bắt đầu</label>
-                                        <input type="date" className="form-control" required="required"
+                                        <input type="datetime-local" className="form-control" required="required"
                                                value={startDate}
                                                onChange={(event) => {
                                                    setStartDate(event.target.value);
@@ -338,7 +336,7 @@ const ExamList = () => {
                                 <div className="col-sm-6">
                                     <div className="form-group">
                                         <label>Ngày kết thúc</label>
-                                        <input type="date" className="form-control" required="required"
+                                        <input type="datetime-local" className="form-control" required="required"
                                                value={endDate}
                                                onChange={(event) => {
                                                    setEndDate(event.target.value);
@@ -356,7 +354,7 @@ const ExamList = () => {
                 </div>
             </div>
 
-            <div id="edit_exam" className="modal" role="dialog">
+            <div id="edit_exam" className="modal fade" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content modal-lg">
                         <div className="modal-header">
@@ -416,7 +414,7 @@ const ExamList = () => {
                                 <div className="col-sm-6">
                                     <div className="form-group">
                                         <label>Ngày bắt đầu</label>
-                                        <input type="date" className="form-control" required="required"
+                                        <input type="datetime-local" className="form-control" required="required"
                                                value={startDate}
                                                onChange={(event) => {
                                                    setStartDate(event.target.value);
@@ -427,7 +425,7 @@ const ExamList = () => {
                                 <div className="col-sm-6">
                                     <div className="form-group">
                                         <label>Ngày kết thúc</label>
-                                        <input type="date" className="form-control" required="required"
+                                        <input type="datetime-local" className="form-control" required="required"
                                                value={endDate}
                                                onChange={(event) => {
                                                    setEndDate(event.target.value);
@@ -437,14 +435,15 @@ const ExamList = () => {
                                 </div>
                             </div>
                             <div className="m-t-20 text-center">
-                                <button className="btn btn-primary btn-lg">Lưu thay đổi</button>
+                                <button className="btn btn-primary btn-lg" data-dismiss="modal"
+                                        onClick={() => handleUpdate()}>Lưu thay đổi</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="delete_exam" className="modal" role="dialog">
+            <div id="delete_exam" className="modal fade" role="dialog">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content modal-md">
                         <div className="modal-header">
@@ -454,8 +453,9 @@ const ExamList = () => {
                             <p>Bạn có chắc muốn xóa bài thi này?</p>
                             <div className="m-t-20"><Link to="#" className="btn btn-white"
                                                           data-dismiss="modal">Hủy</Link>
-                                <button type="submit" className="btn btn-danger"
-                                        style={{marginLeft: '10px'}}>Xóa
+                                <button type="submit" className="btn btn-danger" data-dismiss="modal"
+                                        style={{marginLeft: '10px'}}
+                                        onClick={() => confirmDelete()}>Xóa
                                 </button>
                             </div>
                         </div>
