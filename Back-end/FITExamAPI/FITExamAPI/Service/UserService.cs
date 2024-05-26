@@ -167,7 +167,10 @@ namespace FITExamAPI.Service
 
         public async Task<User?> DeleteAsync(int id)
         {
-            var user = await _context.Users.Include(s => s.Image).FirstOrDefaultAsync(u => u.Id == id);
+            var user = await _context.Users
+                                     .Include(u => u.Image)
+                                     .Include(u => u.Logs)
+                                     .FirstOrDefaultAsync(u => u.Id == id);
             if (user == null)
             {
                 return null;
@@ -176,6 +179,14 @@ namespace FITExamAPI.Service
             if (user.Image != null)
             {
                 _context.Images.Remove(user.Image);
+            }
+
+            if (user.Logs != null)
+            {
+                foreach (var log in user.Logs)
+                {
+                    _context.Logs.Remove(log);
+                }
             }
 
             _context.Users.Remove(user);

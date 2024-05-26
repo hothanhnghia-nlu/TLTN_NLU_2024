@@ -15,6 +15,7 @@ namespace FITExamAPI.Models
         public DateTime? EndDate { get; set; }
         public virtual Subject? Subject { get; set; }
         public virtual User? User { get; set; }
+        public virtual ICollection<Question>? Questions { get; set; } = new List<Question>();
         public virtual ICollection<Result>? Results { get; set; } = new List<Result>();
 
     }

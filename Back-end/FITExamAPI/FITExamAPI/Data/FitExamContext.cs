@@ -15,6 +15,7 @@ namespace FITExamAPI.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Exam> Exams { get; set; }
         public DbSet<Result> Results { get; set; }
+        public DbSet<ResultDetail> ResultDetails { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Subject> Subjects { get; set; }
@@ -55,25 +56,40 @@ namespace FITExamAPI.Data
                 .HasForeignKey(i => i.QuestionId);
 
             modelBuilder.Entity<Result>()
-                .HasOne(s => s.Exam)
+                .HasOne(r => r.Exam)
                 .WithMany(e => e.Results)
                 .HasForeignKey(s => s.ExamId);
           
             modelBuilder.Entity<Result>()
-                .HasOne(s => s.User)
+                .HasOne(r => r.User)
                 .WithMany(e => e.Results)
-                .HasForeignKey(s => s.UserId);
+                .HasForeignKey(s => s.UserId);      
+            
+            modelBuilder.Entity<ResultDetail>()
+                .HasOne(rd => rd.Result)
+                .WithMany(r => r.ResultDetails)
+                .HasForeignKey(rd => rd.ResultId);
 
             modelBuilder.Entity<Question>()
-                .HasOne(q => q.Subject)
+                .HasOne(q => q.Exam)
                 .WithMany(s => s.Questions)
-                .HasForeignKey(q => q.SubjectId);
+                .HasForeignKey(q => q.ExamId);
             
+            modelBuilder.Entity<Question>()
+                .HasMany(rd => rd.ResultDetails)
+                .WithOne(q => q.Question)
+                .HasForeignKey(q => q.QuestionId);
+
             modelBuilder.Entity<Answer>()
                 .HasOne(a => a.Question)
-                .WithMany(q => q.Answers)
+                .WithMany(q => q.Options)
                 .HasForeignKey(a => a.QuestionId);
              
+            modelBuilder.Entity<Answer>()
+                .HasMany(rd => rd.ResultDetails)
+                .WithOne(a => a.Answer)
+                .HasForeignKey(a => a.AnswerId);
+
             modelBuilder.Entity<Log>()
                 .HasOne(l => l.User)
                 .WithMany(u => u.Logs)

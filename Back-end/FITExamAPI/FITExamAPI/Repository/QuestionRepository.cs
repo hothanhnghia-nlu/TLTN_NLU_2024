@@ -6,9 +6,13 @@ namespace FITExamAPI.Repository
     {
         Task<Question> CreateAsync(Question question);
         Task<List<Question>> GetAllAsync();
-        Task<Question?> GetByIdAsync(string id);
-        Task<Question?> UpdateAsync(string id, Question question);
-        Task<Question?> DeleteAsync(string id);
+        Task<List<Question>> GetAllByExamIdAsync(int examId);
+        Task<List<Question>> GetAllByUserIdAsync(int userId);
+        Task<Question?> GetByIdAsync(int id);
+        Task<Question?> UpdateAsync(int id, Question question);
+        Task<Question?> DeleteAsync(int id);
+        Task<List<Question>?> ShuffleByExamId(int examId);
+        Task<List<Question>?> ShuffleByUserId(int userId);
 
     }
 }

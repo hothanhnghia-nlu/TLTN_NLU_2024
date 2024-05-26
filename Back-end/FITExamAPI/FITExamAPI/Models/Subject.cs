@@ -13,7 +13,6 @@ namespace FITExamAPI.Models
         public int? Credit { get; set; }
         public virtual Image? Image { get; set; }
         public virtual ICollection<Exam>? Exams { get; set; } = new List<Exam>();
-        public virtual ICollection<Question>? Questions { get; set; } = new List<Question>();
 
         [NotMapped]
         public IFormFile? ImageFile { get; set; }

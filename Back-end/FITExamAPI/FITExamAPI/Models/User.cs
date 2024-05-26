@@ -22,8 +22,8 @@ namespace FITExamAPI.Models
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public sbyte? Status { get; set; }
-        public Image? Image { get; set; }
-        public Faculty? Faculty { get; set; }
+        public virtual Image? Image { get; set; }
+        public virtual Faculty? Faculty { get; set; }
         public virtual ICollection<Exam>? Exams { get; set; } = new List<Exam>();
         public virtual ICollection<Result>? Results { get; set; } = new List<Result>();
         public virtual ICollection<Log>? Logs { get; set; } = new List<Log>(); 

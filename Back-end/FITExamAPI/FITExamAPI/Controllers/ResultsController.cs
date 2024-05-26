@@ -19,7 +19,7 @@ namespace FITExamAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Result>> CreateResult(Result result)
+        public async Task<ActionResult<Result>> CreateResult([FromForm] Result result)
         {
             if (_context.Results == null)
             {
@@ -39,14 +39,14 @@ namespace FITExamAPI.Controllers
             return await _resultRepository.GetAllAsync();
         }
         
-        [HttpGet("list")]
-        public async Task<ActionResult<IEnumerable<Result>>> GetAllResultsByUserId([FromQuery] int userId)
+        [HttpGet("student")]
+        public async Task<ActionResult<IEnumerable<Result>>> GetAllResultsByUserId([FromQuery] int id)
         {
             if (_context.Results == null)
             {
                 return NotFound();
             }
-            return await _resultRepository.GetAllByUserIdAsync(userId);
+            return await _resultRepository.GetAllByUserIdAsync(id);
         }
 
         [HttpGet("{id}")]
@@ -62,9 +62,9 @@ namespace FITExamAPI.Controllers
         }
         
         [HttpGet("user")]
-        public async Task<ActionResult<Result>> GetResultByUserId([FromQuery] int userId)
+        public async Task<ActionResult<Result>> GetResultByUserId([FromQuery] int id)
         {
-            var result = await _resultRepository.GetByUserIdAsync(userId);
+            var result = await _resultRepository.GetByUserIdAsync(id);
 
             if (result == null)
             {

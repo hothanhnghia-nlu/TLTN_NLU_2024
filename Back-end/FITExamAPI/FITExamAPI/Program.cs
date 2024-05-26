@@ -44,7 +44,10 @@ builder.Services.AddScoped<ImageRepository, ImageService>();
 builder.Services.AddScoped<FacultyRepository, FacultyService>();
 builder.Services.AddScoped<SubjectRepository, SubjectService>();
 builder.Services.AddScoped<ExamRepository, ExamService>();
+builder.Services.AddScoped<QuestionRepository, QuestionService>();
+builder.Services.AddScoped<AnswerRepository, AnswerService>();
 builder.Services.AddScoped<ResultRepository, ResultService>();
+builder.Services.AddScoped<ResultDetailRepository, ResultDetailService>();
 builder.Services.AddScoped<LogRepository, LogService>();
 
 // Cloudinary configuration

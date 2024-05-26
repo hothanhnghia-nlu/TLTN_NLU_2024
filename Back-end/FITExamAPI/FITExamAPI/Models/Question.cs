@@ -7,16 +7,18 @@ namespace FITExamAPI.Models
     {
         public int Id { get; set; }
         public string? Content { get; set; } = string.Empty;
-        [MaxLength(255)]
-        public string? QuestionType { get; set; } = string.Empty;
-        public string? SubjectId { get; set; }
+        public int? ExamId { get; set; }
         [MaxLength(255)]
         public string? DifficultyLevel { get; set; } = string.Empty;
-        public virtual Subject? Subject { get; set; }
+        public int? ShuffleOrder { get; set; }
+        public virtual Exam? Exam { get; set; }
         public virtual ICollection<Image>? Images { get; set; } = new List<Image>();
-        public virtual ICollection<Answer>? Answers { get; set; } = new List<Answer>();
+        public virtual ICollection<Answer>? Options { get; set; } = new List<Answer>();
+        public virtual ICollection<ResultDetail>? ResultDetails { get; set; } = new List<ResultDetail>();
 
         [NotMapped]
-        public IFormFile ImageFile { get; set; }
+        public IFormFile? ImageFile { get; set; }
+        [NotMapped]
+        public string? ExamName { get; set; }
     }
 }

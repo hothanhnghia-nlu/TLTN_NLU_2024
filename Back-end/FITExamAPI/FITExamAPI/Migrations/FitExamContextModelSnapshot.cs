@@ -192,16 +192,15 @@ namespace FITExamAPI.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("QuestionType")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                    b.Property<int?>("ExamId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("SubjectId")
-                        .HasColumnType("varchar(255)");
+                    b.Property<int?>("ShuffleOrder")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SubjectId");
+                    b.HasIndex("ExamId");
 
                     b.ToTable("Questions");
                 });
@@ -239,6 +238,37 @@ namespace FITExamAPI.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Results");
+                });
+
+            modelBuilder.Entity("FITExamAPI.Models.ResultDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AnswerId")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("IsCorrect")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int?>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ResultId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnswerId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("ResultId");
+
+                    b.ToTable("ResultDetails");
                 });
 
             modelBuilder.Entity("FITExamAPI.Models.Subject", b =>
@@ -314,7 +344,7 @@ namespace FITExamAPI.Migrations
             modelBuilder.Entity("FITExamAPI.Models.Answer", b =>
                 {
                     b.HasOne("FITExamAPI.Models.Question", "Question")
-                        .WithMany("Answers")
+                        .WithMany("Options")
                         .HasForeignKey("QuestionId");
 
                     b.Navigation("Question");
@@ -367,11 +397,11 @@ namespace FITExamAPI.Migrations
 
             modelBuilder.Entity("FITExamAPI.Models.Question", b =>
                 {
-                    b.HasOne("FITExamAPI.Models.Subject", "Subject")
+                    b.HasOne("FITExamAPI.Models.Exam", "Exam")
                         .WithMany("Questions")
-                        .HasForeignKey("SubjectId");
+                        .HasForeignKey("ExamId");
 
-                    b.Navigation("Subject");
+                    b.Navigation("Exam");
                 });
 
             modelBuilder.Entity("FITExamAPI.Models.Result", b =>
@@ -389,6 +419,27 @@ namespace FITExamAPI.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FITExamAPI.Models.ResultDetail", b =>
+                {
+                    b.HasOne("FITExamAPI.Models.Answer", "Answer")
+                        .WithMany("ResultDetails")
+                        .HasForeignKey("AnswerId");
+
+                    b.HasOne("FITExamAPI.Models.Question", "Question")
+                        .WithMany("ResultDetails")
+                        .HasForeignKey("QuestionId");
+
+                    b.HasOne("FITExamAPI.Models.Result", "Result")
+                        .WithMany("ResultDetails")
+                        .HasForeignKey("ResultId");
+
+                    b.Navigation("Answer");
+
+                    b.Navigation("Question");
+
+                    b.Navigation("Result");
+                });
+
             modelBuilder.Entity("FITExamAPI.Models.User", b =>
                 {
                     b.HasOne("FITExamAPI.Models.Faculty", "Faculty")
@@ -398,8 +449,15 @@ namespace FITExamAPI.Migrations
                     b.Navigation("Faculty");
                 });
 
+            modelBuilder.Entity("FITExamAPI.Models.Answer", b =>
+                {
+                    b.Navigation("ResultDetails");
+                });
+
             modelBuilder.Entity("FITExamAPI.Models.Exam", b =>
                 {
+                    b.Navigation("Questions");
+
                     b.Navigation("Results");
                 });
 
@@ -410,9 +468,16 @@ namespace FITExamAPI.Migrations
 
             modelBuilder.Entity("FITExamAPI.Models.Question", b =>
                 {
-                    b.Navigation("Answers");
-
                     b.Navigation("Images");
+
+                    b.Navigation("Options");
+
+                    b.Navigation("ResultDetails");
+                });
+
+            modelBuilder.Entity("FITExamAPI.Models.Result", b =>
+                {
+                    b.Navigation("ResultDetails");
                 });
 
             modelBuilder.Entity("FITExamAPI.Models.Subject", b =>
@@ -420,8 +485,6 @@ namespace FITExamAPI.Migrations
                     b.Navigation("Exams");
 
                     b.Navigation("Image");
-
-                    b.Navigation("Questions");
                 });
 
             modelBuilder.Entity("FITExamAPI.Models.User", b =>
