@@ -15,10 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import vn.edu.hcmuaf.fit.fitexam.R;
 import vn.edu.hcmuaf.fit.fitexam.ResultActivity;
+import vn.edu.hcmuaf.fit.fitexam.model.Exam;
 import vn.edu.hcmuaf.fit.fitexam.model.Result;
 
 public class ExamHistoryAdapter extends RecyclerView.Adapter<ExamHistoryAdapter.HistoryViewHolder> {
@@ -42,6 +46,10 @@ public class ExamHistoryAdapter extends RecyclerView.Adapter<ExamHistoryAdapter.
         return new HistoryViewHolder(view);
     }
 
+    public void setFilteredList(List<Result> filteredList) {
+        this.historyList = filteredList;
+        notifyDataSetChanged();
+    }
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
@@ -66,7 +74,7 @@ public class ExamHistoryAdapter extends RecyclerView.Adapter<ExamHistoryAdapter.
     }
 
     public static class HistoryViewHolder extends RecyclerView.ViewHolder {
-        TextView tvExamName, tvTotalCorrectAnswers, tvScore, tvResult;
+        TextView tvExamName, tvTotalCorrectAnswers, tvScore, tvResult, tvExamDate;
         ImageView subjectImage;
         CardView cvHistory;
 
@@ -77,6 +85,7 @@ public class ExamHistoryAdapter extends RecyclerView.Adapter<ExamHistoryAdapter.
             tvTotalCorrectAnswers = itemView.findViewById(R.id.totalCorrectAnswers);
             tvScore = itemView.findViewById(R.id.score);
             tvResult = itemView.findViewById(R.id.result);
+            tvExamDate = itemView.findViewById(R.id.examDate);
             subjectImage = itemView.findViewById(R.id.subjectImage);
             cvHistory = itemView.findViewById(R.id.cvHistory);
         }
@@ -87,6 +96,7 @@ public class ExamHistoryAdapter extends RecyclerView.Adapter<ExamHistoryAdapter.
             tvTotalCorrectAnswers.setText(result.getTotalCorrectAnswer()
                     + "/" + result.getExam().getNumberOfQuestions());
             tvScore.setText(String.valueOf(result.getScore()));
+            tvExamDate.setText(convertDateType(result.getExamDate()));
             classifyByScore(result);
 
             if (result.getExam().getSubject().getImage() != null) {
@@ -102,6 +112,20 @@ public class ExamHistoryAdapter extends RecyclerView.Adapter<ExamHistoryAdapter.
                 tvResult.setText("Không đạt");
             } else {
                 tvResult.setText("Đạt");
+            }
+        }
+
+        @SuppressLint("SimpleDateFormat")
+        private String convertDateType(String inputDate) {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            try {
+                Date date = inputFormat.parse(inputDate);
+                assert date != null;
+                return outputFormat.format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return null;
             }
         }
     }

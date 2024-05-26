@@ -82,10 +82,10 @@
                     app:civ_border_color="#F0F0F0" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/camera"
+                    android:id="@+id/btnOpenGallery"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/icon_camera"
+                    android:src="@drawable/icon_pen"
                     android:layout_alignEnd="@id/profileImage"
                     android:layout_alignBottom="@id/profileImage"
                     android:layout_marginBottom="3dp"

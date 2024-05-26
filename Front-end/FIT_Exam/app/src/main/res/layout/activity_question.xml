@@ -94,75 +94,42 @@
         android:background="@drawable/border_select"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/question"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/questionLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:text="Câu 1"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/question"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Câu hỏi"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/figure"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"/>
+        </LinearLayout>
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/question"
+            android:layout_below="@id/questionLayout"
             android:layout_above="@id/buttons"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp">
 
             <RadioGroup
                 android:id="@+id/answerRadioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
-                <RadioButton
-                    android:id="@+id/option1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/border_radio_button"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="5dp"
-                    android:paddingTop="15dp"
-                    android:paddingBottom="15dp"
-                    android:text="Option 1" />
-
-                <RadioButton
-                    android:id="@+id/option2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/border_radio_button"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="5dp"
-                    android:paddingTop="15dp"
-                    android:paddingBottom="15dp"
-                    android:text="Option 2" />
-
-                <RadioButton
-                    android:id="@+id/option3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/border_radio_button"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="5dp"
-                    android:paddingTop="15dp"
-                    android:paddingBottom="15dp"
-                    android:text="Option 3" />
-
-                <RadioButton
-                    android:id="@+id/option4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/border_radio_button"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="5dp"
-                    android:paddingTop="15dp"
-                    android:paddingBottom="15dp"
-                    android:text="Option 4" />
             </RadioGroup>
 
         </ScrollView>

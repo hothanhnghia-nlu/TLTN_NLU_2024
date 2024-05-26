@@ -7,9 +7,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import android.Manifest;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -22,7 +19,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.format.Formatter;
@@ -67,7 +63,7 @@ public class EditProfileActivity extends AppCompatActivity {
     ImageView btnBack;
     Button btnSave;
     AutoCompleteTextView acGender, acFaculty;
-    CircleImageView cvProfileImage, cvCamera;
+    CircleImageView cvProfileImage, btnOpenGallery;
     Uri mUri;
     LoginSession session;
     String[] gender = new String[]{"Nam", "Nữ", "Khác"};
@@ -76,10 +72,9 @@ public class EditProfileActivity extends AppCompatActivity {
     String selectedGender, selectedFaculty, selectedDate;
     HashMap<String, Integer> facultyMap = new HashMap<>();
     private static final int REQUEST_IMAGE_PICK = 1;
-    private static final int REQUEST_IMAGE_CAPTURE = 2;
     private static final int PERMISSION_REQUEST_CODE = 100;
 
-    private ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> launcherGallery = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -114,7 +109,7 @@ public class EditProfileActivity extends AppCompatActivity {
         acGender = findViewById(R.id.gender);
         acFaculty = findViewById(R.id.faculty);
         cvProfileImage = findViewById(R.id.profileImage);
-        cvCamera = findViewById(R.id.camera);
+        btnOpenGallery = findViewById(R.id.btnOpenGallery);
         tvMessage = findViewById(R.id.showError);
         btnSave = findViewById(R.id.btnSave);
         btnBack = findViewById(R.id.btnBack);
@@ -147,12 +142,8 @@ public class EditProfileActivity extends AppCompatActivity {
             selectedFaculty = (String) parent.getItemAtPosition(position);
         });
 
-        cvProfileImage.setOnClickListener(v -> {
+        btnOpenGallery.setOnClickListener(v -> {
             openGallery();
-        });
-
-        cvCamera.setOnClickListener(v -> {
-            checkCameraPermission();
         });
 
         btnSave.setOnClickListener(view -> {
@@ -180,28 +171,7 @@ public class EditProfileActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        activityResultLauncher.launch(Intent.createChooser(intent, "Select Picture"));
-    }
-
-    private void checkCameraPermission() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            openCamera();
-            return;
-        }
-
-        if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            openCamera();
-        } else {
-            String[] permission = {Manifest.permission.CAMERA};
-            requestPermissions(permission, PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    private void openCamera() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
+        launcherGallery.launch(Intent.createChooser(intent, "Select Picture"));
     }
 
     @Override
@@ -213,11 +183,6 @@ public class EditProfileActivity extends AppCompatActivity {
             if (selectedImageUri != null) {
                 cvProfileImage.setImageURI(selectedImageUri);
             }
-        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
-            Bundle extras = data.getExtras();
-            assert extras != null;
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            cvProfileImage.setImageBitmap(imageBitmap);
         }
     }
 
@@ -227,7 +192,6 @@ public class EditProfileActivity extends AppCompatActivity {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openGallery();
-                openCamera();
             }
         }
     }

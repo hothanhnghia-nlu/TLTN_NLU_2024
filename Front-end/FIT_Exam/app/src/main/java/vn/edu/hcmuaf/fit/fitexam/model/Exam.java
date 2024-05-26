@@ -14,6 +14,7 @@ public class Exam implements Serializable {
     private String endDate;
     private Subject subject;
     private User user;
+    private List<Question> questions;
     private List<Result> results;
 
     public Exam() {
@@ -97,6 +98,14 @@ public class Exam implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
     }
 
     public List<Result> getResults() {

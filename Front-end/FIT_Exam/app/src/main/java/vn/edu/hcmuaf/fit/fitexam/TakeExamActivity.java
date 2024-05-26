@@ -128,6 +128,9 @@ public class TakeExamActivity extends AppCompatActivity {
         }
         if (!filteredList.isEmpty()) {
             examAdapter.setFilteredList(filteredList);
+            tvMessage.setVisibility(View.GONE);
+        } else {
+            tvMessage.setVisibility(View.VISIBLE);
         }
     }
 

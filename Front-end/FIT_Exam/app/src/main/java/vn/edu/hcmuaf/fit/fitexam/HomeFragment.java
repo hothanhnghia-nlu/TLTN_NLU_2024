@@ -89,10 +89,10 @@ public class HomeFragment extends Fragment {
         if (checkInternetPermission()) {
             if (id != null) {
                 loadStudentName(Integer.parseInt(id));
+                loadHistoryList(Integer.parseInt(id));
             }
             loadSubjectList();
             loadTakeExamList();
-            loadHistoryList();
         } else {
             Toast.makeText(getActivity(), "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
         }
@@ -185,8 +185,8 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void loadHistoryList() {
-        Call<ArrayList<Result>> resultList = ApiService.apiService.getAllResults();
+    private void loadHistoryList(int id) {
+        Call<ArrayList<Result>> resultList = ApiService.apiService.getAllResultsByUserId(id);
 
         resultList.enqueue(new Callback<ArrayList<Result>>() {
             @Override

@@ -17,6 +17,9 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -31,6 +34,7 @@ public class SignupActivity extends AppCompatActivity {
     TextInputEditText edName, edPhone, edEmail, edPassword, edConfPassword;
     Button btnSignup;
     TextView tvMessage, btnLogin;
+    final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%*^]).{8,64})";
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -71,6 +75,10 @@ public class SignupActivity extends AppCompatActivity {
                 || password.isEmpty() || confPassword.isEmpty()) {
             tvMessage.setVisibility(View.VISIBLE);
             tvMessage.setText("Vui lòng điền đầy đủ thông tin.");
+        } else if (!isPasswordValid(password)) {
+            tvMessage.setVisibility(View.VISIBLE);
+            tvMessage.setText("Mật khẩu phải chứa ít nhất một chữ cái viết thường, " +
+                    "một chữ cái viết hoa, một ký tự đặc biệt và có ít nhất 8 ký tự.");
         } else if (!password.equals(confPassword)) {
             tvMessage.setVisibility(View.VISIBLE);
             tvMessage.setText("Mật khẩu xác nhận không đúng.");
@@ -165,6 +173,14 @@ public class SignupActivity extends AppCompatActivity {
     private String getPhoneIpAddress() {
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         return Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
+    }
+
+    public boolean isPasswordValid(final String password) {
+        Pattern pattern;
+        Matcher matcher;
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(password);
+        return matcher.matches();
     }
 
     // Check internet permission

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="radio_button_padding_start_end">5dp</dimen>
+    <dimen name="radio_button_padding_top_bottom">15dp</dimen>
+    <dimen name="radio_button_margin_top">15dp</dimen>
+    <dimen name="answer_padding_start">8dp</dimen>
+    <dimen name="answer_padding_end">8dp</dimen>
+    <dimen name="answer_padding_top">15dp</dimen>
+    <dimen name="answer_padding_bottom">15dp</dimen>
+</resources>

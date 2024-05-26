@@ -21,13 +21,18 @@ import retrofit2.http.Query;
 import vn.edu.hcmuaf.fit.fitexam.model.Exam;
 import vn.edu.hcmuaf.fit.fitexam.model.Faculty;
 import vn.edu.hcmuaf.fit.fitexam.model.Log;
+import vn.edu.hcmuaf.fit.fitexam.model.Question;
 import vn.edu.hcmuaf.fit.fitexam.model.Result;
+import vn.edu.hcmuaf.fit.fitexam.model.ResultDetail;
 import vn.edu.hcmuaf.fit.fitexam.model.Subject;
 import vn.edu.hcmuaf.fit.fitexam.model.User;
+import vn.edu.hcmuaf.fit.fitexam.model.utils.ResultConst;
+import vn.edu.hcmuaf.fit.fitexam.model.utils.ResultDetailConst;
 import vn.edu.hcmuaf.fit.fitexam.model.utils.UserConst;
 
 public interface ApiService {
     String apiUrl = "http://192.168.1.25/api/";
+//    String apiUrl = "http://10.51.86.11/api/";
 
     HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor()
             .setLevel(HttpLoggingInterceptor.Level.BASIC);
@@ -86,10 +91,30 @@ public interface ApiService {
     @GET("exams/subject")
     Call<ArrayList<Exam>> getAllExamsBySubjectId(@Query("id") String id);
 
-    @GET("results")
-    Call<ArrayList<Result>> getAllResults();
-    @GET("exams/user")
-    Call<ArrayList<Result>> getAllResultsByUserId(@Query("id") String id);
+    @GET("questions/exam")
+    Call<ArrayList<Question>> getAllQuestionsByExamId(@Query("id") int id);
+
+    @Multipart
+    @POST("results")
+    Call<Result> createResult(
+            @Part(ResultConst.KEY_USER_ID) RequestBody userId,
+            @Part(ResultConst.KEY_EXAM_ID) RequestBody examId,
+            @Part(ResultConst.KEY_TOTAL_CORRECT_ANSWER) RequestBody totalCorrectAnswer,
+            @Part(ResultConst.KEY_SCORE) RequestBody score,
+            @Part(ResultConst.KEY_EXAM_DATE) RequestBody examDate,
+            @Part(ResultConst.KEY_OVERALL_TIME) RequestBody overallTime);
+    @GET("results/student")
+    Call<ArrayList<Result>> getAllResultsByUserId(@Query("id") int id);
+
+    @Multipart
+    @POST("resultDetails")
+    Call<ResultDetail> createResultDetail(
+            @Part(ResultDetailConst.KEY_RESULT_ID) RequestBody resultId,
+            @Part(ResultDetailConst.KEY_QUESTION_ID) RequestBody questionId,
+            @Part(ResultDetailConst.KEY_ANSWER_ID) RequestBody answerId,
+            @Part(ResultDetailConst.KEY_IS_CORRECT) RequestBody isCorrect);
+    @GET("resultDetails/result")
+    Call<ArrayList<ResultDetail>> getResultDetailByResultId(@Query("id") int id);
 
     @POST("logs")
     Call<Log> createLog(@Body Log log);

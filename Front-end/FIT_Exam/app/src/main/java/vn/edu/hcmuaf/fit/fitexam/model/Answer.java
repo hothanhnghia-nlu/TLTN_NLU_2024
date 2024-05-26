@@ -12,6 +12,12 @@ public class Answer implements Serializable {
     public Answer() {
     }
 
+    public Answer(int id, String content, boolean isCorrect) {
+        this.id = id;
+        this.content = content;
+        this.isCorrect = isCorrect;
+    }
+
     public int getId() {
         return id;
     }

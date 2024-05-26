@@ -16,6 +16,15 @@ public class Result implements Serializable {
     public Result() {
     }
 
+    public Result(int userId, int examId, int totalCorrectAnswer, double score, String examDate, int overallTime) {
+        this.userId = userId;
+        this.examId = examId;
+        this.totalCorrectAnswer = totalCorrectAnswer;
+        this.score = score;
+        this.examDate = examDate;
+        this.overallTime = overallTime;
+    }
+
     public int getId() {
         return id;
     }

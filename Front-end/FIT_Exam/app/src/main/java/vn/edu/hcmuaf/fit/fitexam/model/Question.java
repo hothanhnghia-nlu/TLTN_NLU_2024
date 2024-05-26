@@ -1,19 +1,29 @@
 package vn.edu.hcmuaf.fit.fitexam.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Question implements Serializable {
     private int id;
     private String content;
-    private String questionType;
-    private int subjectId;
+    private int examId;
     private String difficultyLevel;
-    private Subject subject;
+    private Exam exam;
     private List<Image> images;
-    private List<Answer> answers;
+    private List<Answer> options;
 
     public Question() {
+    }
+
+    public Question(int id, String content) {
+        this.id = id;
+        this.content = content;
+        this.options = new ArrayList<>();
+    }
+
+    public void addOption(Answer option) {
+        options.add(option);
     }
 
     public int getId() {
@@ -32,20 +42,12 @@ public class Question implements Serializable {
         this.content = content;
     }
 
-    public String getQuestionType() {
-        return questionType;
+    public int getExamId() {
+        return examId;
     }
 
-    public void setQuestionType(String questionType) {
-        this.questionType = questionType;
-    }
-
-    public int getSubjectId() {
-        return subjectId;
-    }
-
-    public void setSubjectId(int subjectId) {
-        this.subjectId = subjectId;
+    public void setExamId(int examId) {
+        this.examId = examId;
     }
 
     public String getDifficultyLevel() {
@@ -56,12 +58,12 @@ public class Question implements Serializable {
         this.difficultyLevel = difficultyLevel;
     }
 
-    public Subject getSubject() {
-        return subject;
+    public Exam getExam() {
+        return exam;
     }
 
-    public void setSubject(Subject subject) {
-        this.subject = subject;
+    public void setExam(Exam exam) {
+        this.exam = exam;
     }
 
     public List<Image> getImages() {
@@ -72,11 +74,12 @@ public class Question implements Serializable {
         this.images = images;
     }
 
-    public List<Answer> getAnswers() {
-        return answers;
+    public List<Answer> getOptions() {
+        return options;
     }
 
-    public void setAnswers(List<Answer> answers) {
-        this.answers = answers;
+    public void setOptions(List<Answer> options) {
+        this.options = options;
     }
+
 }

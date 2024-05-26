@@ -9,7 +9,6 @@ public class Subject implements Serializable {
     private int credit;
     private Image image;
     private List<Exam> exams;
-    private List<Question> questions;
 
     public Subject() {
     }
@@ -54,11 +53,4 @@ public class Subject implements Serializable {
         this.exams = exams;
     }
 
-    public List<Question> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
-    }
 }

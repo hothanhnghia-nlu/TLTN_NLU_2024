@@ -46,6 +46,14 @@
                 </com.google.android.material.appbar.AppBarLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_search"
+                android:layout_margin="8dp"
+                app:queryHint="Tìm kiếm tên bài thi..."
+                app:iconifiedByDefault="false"/>
 
             <TextView
                 android:id="@+id/message"

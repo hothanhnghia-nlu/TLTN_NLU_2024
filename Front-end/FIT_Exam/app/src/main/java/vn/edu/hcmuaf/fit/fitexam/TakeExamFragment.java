@@ -121,6 +121,9 @@ public class TakeExamFragment extends Fragment {
         }
         if (!filteredList.isEmpty()) {
             examAdapter.setFilteredList(filteredList);
+            tvMessage.setVisibility(View.GONE);
+        } else {
+            tvMessage.setVisibility(View.VISIBLE);
         }
     }
 

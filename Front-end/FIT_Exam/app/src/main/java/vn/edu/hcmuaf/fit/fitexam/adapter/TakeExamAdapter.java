@@ -22,6 +22,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 import vn.edu.hcmuaf.fit.fitexam.LoginActivity;
@@ -67,14 +72,17 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
         holder.cvExam.setOnClickListener(view -> {
             int examId = exam.getId();
             String examName = exam.getName();
+            int numberOfQuestions = exam.getNumberOfQuestions();
             int time = exam.getExamTime();
+            String startDate = exam.getStartDate();
+            String endDate = exam.getEndDate();
 
-            showStartDialog(examId, examName, time);
+            compareExamDate(examId, examName, numberOfQuestions, time, startDate, endDate);
         });
     }
 
     @SuppressLint("SetTextI18n")
-    private void showStartDialog(int examId, String examName, int examTime) {
+    private void showStartDialog(int examId, String examName, int numberOfQuestions, int examTime) {
         String email = LoginSession.getEmailKey();
 
         dismissDialog();
@@ -85,7 +93,7 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
             return;
         }
         if (email == null) {
-            handleAlertDialog();
+            showAlertDialog();
             return;
         }
         dialog = new Dialog(activity);
@@ -109,6 +117,7 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
             Intent intent = new Intent(activity, QuestionActivity.class);
             intent.putExtra("examId", examId);
             intent.putExtra("examName", examName);
+            intent.putExtra("numberOfQuestions", numberOfQuestions);
             intent.putExtra("examTime", examTime);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(intent);
@@ -120,7 +129,7 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
     }
 
     @SuppressLint("SetTextI18n")
-    private void handleAlertDialog() {
+    private void showAlertDialog() {
         dismissDialog();
 
         Activity activity = (Activity) context;
@@ -151,9 +160,54 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
         dialog.show();
     }
 
+    @SuppressLint("SetTextI18n")
+    private void showCheckDateDialog() {
+        dismissDialog();
+
+        Activity activity = (Activity) context;
+
+        if (activity.isFinishing()) {
+            return;
+        }
+
+        Dialog dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_alert_dialog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+
+        TextView tvMessage = dialog.findViewById(R.id.message);
+        Button btnClose = dialog.findViewById(R.id.btnContinuous);
+
+        tvMessage.setText("Ngoài thời gian cho phép thi. Vui lòng quay lại sau");
+
+        btnClose.setOnClickListener(view -> {
+            dismissDialog();
+        });
+
+        dialog.show();
+    }
+
     private void dismissDialog() {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
+        }
+    }
+
+    private void compareExamDate(int examId, String examName, int numberOfQuestions, int examTime, String startDateStr, String endDateStr) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
+            LocalDateTime startDate = LocalDateTime.parse(startDateStr, formatter);
+            LocalDateTime endDate = LocalDateTime.parse(endDateStr, formatter);
+
+            LocalDateTime currentDate = LocalDateTime.now();
+
+            if (currentDate.isAfter(startDate) && currentDate.isBefore(endDate)) {
+                showStartDialog(examId, examName, numberOfQuestions, examTime);
+            } else {
+                showCheckDateDialog();
+            }
         }
     }
 

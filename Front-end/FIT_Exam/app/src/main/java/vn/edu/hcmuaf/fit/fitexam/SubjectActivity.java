@@ -119,6 +119,9 @@ public class SubjectActivity extends AppCompatActivity {
         }
         if (!filteredList.isEmpty()) {
             adapter.setFilteredList(filteredList);
+            tvMessage.setVisibility(View.GONE);
+        } else {
+            tvMessage.setVisibility(View.VISIBLE);
         }
     }
 
