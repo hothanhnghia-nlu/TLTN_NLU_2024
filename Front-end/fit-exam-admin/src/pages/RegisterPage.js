@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {TabTitle} from "../commons/DynamicTitle";
 import {registerApi} from "../service/UserService";
@@ -16,6 +16,13 @@ const RegisterPage = () => {
     const [confPasswordError, setConfPasswordError] = useState('');
     const [role, setRole] = useState(0);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        let userId = localStorage.getItem("id");
+        if (userId) {
+            navigate("/");
+        }
+    }, [navigate]);
 
     const handleCheckboxChange = (event) => {
         const value = parseInt(event.target.value, 10);

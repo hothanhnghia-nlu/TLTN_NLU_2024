@@ -2593,6 +2593,10 @@ table.dataTable > thead .sorting:before, table.dataTable > thead .sorting:after,
     color: #fff
 }
 
+.modal-header1 .close {
+    font-size: 1.5rem;
+}
+
 .dropdown.action-label {
     display: inline-block
 }

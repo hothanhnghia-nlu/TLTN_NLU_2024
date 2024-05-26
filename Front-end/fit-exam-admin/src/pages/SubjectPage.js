@@ -20,7 +20,11 @@ const SubjectPage = () => {
     const [id, setId] = useState('');
     const [name, setName] = useState('');
     const [credit, setCredit] = useState('');
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImage, setSelectedImage] = useState({
+        file: null,
+        name: '',
+        preview: ''
+    });
 
     const [query, setQuery] = useState('');
     const keys = ["id", "name"];
@@ -55,16 +59,23 @@ const SubjectPage = () => {
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-
-        setSelectedImage({
-            file: file,
-            name: file.name,
-            preview: URL.createObjectURL(file)
-        });
+        if (file) {
+            setSelectedImage({
+                file: file,
+                name: file.name,
+                preview: URL.createObjectURL(file)
+            });
+        }
     };
 
     const handleSave = async () => {
-        const imageFile = selectedImage.file;
+        const imageFile = selectedImage?.file || null;
+
+        if (!id || !name || !credit) {
+            toast.error("Vui lòng điền đầy đủ thông tin!");
+            return;
+        }
+
         try {
             let res = await createSubject(id, name, credit, imageFile);
             if (res && res.id) {
@@ -240,7 +251,7 @@ const SubjectPage = () => {
                                                                     <h2>{item.name}</h2>
                                                                 </td>
                                                                 <td className="text-center">
-                                                                    {item.image.url ? (
+                                                                    {item.image && item.image.url ? (
                                                                         <img src={item.image.url} alt={item.name} style={{ maxWidth: '50px', maxHeight: '70px' }} />
                                                                     ) : (
                                                                         <span>No Image</span>
@@ -316,6 +327,7 @@ const SubjectPage = () => {
                                                    onChange={(event) => {
                                                        setId(event.target.value);
                                                    }}
+                                                   min="0"
                                             />
                                         </div>
                                     </div>
@@ -327,6 +339,7 @@ const SubjectPage = () => {
                                                    onChange={(event) => {
                                                        setCredit(event.target.value);
                                                    }}
+                                                   min="0"
                                             />
                                         </div>
                                     </div>
@@ -347,7 +360,7 @@ const SubjectPage = () => {
                                 <div className="row">
                                     <div className="col-sm-8">
                                         <div className="form-group">
-                                            < label>Hình ảnh</label>
+                                            <label>Hình ảnh</label>
                                             <input
                                                 type="file"
                                                 className="form-control"
@@ -388,6 +401,7 @@ const SubjectPage = () => {
                                                onChange={(event) => {
                                                    setId(event.target.value);
                                                }}
+                                               min="0"
                                         />
                                     </div>
                                 </div>
@@ -399,6 +413,7 @@ const SubjectPage = () => {
                                                onChange={(event) => {
                                                    setCredit(event.target.value);
                                                }}
+                                               min="0"
                                         />
                                     </div>
                                 </div>

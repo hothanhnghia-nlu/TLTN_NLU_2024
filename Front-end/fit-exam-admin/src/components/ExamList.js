@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {TabTitle} from "../commons/DynamicTitle";
 import {Link} from "react-router-dom";
 import Header from ".//Header";
-import {createExam, deleteExam, fetchAllExam, updateExam} from "../service/ExamService";
+import {createExam, deleteExam, fetchAllExamByCreatorId, updateExam} from "../service/ExamService";
 import ReactPaginate from "react-paginate";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -29,11 +29,11 @@ const ExamList = () => {
     const userId = localStorage.getItem("id");
 
     useEffect(() => {
-        getExams();
-    }, [])
+        getExams(userId);
+    }, [userId])
 
-    const getExams = async () => {
-        let res = await fetchAllExam();
+    const getExams = async (id) => {
+        let res = await fetchAllExamByCreatorId({id});
         if (res) {
             setListExams(res);
             setTotalExams(res.length);
@@ -57,6 +57,11 @@ const ExamList = () => {
     };
 
     const handleSave = async () => {
+        if (!name || !subjectId || !examTime || !numberOfQuestions || !startDate || !endDate) {
+            toast.error("Vui lòng điền đầy đủ thông tin!");
+            return;
+        }
+
         let res = await createExam(name, subjectId, userId, examTime, numberOfQuestions, startDate, endDate);
 
         if (res && res.id) {
@@ -293,6 +298,7 @@ const ExamList = () => {
                                                onChange={(event) => {
                                                    setExamTime(event.target.value);
                                                }}
+                                               min="0"
                                         />
                                     </div>
                                 </div>
@@ -306,6 +312,7 @@ const ExamList = () => {
                                                onChange={(event) => {
                                                    setSubjectId(event.target.value);
                                                }}
+                                               min="0"
                                         />
                                     </div>
                                 </div>
@@ -317,6 +324,7 @@ const ExamList = () => {
                                                onChange={(event) => {
                                                    setNumberOfQuestions(event.target.value);
                                                }}
+                                               min="0"
                                         />
                                     </div>
                                 </div>
@@ -346,7 +354,7 @@ const ExamList = () => {
                                 </div>
                             </div>
                             <div className="m-t-20 text-center">
-                                <button className="btn btn-primary btn-lg" data-dismiss="modal"
+                                <button className="btn btn-primary btn-lg"
                                         onClick={() => handleSave()}>Tạo bài thi</button>
                             </div>
                         </div>
@@ -382,6 +390,7 @@ const ExamList = () => {
                                                onChange={(event) => {
                                                    setExamTime(event.target.value);
                                                }}
+                                               min="0"
                                         />
                                     </div>
                                 </div>
@@ -389,12 +398,13 @@ const ExamList = () => {
                             <div className="row">
                                 <div className="col-sm-6">
                                     <div className="form-group">
-                                        <label>Môn thi</label>
+                                        <label>Mã môn thi</label>
                                         <input type="number" className="form-control" required="required"
                                                value={subjectId}
                                                onChange={(event) => {
                                                    setSubjectId(event.target.value);
                                                }}
+                                               min="0"
                                         />
                                     </div>
                                 </div>
@@ -406,6 +416,7 @@ const ExamList = () => {
                                                onChange={(event) => {
                                                    setNumberOfQuestions(event.target.value);
                                                }}
+                                               min="0"
                                         />
                                     </div>
                                 </div>

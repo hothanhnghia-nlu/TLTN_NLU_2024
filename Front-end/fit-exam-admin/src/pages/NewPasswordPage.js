@@ -18,9 +18,15 @@ const NewPasswordPage = () => {
     let userEmail = localStorage.getItem("email");
 
     useEffect(() => {
+        let userId = localStorage.getItem("id");
+        if (userId) {
+            navigate("/");
+        }
+    }, [navigate]);
+
+    useEffect(() => {
         getUserId(userEmail);
     }, [userEmail]);
-
 
     useEffect(() => {
         if (!userEmail) {

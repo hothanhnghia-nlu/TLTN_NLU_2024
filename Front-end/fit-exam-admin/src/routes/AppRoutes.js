@@ -15,30 +15,32 @@ import EditProfilePage from "../pages/EditProfilePage";
 import ProfilePage from "../pages/ProfilePage";
 import NewPasswordPage from "../pages/NewPasswordPage";
 import ChangePasswordPage from "../pages/ChangePasswordPage";
+import ErrorPage from "../pages/ErrorPage";
+import ExamResultPage from "../pages/ExamResultPage";
 
 const AppRoutes = () => {
     return (
-        <>
-            <Routes>
-                <Route path="/login" element={<LoginPage/>}/>
-                <Route path="/signup" element={<RegisterPage/>}/>
-                <Route path="/forgot-password" element={<ForgotPasswordPage/>}/>
-                <Route path="/new-password" element={<NewPasswordPage/>}/>
-                <Route path="/change-password" element={<ChangePasswordPage/>}/>
+        <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/new-password" element={<NewPasswordPage />} />
+            <Route path="/error-404" element={<ErrorPage/>}/>
 
-                <Route path="/" element={<PrivateRoute><HomePage/></PrivateRoute>}/>
-                <Route path="/my-profile" element={<PrivateRoute><ProfilePage/></PrivateRoute>}/>
-                <Route path="/edit-profile" element={<PrivateRoute><EditProfilePage/></PrivateRoute>}/>
-                <Route path="/students" element={<PrivateRoute><StudentPage/></PrivateRoute>}/>
-                <Route path="/exams" element={<PrivateRoute><ExamPage/></PrivateRoute>}/>
-                <Route path="/question-bank" element={<PrivateRoute><QuestionBankPage/></PrivateRoute>}/>
-                <Route path="/teachers" element={<PrivateRoute><TeacherPage/></PrivateRoute>}/>
-                <Route path="/faculties" element={<PrivateRoute><FacultyPage/></PrivateRoute>}/>
-                <Route path="/subjects" element={<PrivateRoute><SubjectPage/></PrivateRoute>}/>
-                <Route path="/logs" element={<PrivateRoute><LogPage/></PrivateRoute>}/>
-            </Routes>
-        </>
-    )
+            <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} />
+            <Route path="/my-profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+            <Route path="/edit-profile" element={<PrivateRoute><EditProfilePage /></PrivateRoute>} />
+            <Route path="/students" element={<PrivateRoute><StudentPage /></PrivateRoute>} />
+            <Route path="/exams" element={<PrivateRoute><ExamPage /></PrivateRoute>} />
+            <Route path="/question-bank" element={<PrivateRoute><QuestionBankPage /></PrivateRoute>} />
+            <Route path="/exam-result" element={<PrivateRoute><ExamResultPage /></PrivateRoute>} />
+            <Route path="/change-password" element={<PrivateRoute><ChangePasswordPage /></PrivateRoute>} />
+            <Route path="/teachers" element={<PrivateRoute><TeacherPage/></PrivateRoute>}/>
+            <Route path="/faculties" element={<PrivateRoute><FacultyPage/></PrivateRoute>}/>
+            <Route path="/subjects" element={<PrivateRoute><SubjectPage/></PrivateRoute>}/>
+            <Route path="/logs" element={<PrivateRoute><LogPage/></PrivateRoute>}/>
+        </Routes>
+    );
 }
 
 export default AppRoutes;

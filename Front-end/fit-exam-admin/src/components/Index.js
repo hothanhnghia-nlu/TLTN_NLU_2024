@@ -5,7 +5,7 @@ import {TabTitle} from "../commons/DynamicTitle";
 import {fetchAllSubject} from "../service/SubjectService";
 import {fetchAllUser, fetchUserById} from "../service/UserService";
 import moment from "moment";
-import {fetchAllExam} from "../service/ExamService";
+import {fetchAllExamByCreatorId} from "../service/ExamService";
 
 const Index = () => {
     TabTitle('Thống kê | FIT Exam Admin');
@@ -40,7 +40,7 @@ const Index = () => {
         getStudents(0);
         getTeachers(1);
         getSubjects();
-        getExams();
+        getExams(userId);
     }, [])
 
     const getStudents = async (role) => {
@@ -65,8 +65,8 @@ const Index = () => {
         }
     }
 
-    const getExams = async () => {
-        let res = await fetchAllExam();
+    const getExams = async (id) => {
+        let res = await fetchAllExamByCreatorId({id});
         if (res && Array.isArray(res)) {
             setListExams(res);
             setTotalExams(res.length);

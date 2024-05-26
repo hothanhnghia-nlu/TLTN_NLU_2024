@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {Link} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
 import {TabTitle} from "../commons/DynamicTitle";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,13 +9,22 @@ const ForgotPasswordPage = () => {
     TabTitle('Quên mật khẩu | FIT Exam Admin');
 
     const [email, setEmail] = useState('');
+    const [loadingAPI, setLoadingAPI] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        let userId = localStorage.getItem("id");
+        if (userId) {
+            navigate("/");
+        }
+    }, [navigate]);
 
     const handleResetPassword = async () => {
         if (!email) {
             toast.error("Vui lòng nhập Email!");
             return;
         }
-
+        setLoadingAPI(true);
         let res = await sendEmail(email);
         if (res) {
             if (res.status !== 400) {
@@ -25,6 +34,7 @@ const ForgotPasswordPage = () => {
                 toast.error("Email không đúng!");
             }
         }
+        setLoadingAPI(false);
     }
 
     return (
@@ -45,7 +55,9 @@ const ForgotPasswordPage = () => {
                             </div>
                             <div className="form-group text-center custom-mt-form-group">
                                 <button className="btn btn-primary btn-block account-btn"
-                                        type="submit" onClick={() => handleResetPassword()}>Đặt lại mật khẩu
+                                        type="submit" onClick={() => handleResetPassword()}>
+                                    {loadingAPI && <i className="fas fa-sync fa-spin"></i>}
+                                    &nbsp;Đặt lại mật khẩu
                                 </button>
                                 <ToastContainer/>
                             </div>
