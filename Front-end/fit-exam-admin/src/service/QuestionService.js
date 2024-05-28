@@ -4,6 +4,10 @@ const fetchAllQuestionByUserId = ({id}) => {
     return axios.get(`questions/user?id=${id}`);
 }
 
+const fetchQuestionById = ({id}) => {
+    return axios.get(`questions/${id}`);
+}
+
 const fetchShuffleQuestions = ({id}) => {
     return axios.get(`questions/shuffle/user?id=${id}`);
 }
@@ -51,4 +55,4 @@ const deleteQuestion = (id) => {
     return axios.delete(`questions/${id}`);
 }
 
-export {fetchAllQuestionByUserId, fetchShuffleQuestions, createQuestion, updateQuestion, deleteQuestion};
+export {fetchAllQuestionByUserId, fetchQuestionById, fetchShuffleQuestions, createQuestion, updateQuestion, deleteQuestion};

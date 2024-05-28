@@ -182,6 +182,7 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
         tvMessage.setText("Ngoài thời gian cho phép thi. Vui lòng quay lại sau");
 
         btnClose.setOnClickListener(view -> {
+            dialog.dismiss();
             dismissDialog();
         });
 

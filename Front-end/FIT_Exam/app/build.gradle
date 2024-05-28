@@ -16,8 +16,18 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            keyAlias 'fitexam24'
+            keyPassword 'Nghia@1005'
+            storeFile file('C:\\Users\\ASUS\\Desktop\\TLTN_HoThanhNghia\\fileapp.jks')
+            storePassword 'Nghia@1005'
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

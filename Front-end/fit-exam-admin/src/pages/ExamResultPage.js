@@ -76,6 +76,14 @@ const ExamResultPage = () => {
         }
     }
 
+    const getClassification = (item) => {
+        if (item.score >= 5.0) {
+            return <td className="text-center" style={{color: 'red', fontWeight: 'bold'}}>ĐẠT</td>
+        } else {
+            return <td className="text-center" style={{color: 'red', fontWeight: 'bold'}}>KHÔNG ĐẠT</td>
+        }
+    }
+
     return (
         <>
             <Header/>
@@ -132,8 +140,9 @@ const ExamResultPage = () => {
                                                     <th>#</th>
                                                     <th>Tên thí sinh</th>
                                                     <th>Tên bài thi</th>
-                                                    <th className="text-center">Tổng số câu đúng</th>
+                                                    <th className="text-center">Số câu đúng</th>
                                                     <th className="text-center">Điểm thi</th>
+                                                    <th className="text-center">Kết quả</th>
                                                     <th className="text-center">Tổng thời gian thi</th>
                                                     <th>Ngày thi</th>
                                                 </tr>
@@ -160,6 +169,7 @@ const ExamResultPage = () => {
                                                                 </td>
                                                                 <td className="text-center">{item.totalCorrectAnswer}</td>
                                                                 <td className="text-center">{item.score}</td>
+                                                                {getClassification(item)}
                                                                 <td className="text-center">{item.overallTime} phút</td>
                                                                 <td>{convertDate({date: item.examDate})}</td>
                                                             </tr>

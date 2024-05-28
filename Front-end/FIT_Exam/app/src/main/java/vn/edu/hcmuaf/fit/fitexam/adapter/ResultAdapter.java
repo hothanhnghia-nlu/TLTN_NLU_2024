@@ -126,12 +126,14 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultView
                 }
 
                 List<Image> images = question.getImages();
-                if (images != null) {
+                if (images != null && !images.isEmpty()) {
                     for (int i = 0; i < images.size(); i++) {
                         String imageUrl = images.get(i).getUrl();
                         ivFigure.setVisibility(View.VISIBLE);
                         Glide.with(context).load(imageUrl).into(ivFigure);
                     }
+                } else {
+                    ivFigure.setVisibility(View.GONE);
                 }
             }
         }

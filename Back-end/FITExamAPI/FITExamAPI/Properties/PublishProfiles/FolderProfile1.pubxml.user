@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>D:\Java_Backend\FITExamAPI_Released</_PublishTargetUrl>
+    <History>True|2024-05-31T17:00:46.1282154Z;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="FITExamDb">
+      <Value>server=localhost%3bdatabase=fitexam%3buser=root%3bpassword=</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="FITExamAPI.Data.FitExamContext">
+      <Value>server=localhost%3bdatabase=fitexam%3buser=root%3bpassword=</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>

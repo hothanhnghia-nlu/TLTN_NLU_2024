@@ -5,7 +5,12 @@ import Header from "../components/Header";
 import ReactPaginate from "react-paginate";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import {createQuestion, fetchAllQuestionByUserId, fetchShuffleQuestions} from "../service/QuestionService";
+import {
+    createQuestion,
+    fetchAllQuestionByUserId,
+    fetchQuestionById,
+    fetchShuffleQuestions
+} from "../service/QuestionService";
 import {deleteQuestion, updateQuestion} from "../service/QuestionService";
 import {fetchAllAnswerByQuestionId} from "../service/AnswerService";
 
@@ -14,6 +19,7 @@ const ExamList = () => {
 
     const [listQuestions, setListQuestions] = useState([]);
     const [listAnswers, setListAnswers] = useState([]);
+    const [question, setQuestion] = useState({});
     const [totalQuestions, setTotalQuestions] = useState(0);
     const [dataQuestionEdit, setDataQuestionEdit] = useState({});
     const [dataQuestionDelete, setDataQuestionDelete] = useState({});
@@ -47,6 +53,13 @@ const ExamList = () => {
         }
     }
 
+    const getQuestionById = async (id) => {
+        let res = await fetchQuestionById({id});
+        if (res) {
+            setQuestion(res);
+        }
+    }
+
     const handleShuffleQuestions = async (id) => {
         let res = await fetchShuffleQuestions({id});
         if (res) {
@@ -60,6 +73,7 @@ const ExamList = () => {
         if (res) {
             setListAnswers(res);
         }
+        getQuestionById(id);
     }
 
     const [currentItems, setCurrentItems] = useState(null);
@@ -125,6 +139,8 @@ const ExamList = () => {
                 setDifficultyLevel('');
                 setOptions([]);
                 setSelectedImage(null);
+                setAnswer('');
+                setAnswerNum(0);
 
                 toast.success("Tạo bài thi thành công!");
             } else {
@@ -142,6 +158,12 @@ const ExamList = () => {
             setOptions(dataQuestionEdit.options);
             setExamName(dataQuestionEdit.examName);
             setOptions(dataQuestionEdit.options);
+
+            const correctOption = dataQuestionEdit.options.find(option => option.isCorrect);
+
+            if (correctOption) {
+                setAnswer(correctOption.content);
+            }
         }
     }, [dataQuestionEdit]);
 
@@ -195,6 +217,17 @@ const ExamList = () => {
         } else {
             return <td>Sai</td>;
         }
+    }
+
+    const questionContent = question.content;
+    const questionImages = question.images;
+    let contentToDisplay, imageToDisplay;
+
+    if (questionContent || (questionImages && questionImages.length > 0)) {
+        contentToDisplay = <h4>Câu hỏi: {questionContent}</h4>;
+        imageToDisplay = questionImages ? <img src={questionImages[0]?.url}  alt=""/> : null;
+    } else {
+        contentToDisplay = <h4>Không có câu hỏi nào</h4>;
     }
 
     return (
@@ -277,7 +310,7 @@ const ExamList = () => {
                                                             <tr key={`questions-${index}`}>
                                                                 <td>{item.id}</td>
                                                                 <td>
-                                                                    <h2>{item.content}</h2>
+                                                                    <h2>{item.content.length > 30 ? item.content.substring(0, 30) + '...' : item.content}</h2>
                                                                 </td>
                                                                 <td className="text-center">
                                                                     {item.images && item.images.length > 0 ? (
@@ -480,6 +513,8 @@ const ExamList = () => {
                             <button type="button" className="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div className="modal-body">
+                            {contentToDisplay}
+                            {imageToDisplay}
                             <div className="table-responsive">
                                 <table className="table custom-table datatable">
                                     <thead className="thead-light">

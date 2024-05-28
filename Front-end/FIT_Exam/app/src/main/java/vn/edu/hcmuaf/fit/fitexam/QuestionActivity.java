@@ -63,12 +63,12 @@ public class QuestionActivity extends AppCompatActivity {
     RelativeLayout rlTwoButton;
     CountDownTimer countDownTimer;
     DBHelper dbHelper;
+    LoginSession session;
     private long timeLeftInMillis;
     private int numberOfQuestions, examID, examTime;
     private ArrayList<Question> questions;
     private int currentQuestion = 0;
     private boolean continuousMode = false;
-    LoginSession session;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -186,12 +186,14 @@ public class QuestionActivity extends AppCompatActivity {
         tvNumberOfQuestion.setText(String.format("%d/%s", index + 1, numberOfQuestions));
         tvQuestion.setText(String.format("Câu %d: %s", index + 1, question.getContent()));
 
-        if (images != null) {
+        if (images != null && !images.isEmpty()) {
             for (int i = 0; i < images.size(); i++) {
                 String imageUrl = images.get(i).getUrl();
                 ivFigure.setVisibility(View.VISIBLE);
                 Glide.with(getApplicationContext()).load(imageUrl).into(ivFigure);
             }
+        } else {
+            ivFigure.setVisibility(View.GONE);
         }
 
         radioGroup.removeAllViews();

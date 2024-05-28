@@ -13,7 +13,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,18 +42,26 @@ import vn.edu.hcmuaf.fit.fitexam.model.Result;
 import vn.edu.hcmuaf.fit.fitexam.model.Subject;
 import vn.edu.hcmuaf.fit.fitexam.model.User;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     TextView tvName, btnSee1, btnSee2, btnSee3;
     RecyclerView recyclerSubject, recyclerTakeExam, recyclerExamHistory;
     ShimmerFrameLayout shimmerSubject, shimmerTakeExam, shimmerExamHistory;
     SubjectHomeAdapter subjectAdapter;
     TakeExamAdapter examAdapter;
     HistoryAdapter historyAdapter;
+    SwipeRefreshLayout swipeRefreshLayout;
     LoginSession session;
+    private ArrayList<Result> results;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.green_nlu));
+
+        return view;
     }
 
     @Override
@@ -88,6 +98,8 @@ public class HomeFragment extends Fragment {
 
         if (checkInternetPermission()) {
             if (id != null) {
+                swipeRefreshLayout.setOnRefreshListener(() -> loadHistoryList(Integer.parseInt(id)));
+
                 loadStudentName(Integer.parseInt(id));
                 loadHistoryList(Integer.parseInt(id));
             }
@@ -192,7 +204,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<ArrayList<Result>> call, Response<ArrayList<Result>> response) {
                 if (response.isSuccessful()) {
-                    ArrayList<Result> results = response.body();
+                    results = response.body();
 
                     if (results != null && !results.isEmpty()) {
                         Collections.reverse(results);
@@ -203,6 +215,8 @@ public class HomeFragment extends Fragment {
                         historyAdapter = new HistoryAdapter(getContext(), results);
                         recyclerExamHistory.setAdapter(historyAdapter);
                     }
+
+                    onRefresh();
                 }
             }
 
@@ -227,5 +241,16 @@ public class HomeFragment extends Fragment {
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
+    }
+
+    @Override
+    public void onRefresh() {
+        if (results != null && historyAdapter != null) {
+            historyAdapter.setData(results);
+            Handler handler = new Handler();
+            handler.postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
+        } else {
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
 }
