@@ -50,6 +50,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
 import vn.edu.hcmuaf.fit.fitexam.common.RealPathUtil;
@@ -197,7 +198,10 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void getUserInformation(int id) {
-        Call<User> userInfo = ApiService.apiService.getUser(id);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<User> userInfo = apiService.getUser(id);
 
         userInfo.enqueue(new Callback<User>() {
             @Override
@@ -289,14 +293,17 @@ public class EditProfileActivity extends AppCompatActivity {
     private void handleUpdateUser(int id, RequestBody name, RequestBody phone, RequestBody email, RequestBody dob, RequestBody gender, RequestBody facultyId, MultipartBody.Part avatar) {
         String emailSession = LoginSession.getEmailKey();
 
-        Call<Void> update = ApiService.apiService.updateUser(id, name, phone, email, dob, gender, facultyId, avatar);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<Void> update = apiService.updateUser(id, name, phone, email, dob, gender, facultyId, avatar);
 
         update.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Log log = new Log(id, Log.ALERT, getPhoneIpAddress(), "Edit profile",
-                            "Email: " + emailSession + " is edited successful", Log.SUCCESS);
+                            "Email: " + emailSession + " is edited profile successful", Log.SUCCESS);
                     addLog(log);
 
                     Toast.makeText(EditProfileActivity.this,
@@ -321,7 +328,10 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void addLog(Log log) {
-        Call<Log> editLog = ApiService.apiService.createLog(log);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<Log> editLog = apiService.createLog(log);
 
         editLog.enqueue(new Callback<Log>() {
             @Override
@@ -361,7 +371,10 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void getFaculty() {
-        Call<ArrayList<Faculty>> facultyList = ApiService.apiService.getAllFaculties();
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<ArrayList<Faculty>> facultyList = apiService.getAllFaculties();
 
         facultyList.enqueue(new Callback<ArrayList<Faculty>>() {
             @Override

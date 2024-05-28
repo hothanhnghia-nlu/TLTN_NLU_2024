@@ -26,6 +26,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import vn.edu.hcmuaf.fit.fitexam.adapter.TakeExamAdapter;
 import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.model.Exam;
@@ -92,7 +93,10 @@ public class TakeExamActivity extends AppCompatActivity {
     }
 
     private void loadTakeExamList(String subjectId) {
-        Call<ArrayList<Exam>> subjectList = ApiService.apiService.getAllExamsBySubjectId(subjectId);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<ArrayList<Exam>> subjectList = apiService.getAllExamsBySubjectId(subjectId);
 
         subjectList.enqueue(new Callback<ArrayList<Exam>>() {
             @Override

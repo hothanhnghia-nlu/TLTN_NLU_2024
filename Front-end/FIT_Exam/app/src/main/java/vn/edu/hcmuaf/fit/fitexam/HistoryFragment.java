@@ -9,6 +9,7 @@ import android.os.Bundle;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import vn.edu.hcmuaf.fit.fitexam.R;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -108,7 +109,10 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void loadHistoryList(int id) {
-        Call<ArrayList<Result>> resultList = ApiService.apiService.getAllResultsByUserId(id);
+        Retrofit retrofit = ApiService.getClient(getContext());
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<ArrayList<Result>> resultList = apiService.getAllResultsByUserId(id);
 
         resultList.enqueue(new Callback<ArrayList<Result>>() {
             @Override

@@ -31,6 +31,7 @@ import java.util.Collections;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import vn.edu.hcmuaf.fit.fitexam.adapter.HistoryAdapter;
 import vn.edu.hcmuaf.fit.fitexam.adapter.SubjectHomeAdapter;
 import vn.edu.hcmuaf.fit.fitexam.adapter.TakeExamAdapter;
@@ -124,7 +125,10 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void loadStudentName(int id) {
-        Call<User> userInfo = ApiService.apiService.getUser(id);
+        Retrofit retrofit = ApiService.getClient(getContext());
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<User> userInfo = apiService.getUser(id);
 
         userInfo.enqueue(new Callback<User>() {
             @Override
@@ -146,7 +150,10 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void loadSubjectList() {
-        Call<ArrayList<Subject>> subjectList = ApiService.apiService.getAllSubjects();
+        Retrofit retrofit = ApiService.getClient(getContext());
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<ArrayList<Subject>> subjectList = apiService.getAllSubjects();
 
         subjectList.enqueue(new Callback<ArrayList<Subject>>() {
             @Override
@@ -172,7 +179,10 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void loadTakeExamList() {
-        Call<ArrayList<Exam>> subjectList = ApiService.apiService.getAllExams();
+        Retrofit retrofit = ApiService.getClient(getContext());
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<ArrayList<Exam>> subjectList = apiService.getAllExams();
 
         subjectList.enqueue(new Callback<ArrayList<Exam>>() {
             @Override
@@ -198,7 +208,10 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void loadHistoryList(int id) {
-        Call<ArrayList<Result>> resultList = ApiService.apiService.getAllResultsByUserId(id);
+        Retrofit retrofit = ApiService.getClient(getContext());
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<ArrayList<Result>> resultList = apiService.getAllResultsByUserId(id);
 
         resultList.enqueue(new Callback<ArrayList<Result>>() {
             @Override

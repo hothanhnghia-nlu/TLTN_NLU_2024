@@ -25,6 +25,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.common.UserIdCallback;
 import vn.edu.hcmuaf.fit.fitexam.model.Log;
@@ -94,7 +95,10 @@ public class SignupActivity extends AppCompatActivity {
         RequestBody phone = RequestBody.create(MediaType.parse(bodyType), txtPhone);
         RequestBody password = RequestBody.create(MediaType.parse(bodyType), txtPassword);
 
-        Call<User> register = ApiService.apiService.register(name, email, phone, password);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<User> register = apiService.register(name, email, phone, password);
 
         register.enqueue(new Callback<User>() {
             @Override
@@ -131,7 +135,10 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void getUserId(String email, final UserIdCallback callback) {
-        Call<String> call = ApiService.apiService.getUserId(email);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<String> call = apiService.getUserId(email);
 
         call.enqueue(new Callback<String>() {
             @Override
@@ -153,7 +160,10 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void addLog(Log log) {
-        Call<Log> loginLog = ApiService.apiService.createLog(log);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<Log> loginLog = apiService.createLog(log);
 
         loginLog.enqueue(new Callback<Log>() {
             @Override

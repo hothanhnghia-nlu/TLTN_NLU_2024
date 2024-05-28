@@ -44,6 +44,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.common.DBHelper;
 import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
@@ -155,7 +156,10 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     private void loadQuestion(int examId) {
-        Call<ArrayList<Question>> questionList = ApiService.apiService.getAllQuestionsByExamId(examId);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<ArrayList<Question>> questionList = apiService.getAllQuestionsByExamId(examId);
 
         questionList.enqueue(new Callback<ArrayList<Question>>() {
             @Override
@@ -459,7 +463,10 @@ public class QuestionActivity extends AppCompatActivity {
         RequestBody examDate = RequestBody.create(MediaType.parse(bodyType), formattedDateTime);
         RequestBody overallTime = RequestBody.create(MediaType.parse(bodyType), String.valueOf(examTime));
 
-        Call<Result> create = ApiService.apiService.createResult(userId, examId, totalCorrectAnswer, score, examDate, overallTime);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<Result> create = apiService.createResult(userId, examId, totalCorrectAnswer, score, examDate, overallTime);
 
         create.enqueue(new Callback<Result>() {
             @Override
@@ -503,7 +510,10 @@ public class QuestionActivity extends AppCompatActivity {
         RequestBody answerId = RequestBody.create(MediaType.parse(bodyType), String.valueOf(answerID));
         RequestBody isCorrect = RequestBody.create(MediaType.parse(bodyType), String.valueOf(checkIsCorrect));
 
-        Call<ResultDetail> create = ApiService.apiService.createResultDetail(resultId, questionId, answerId, isCorrect);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<ResultDetail> create = apiService.createResultDetail(resultId, questionId, answerId, isCorrect);
 
         create.enqueue(new Callback<ResultDetail>() {
             @Override

@@ -22,6 +22,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
 import vn.edu.hcmuaf.fit.fitexam.common.UserUtils;
@@ -82,7 +83,10 @@ public class NewPasswordActivity extends AppCompatActivity {
         String bodyType = "multipart/form-data";
         RequestBody password = RequestBody.create(MediaType.parse(bodyType), txtPassword);
 
-        Call<Void> changePassword = ApiService.apiService.changePassword(id, password);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<Void> changePassword = apiService.changePassword(id, password);
 
         changePassword.enqueue(new Callback<Void>() {
             @Override
@@ -118,7 +122,10 @@ public class NewPasswordActivity extends AppCompatActivity {
     }
 
     private void addLog(Log log) {
-        Call<Log> passwordLog = ApiService.apiService.createLog(log);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<Log> passwordLog = apiService.createLog(log);
 
         passwordLog.enqueue(new Callback<Log>() {
             @Override

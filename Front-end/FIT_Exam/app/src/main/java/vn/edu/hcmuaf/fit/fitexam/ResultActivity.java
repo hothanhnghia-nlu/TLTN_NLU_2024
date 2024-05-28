@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import vn.edu.hcmuaf.fit.fitexam.adapter.ResultAdapter;
 import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
@@ -67,7 +68,10 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     private void loadResult(int id) {
-        Call<ArrayList<ResultDetail>> resultDetail = ApiService.apiService.getResultDetailByResultId(id);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<ArrayList<ResultDetail>> resultDetail = apiService.getResultDetailByResultId(id);
 
         resultDetail.enqueue(new Callback<ArrayList<ResultDetail>>() {
             @Override

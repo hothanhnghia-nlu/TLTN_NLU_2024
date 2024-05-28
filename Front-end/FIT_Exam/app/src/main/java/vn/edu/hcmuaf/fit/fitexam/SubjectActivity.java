@@ -25,6 +25,7 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Retrofit;
 import vn.edu.hcmuaf.fit.fitexam.adapter.SubjectAdapter;
 import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.model.Subject;
@@ -83,7 +84,10 @@ public class SubjectActivity extends AppCompatActivity {
     }
 
     private void loadSubjectList() {
-        Call<ArrayList<Subject>> subjectList = ApiService.apiService.getAllSubjects();
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<ArrayList<Subject>> subjectList = apiService.getAllSubjects();
 
         subjectList.enqueue(new Callback<ArrayList<Subject>>() {
             @Override

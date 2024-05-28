@@ -28,6 +28,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import vn.edu.hcmuaf.fit.fitexam.adapter.TakeExamAdapter;
 import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.model.Exam;
@@ -85,7 +86,10 @@ public class TakeExamFragment extends Fragment {
     }
 
     private void loadTakeExamList() {
-        Call<ArrayList<Exam>> subjectList = ApiService.apiService.getAllExams();
+        Retrofit retrofit = ApiService.getClient(getContext());
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<ArrayList<Exam>> subjectList = apiService.getAllExams();
 
         subjectList.enqueue(new Callback<ArrayList<Exam>>() {
             @Override

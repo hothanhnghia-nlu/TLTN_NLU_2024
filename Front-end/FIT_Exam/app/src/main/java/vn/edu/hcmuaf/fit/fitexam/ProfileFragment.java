@@ -44,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Retrofit;
 import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
 import vn.edu.hcmuaf.fit.fitexam.model.Log;
@@ -118,7 +119,10 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getUserInformation(int id) {
-        Call<User> userInfo = ApiService.apiService.getUser(id);
+        Retrofit retrofit = ApiService.getClient(getContext());
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<User> userInfo = apiService.getUser(id);
 
         userInfo.enqueue(new Callback<User>() {
             @SuppressLint("SetTextI18n")
@@ -217,7 +221,10 @@ public class ProfileFragment extends Fragment {
     }
 
     private void addLog(Log log) {
-        Call<Log> logoutLog = ApiService.apiService.createLog(log);
+        Retrofit retrofit = ApiService.getClient(getContext());
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<Log> logoutLog = apiService.createLog(log);
 
         logoutLog.enqueue(new Callback<Log>() {
             @Override

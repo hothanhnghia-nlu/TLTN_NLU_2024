@@ -36,6 +36,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
 import vn.edu.hcmuaf.fit.fitexam.common.UserIdCallback;
@@ -121,7 +122,10 @@ public class LoginActivity extends AppCompatActivity {
         RequestBody email = RequestBody.create(MediaType.parse(bodyType), txtEmail);
         RequestBody password = RequestBody.create(MediaType.parse(bodyType), txtPassword);
 
-        Call<User> login = ApiService.apiService.login(email, password);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<User> login = apiService.login(email, password);
 
         login.enqueue(new Callback<User>() {
             @SuppressLint("SetTextI18n")
@@ -146,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
                         tvMessage.setText("Vui lòng kiểm tra lại email và mật khẩu.");
 
                         Toast.makeText(LoginActivity.this,
-                                "Đăng nhập thất bại!", Toast.LENGTH_SHORT).show();
+                                "Đăng nhập không thành công!", Toast.LENGTH_SHORT).show();
 
                         Log log = new Log(Integer.parseInt(userId), Log.ALERT, getPhoneIpAddress(),
                                 "Login", "Email: " + txtEmail + " is login failed", Log.FAILED);
@@ -163,7 +167,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void addLog(Log log) {
-        Call<Log> loginLog = ApiService.apiService.createLog(log);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<Log> loginLog = apiService.createLog(log);
 
         loginLog.enqueue(new Callback<Log>() {
             @Override
@@ -233,7 +240,10 @@ public class LoginActivity extends AppCompatActivity {
         RequestBody name = RequestBody.create(MediaType.parse(bodyType), txtName);
         RequestBody password = RequestBody.create(MediaType.parse(bodyType), txtPassword);
 
-        Call<User> register = ApiService.apiService.register(name, email, null, password);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<User> register = apiService.register(name, email, null, password);
         register.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -259,7 +269,10 @@ public class LoginActivity extends AppCompatActivity {
         RequestBody email = RequestBody.create(MediaType.parse(bodyType), txtEmail);
         RequestBody password = RequestBody.create(MediaType.parse(bodyType), txtPassword);
 
-        Call<User> login = ApiService.apiService.login(email, password);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<User> login = apiService.login(email, password);
         login.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -271,15 +284,15 @@ public class LoginActivity extends AppCompatActivity {
                         LoginSession.saveLoginSession(userId, txtEmail, txtPassword);
 
                         Log log = new Log(Integer.parseInt(userId), Log.INFO, getPhoneIpAddress(), "Login",
-                                "Email: " + txtEmail + " is login successful", Log.SUCCESS);
+                                "Email: " + txtEmail + " is login Google successful", Log.SUCCESS);
                         addLog(log);
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
-                        Log log = new Log(Integer.parseInt(userId), Log.ALERT, getPhoneIpAddress(),
-                                "Login", "Email: " + txtEmail + " is login failed", Log.FAILED);
+                        Log log = new Log(Integer.parseInt(userId), Log.ALERT, getPhoneIpAddress(),"Login",
+                                "Email: " + txtEmail + " is login Google failed", Log.FAILED);
                         addLog(log);
                     }
                 });
@@ -293,7 +306,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void getUserId(String email, final UserIdCallback callback) {
-        Call<String> call = ApiService.apiService.getUserId(email);
+        Retrofit retrofit = ApiService.getClient(this);
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<String> call = apiService.getUserId(email);
 
         call.enqueue(new Callback<String>() {
             @Override

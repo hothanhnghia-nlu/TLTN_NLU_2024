@@ -1,5 +1,7 @@
 package vn.edu.hcmuaf.fit.fitexam.api;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 
 import okhttp3.MultipartBody;
@@ -31,20 +33,21 @@ import vn.edu.hcmuaf.fit.fitexam.model.utils.ResultDetailConst;
 import vn.edu.hcmuaf.fit.fitexam.model.utils.UserConst;
 
 public interface ApiService {
-    String apiUrl = "http://192.168.1.25/api/";
-//    String apiUrl = "http://10.51.86.11/api/";
+    String apiUrl = "https://192.168.1.25/api/";
+//    String apiUrl = "https://10.51.86.11/api/";
 
     HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor()
             .setLevel(HttpLoggingInterceptor.Level.BASIC);
 
-    OkHttpClient.Builder okBuilder = new OkHttpClient.Builder().addInterceptor(interceptor);
+    static Retrofit getClient(Context context) {
+        OkHttpClient client = UnsafeOkHttpClient.getUnsafeOkHttpClient(context);
 
-    ApiService apiService = new Retrofit.Builder()
-            .baseUrl(apiUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okBuilder.build())
-            .build()
-            .create(ApiService.class);
+        return new Retrofit.Builder()
+                .baseUrl(apiUrl)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+    }
 
     @Multipart
     @POST("register")
