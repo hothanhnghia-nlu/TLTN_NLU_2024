@@ -4,4 +4,8 @@ const fetchAllResult = () => {
     return axios.get("results");
 }
 
-export {fetchAllResult};
+const fetchResultDetailByQuestionId = ({id}) => {
+    return axios.get(`resultDetails/result?id=${id}`);
+}
+
+export {fetchAllResult, fetchResultDetailByQuestionId};

@@ -3,14 +3,16 @@ import {TabTitle} from "../commons/DynamicTitle";
 import {Link} from "react-router-dom";
 import Header from "../components/Header";
 import moment from "moment/moment";
-import {fetchAllResult} from "../service/ResultService";
+import {fetchAllResult, fetchResultDetailByQuestionId} from "../service/ResultService";
 import ReactPaginate from "react-paginate";
 import {CSVLink} from "react-csv";
+import {fetchAllAnswerByQuestionId} from "../service/AnswerService";
 
 const ExamResultPage = () => {
     TabTitle('Kết quả thi | FIT Exam Admin');
 
     const [listResults, setListResults] = useState([]);
+    const [listAnswers, setListAnswers] = useState([]);
     const [totalResults, setTotalResults] = useState([]);
     const [dataExport, setDataExport] = useState([]);
     const [query, setQuery] = useState('');
@@ -24,6 +26,13 @@ const ExamResultPage = () => {
         if (res) {
             setListResults(res);
             setTotalResults(res.length);
+        }
+    }
+
+    const handleViewAnswer = async (id) => {
+        let res = await fetchResultDetailByQuestionId({id});
+        if (res) {
+            setListAnswers(res);
         }
     }
 
@@ -81,6 +90,14 @@ const ExamResultPage = () => {
             return <td className="text-center" style={{color: 'red', fontWeight: 'bold'}}>ĐẠT</td>
         } else {
             return <td className="text-center" style={{color: 'red', fontWeight: 'bold'}}>KHÔNG ĐẠT</td>
+        }
+    }
+
+    const getCorrectAnswer = (item) => {
+        if (item.isCorrect === true) {
+            return <td>Đúng</td>;
+        } else {
+            return <td>Sai</td>;
         }
     }
 
@@ -145,6 +162,7 @@ const ExamResultPage = () => {
                                                     <th className="text-center">Kết quả</th>
                                                     <th className="text-center">Tổng thời gian thi</th>
                                                     <th>Ngày thi</th>
+                                                    <th className="text-right">Tính năng</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -172,6 +190,14 @@ const ExamResultPage = () => {
                                                                 {getClassification(item)}
                                                                 <td className="text-center">{item.overallTime} phút</td>
                                                                 <td>{convertDate({date: item.examDate})}</td>
+                                                                <td className="text-right">
+                                                                    <button type="submit" data-toggle="modal"
+                                                                            data-target="#view_answer"
+                                                                            className="btn btn-primary btn-sm mb-1"
+                                                                            onClick={() => handleViewAnswer(item.id)}>
+                                                                        <i className="far fa-eye" title="Xem"></i>
+                                                                    </button>
+                                                                </td>
                                                             </tr>
                                                         )
                                                     })
@@ -201,6 +227,57 @@ const ExamResultPage = () => {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view_answer" className="modal fade" role="dialog">
+                <div className="modal-dialog modal-dialog-centered modal-fullscreen">
+                    <div className="modal-content modal-content1">
+                        <div className="modal-header modal-header1">
+                            <h4 className="modal-title">Chi tiết câu trả lời</h4>
+                            <button type="button" className="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="table-responsive">
+                                <table className="table custom-table datatable">
+                                    <thead className="thead-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Câu hỏi</th>
+                                        <th>Câu trả lời</th>
+                                        <th>Đúng/sai</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {listAnswers && listAnswers.length > 0 &&
+                                        listAnswers.map((item, index) => {
+                                            return (
+                                                <tr key={`answers-${index}`}>
+                                                    <td>{item.id}</td>
+                                                    <td>
+                                                        {item.question ? (
+                                                            <h2>{item.question.content}</h2>
+                                                        ) : (
+                                                            <span>Invalid question</span>
+                                                        )}
+                                                    </td>
+                                                    <td>
+                                                        {item.answer ? (
+                                                            <h2>{item.answer.content}</h2>
+                                                        ) : (
+                                                            <span>Invalid question</span>
+                                                        )}
+                                                    </td>
+                                                    {getCorrectAnswer(item)}
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
