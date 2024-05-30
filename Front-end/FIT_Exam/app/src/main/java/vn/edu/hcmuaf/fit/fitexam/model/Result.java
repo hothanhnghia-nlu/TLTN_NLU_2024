@@ -9,14 +9,14 @@ public class Result implements Serializable {
     private int totalCorrectAnswer;
     private double score;
     private String examDate;
-    private int overallTime;
+    private double overallTime;
     private User user;
     private Exam exam;
 
     public Result() {
     }
 
-    public Result(int userId, int examId, int totalCorrectAnswer, double score, String examDate, int overallTime) {
+    public Result(int userId, int examId, int totalCorrectAnswer, double score, String examDate, double overallTime) {
         this.userId = userId;
         this.examId = examId;
         this.totalCorrectAnswer = totalCorrectAnswer;
@@ -73,11 +73,11 @@ public class Result implements Serializable {
         this.examDate = examDate;
     }
 
-    public int getOverallTime() {
+    public double getOverallTime() {
         return overallTime;
     }
 
-    public void setOverallTime(int overallTime) {
+    public void setOverallTime(double overallTime) {
         this.overallTime = overallTime;
     }
 

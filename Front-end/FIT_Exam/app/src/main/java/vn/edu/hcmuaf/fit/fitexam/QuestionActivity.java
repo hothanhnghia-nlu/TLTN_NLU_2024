@@ -66,6 +66,7 @@ public class QuestionActivity extends AppCompatActivity {
     DBHelper dbHelper;
     LoginSession session;
     private long timeLeftInMillis;
+    private String examDateTime;
     private int numberOfQuestions, examID, examTime;
     private ArrayList<Question> questions;
     private int currentQuestion = 0;
@@ -97,6 +98,7 @@ public class QuestionActivity extends AppCompatActivity {
         String examName = intent.getStringExtra("examName");
         numberOfQuestions = intent.getIntExtra("numberOfQuestions", -1);
         examTime = intent.getIntExtra("examTime", -1);
+        examDateTime = intent.getStringExtra("examDate");
 
         if (checkInternetPermission()) {
             if (examID != -1 || examName != null || examTime != 1 || numberOfQuestions != -1) {
@@ -447,21 +449,14 @@ public class QuestionActivity extends AppCompatActivity {
         String userID = LoginSession.getIdKey();
         double examScore = (10.0 / numberOfQuestions) * correctAnswers;
         double roundedScore = Math.round(examScore * 100.0) / 100.0;
-        LocalDateTime dateTime;
-        String formattedDateTime = "";
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            dateTime = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            formattedDateTime = dateTime.format(formatter);
-        }
 
         String bodyType = "multipart/form-data";
         RequestBody userId = RequestBody.create(MediaType.parse(bodyType), userID);
         RequestBody examId = RequestBody.create(MediaType.parse(bodyType), String.valueOf(examID));
         RequestBody totalCorrectAnswer = RequestBody.create(MediaType.parse(bodyType), String.valueOf(correctAnswers));
         RequestBody score = RequestBody.create(MediaType.parse(bodyType), String.valueOf(roundedScore));
-        RequestBody examDate = RequestBody.create(MediaType.parse(bodyType), formattedDateTime);
-        RequestBody overallTime = RequestBody.create(MediaType.parse(bodyType), String.valueOf(examTime));
+        RequestBody examDate = RequestBody.create(MediaType.parse(bodyType), examDateTime);
+        RequestBody overallTime = RequestBody.create(MediaType.parse(bodyType), String.valueOf(calcOverallExamTime()));
 
         Retrofit retrofit = ApiService.getClient(this);
         ApiService apiService = retrofit.create(ApiService.class);
@@ -528,6 +523,20 @@ public class QuestionActivity extends AppCompatActivity {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });
+    }
+
+    private double calcOverallExamTime() {
+        String time = tvCountDown.getText().toString();
+
+        String[] parts = time.split(":");
+        int minutes = Integer.parseInt(parts[0]);
+        int seconds = Integer.parseInt(parts[1]);
+
+        double totalMinutes = minutes + (seconds / 60.0);
+        double dbExamTime = examTime;
+        double overallTime = dbExamTime - totalMinutes;
+
+        return Math.round(overallTime * 100.0) / 100.0;
     }
 
     @Override

@@ -43,26 +43,19 @@ import vn.edu.hcmuaf.fit.fitexam.model.Result;
 import vn.edu.hcmuaf.fit.fitexam.model.Subject;
 import vn.edu.hcmuaf.fit.fitexam.model.User;
 
-public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class HomeFragment extends Fragment {
     TextView tvName, btnSee1, btnSee2, btnSee3;
     RecyclerView recyclerSubject, recyclerTakeExam, recyclerExamHistory;
     ShimmerFrameLayout shimmerSubject, shimmerTakeExam, shimmerExamHistory;
     SubjectHomeAdapter subjectAdapter;
     TakeExamAdapter examAdapter;
     HistoryAdapter historyAdapter;
-    SwipeRefreshLayout swipeRefreshLayout;
     LoginSession session;
     private ArrayList<Result> results;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.green_nlu));
-
-        return view;
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
@@ -99,8 +92,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         if (checkInternetPermission()) {
             if (id != null) {
-                swipeRefreshLayout.setOnRefreshListener(() -> loadHistoryList(Integer.parseInt(id)));
-
                 loadStudentName(Integer.parseInt(id));
                 loadHistoryList(Integer.parseInt(id));
             }
@@ -228,8 +219,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         historyAdapter = new HistoryAdapter(getContext(), results);
                         recyclerExamHistory.setAdapter(historyAdapter);
                     }
-
-                    onRefresh();
                 }
             }
 
@@ -254,16 +243,5 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
-    }
-
-    @Override
-    public void onRefresh() {
-        if (results != null && historyAdapter != null) {
-            historyAdapter.setData(results);
-            Handler handler = new Handler();
-            handler.postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 1000);
-        } else {
-            swipeRefreshLayout.setRefreshing(false);
-        }
     }
 }

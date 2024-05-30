@@ -22,11 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 import vn.edu.hcmuaf.fit.fitexam.LoginActivity;
@@ -76,13 +73,20 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
             int time = exam.getExamTime();
             String startDate = exam.getStartDate();
             String endDate = exam.getEndDate();
+            LocalDateTime dateTime;
+            String examDate = "";
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                dateTime = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                examDate = dateTime.format(formatter);
+            }
 
-            compareExamDate(examId, examName, numberOfQuestions, time, startDate, endDate);
+            compareExamDate(examId, examName, numberOfQuestions, time, startDate, endDate, examDate);
         });
     }
 
     @SuppressLint("SetTextI18n")
-    private void showStartDialog(int examId, String examName, int numberOfQuestions, int examTime) {
+    private void showStartDialog(int examId, String examName, int numberOfQuestions, int examTime, String examDate) {
         String email = LoginSession.getEmailKey();
 
         dismissDialog();
@@ -119,6 +123,7 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
             intent.putExtra("examName", examName);
             intent.putExtra("numberOfQuestions", numberOfQuestions);
             intent.putExtra("examTime", examTime);
+            intent.putExtra("examDate", examDate);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(intent);
             dismissDialog();
@@ -195,7 +200,7 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
         }
     }
 
-    private void compareExamDate(int examId, String examName, int numberOfQuestions, int examTime, String startDateStr, String endDateStr) {
+    private void compareExamDate(int examId, String examName, int numberOfQuestions, int examTime, String startDateStr, String endDateStr, String examDate) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
@@ -205,7 +210,7 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
             LocalDateTime currentDate = LocalDateTime.now();
 
             if (currentDate.isAfter(startDate) && currentDate.isBefore(endDate)) {
-                showStartDialog(examId, examName, numberOfQuestions, examTime);
+                showStartDialog(examId, examName, numberOfQuestions, examTime, examDate);
             } else {
                 showCheckDateDialog();
             }
