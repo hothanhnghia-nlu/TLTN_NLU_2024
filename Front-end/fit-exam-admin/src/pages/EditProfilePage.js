@@ -21,6 +21,7 @@ const EditProfilePage = () => {
         preview: ''
     });
 
+    const [loadingAPI, setLoadingAPI] = useState(false);
     const userId = localStorage.getItem("id");
     const [user, setUser] = useState({});
 
@@ -67,6 +68,8 @@ const EditProfilePage = () => {
         const status = user.status;
 
         try {
+            setLoadingAPI(true);
+
             let res = await updateUser(userId, name, email, phone, dob, gender, role, status, avatar);
 
             if (res) {
@@ -80,6 +83,8 @@ const EditProfilePage = () => {
             }
         } catch (error) {
             console.error("Error updating user:", error);
+        } finally {
+            setLoadingAPI(false);
         }
     };
 
@@ -181,7 +186,9 @@ const EditProfilePage = () => {
                                             <div className="col-lg-12 col-md-12 col-sm-12 col-12">
                                                 <div className="form-group text-center custom-mt-form-group">
                                                     <button className="btn btn-primary mr-2" type="submit"
-                                                            onClick={() => handleUpdate()}>Lưu
+                                                            onClick={handleUpdate}>
+                                                        {loadingAPI && <i className="fas fa-sync fa-spin"></i>}
+                                                        &nbsp;Lưu
                                                     </button>
                                                     <Link to="/my-profile">
                                                         <button className="btn btn-secondary" type="reset">Hủy</button>

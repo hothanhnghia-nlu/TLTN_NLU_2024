@@ -341,6 +341,27 @@ public class QuestionActivity extends AppCompatActivity {
 
     private void handleSubmit() {
         saveSelectedAnswer();
+
+        List<Integer> unansweredQuestions = new ArrayList<>();
+
+        for (int i = 0; i < questions.size(); i++) {
+            int savedAnswerId = dbHelper.getUserAnswer(questions.get(i).getId());
+            if (savedAnswerId == -1) {
+                unansweredQuestions.add(i + 1);
+            }
+        }
+
+        if (!unansweredQuestions.isEmpty()) {
+            StringBuilder message = new StringBuilder("Bạn chưa trả lời các câu: ");
+            for (int questionNumber : unansweredQuestions) {
+                message.append(questionNumber).append(", ");
+            }
+            message.setLength(message.length() - 2);
+            message.append(". Vui lòng trả lời tất cả các câu hỏi trước khi nộp bài.");
+            Toast.makeText(this, message.toString(), Toast.LENGTH_LONG).show();
+            return;
+        }
+
         showSubmitDialog();
     }
 

@@ -7,12 +7,10 @@ import java.util.ArrayList;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -33,11 +31,7 @@ import vn.edu.hcmuaf.fit.fitexam.model.utils.ResultDetailConst;
 import vn.edu.hcmuaf.fit.fitexam.model.utils.UserConst;
 
 public interface ApiService {
-    String apiUrl = "https://192.168.1.25/api/";
-//    String apiUrl = "https://10.51.86.11/api/";
-
-    HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor()
-            .setLevel(HttpLoggingInterceptor.Level.BASIC);
+    String apiUrl = "https://10.51.86.11/api/";
 
     static Retrofit getClient(Context context) {
         OkHttpClient client = UnsafeOkHttpClient.getUnsafeOkHttpClient(context);

@@ -6,7 +6,7 @@ import moment from "moment/moment";
 import {fetchAllLog} from "../service/LogService";
 import ReactPaginate from "react-paginate";
 
-const ExamList = () => {
+const LogPage = () => {
     TabTitle('Nhật ký | FIT Exam Admin');
     
     const [listLogs, setListLogs] = useState([]);
@@ -164,4 +164,4 @@ const ExamList = () => {
     )
 }
 
-export default ExamList;
+export default LogPage;

@@ -60,7 +60,7 @@ const Header = () => {
                                     {user.image ? (
                                         <img className="rounded-circle" src={user.image.url} alt={user.name} width="30" />
                                     ) : (
-                                        <img className="rounded-circle" src="assets/img/user-06.jpg" alt={user.name} width="30" />
+                                        <img className="rounded-circle" src="assets/img/user.jpg" alt={user.name} width="30" />
                                     )}
                                     <span className="status online"></span>
                                 </span>

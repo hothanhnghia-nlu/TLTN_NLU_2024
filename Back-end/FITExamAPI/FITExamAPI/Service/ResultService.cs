@@ -76,6 +76,34 @@ namespace FITExamAPI.Service
 
             return results;
         }
+        
+        public async Task<List<Result>> GetAllByTeacherIdAsync(int teacherId)
+        {
+            var results = await _context.Results
+                .Include(r => r.Exam)
+                .ThenInclude(e => e.Subject)
+                .ThenInclude(s => s.Image)
+                .Select(r => new Result
+                {
+                    Id = r.Id,
+                    UserId = r.UserId,
+                    ExamId = r.ExamId,
+                    TotalCorrectAnswer = r.TotalCorrectAnswer,
+                    Score = r.Score,
+                    ExamDate = r.ExamDate,
+                    OverallTime = r.OverallTime,
+                    Exam = r.Exam,
+                    User = new User
+                    {
+                        Id = r.User.Id,
+                        Name = r.User.Name
+                    }
+                })
+                .Where(r => r.Exam.CreatorId == teacherId)
+                .ToListAsync();
+
+            return results;
+        }
 
         public async Task<Result?> GetByIdAsync(int id)
         {

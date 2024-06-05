@@ -3,10 +3,9 @@ import {TabTitle} from "../commons/DynamicTitle";
 import {Link} from "react-router-dom";
 import Header from "../components/Header";
 import moment from "moment/moment";
-import {fetchAllResult, fetchResultDetailByQuestionId} from "../service/ResultService";
+import {fetchAllResultByTeacherId, fetchResultDetailByQuestionId} from "../service/ResultService";
 import ReactPaginate from "react-paginate";
 import {CSVLink} from "react-csv";
-import {fetchAllAnswerByQuestionId} from "../service/AnswerService";
 
 const ExamResultPage = () => {
     TabTitle('Kết quả thi | FIT Exam Admin');
@@ -17,12 +16,14 @@ const ExamResultPage = () => {
     const [dataExport, setDataExport] = useState([]);
     const [query, setQuery] = useState('');
 
+    const userId = localStorage.getItem("id");
+    
     useEffect(() => {
-        getResults();
-    }, [])
+        getResults(userId);
+    }, [userId]);
 
-    const getResults = async () => {
-        let res = await fetchAllResult();
+    const getResults = async (id) => {
+        let res = await fetchAllResultByTeacherId({id});
         if (res) {
             setListResults(res);
             setTotalResults(res.length);
@@ -91,6 +92,12 @@ const ExamResultPage = () => {
         } else {
             return <td className="text-center" style={{color: 'red', fontWeight: 'bold'}}>KHÔNG ĐẠT</td>
         }
+    }
+
+    function convertToMinutesSeconds(totalMinutes) {
+        var minutes = Math.floor(totalMinutes);
+        var seconds = Math.round((totalMinutes - minutes) * 60);
+        return minutes + "m" + seconds + "s";
     }
 
     const getCorrectAnswer = (item) => {
@@ -188,7 +195,7 @@ const ExamResultPage = () => {
                                                                 <td className="text-center">{item.totalCorrectAnswer}</td>
                                                                 <td className="text-center">{item.score}</td>
                                                                 {getClassification(item)}
-                                                                <td className="text-center">{item.overallTime} phút</td>
+                                                                <td className="text-center">{convertToMinutesSeconds(item.overallTime)}</td>
                                                                 <td>{convertDate({date: item.examDate})}</td>
                                                                 <td className="text-right">
                                                                     <button type="submit" data-toggle="modal"
@@ -240,7 +247,7 @@ const ExamResultPage = () => {
                             <h4 className="modal-title">Chi tiết câu trả lời</h4>
                             <button type="button" className="close" data-dismiss="modal">&times;</button>
                         </div>
-                        <div className="modal-body">
+                        <div>
                             <div className="table-responsive">
                                 <table className="table custom-table datatable">
                                     <thead className="thead-light">
@@ -254,9 +261,10 @@ const ExamResultPage = () => {
                                     <tbody>
                                     {listAnswers && listAnswers.length > 0 &&
                                         listAnswers.map((item, index) => {
+                                            const realIndex = itemOffset + index + 1;
                                             return (
                                                 <tr key={`answers-${index}`}>
-                                                    <td>{item.id}</td>
+                                                    <td>{realIndex}</td>
                                                     <td>
                                                         {item.question ? (
                                                             <h2>{item.question.content}</h2>

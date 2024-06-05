@@ -11,6 +11,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import vn.edu.hcmuaf.fit.fitexam.R;
 
 public class UnsafeOkHttpClient {
@@ -44,9 +45,13 @@ public class UnsafeOkHttpClient {
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, tmf.getTrustManagers(), new java.security.SecureRandom());
 
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor()
+                    .setLevel(HttpLoggingInterceptor.Level.BODY);
+
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             builder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) tmf.getTrustManagers()[0]);
             builder.hostnameVerifier((hostname, session) -> true);
+            builder.addInterceptor(interceptor);
 
             return builder.build();
         } catch (Exception e) {

@@ -1,8 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-    baseURL: 'https://192.168.1.25/api/'
-    // baseURL: 'https://10.51.86.11/api/'
+    baseURL: 'https://10.51.86.11/api/'
 });
 
 // Add a response interceptor

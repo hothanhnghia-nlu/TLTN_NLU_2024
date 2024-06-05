@@ -6,7 +6,7 @@ import java.util.List;
 public class Exam implements Serializable {
     private int id;
     private String name;
-    private int subjectId;
+    private String subjectId;
     private int creatorId;
     private int examTime;
     private int numberOfQuestions;
@@ -36,11 +36,11 @@ public class Exam implements Serializable {
         this.name = name;
     }
 
-    public int getSubjectId() {
+    public String getSubjectId() {
         return subjectId;
     }
 
-    public void setSubjectId(int subjectId) {
+    public void setSubjectId(String subjectId) {
         this.subjectId = subjectId;
     }
 

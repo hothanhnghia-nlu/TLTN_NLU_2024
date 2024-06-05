@@ -85,6 +85,7 @@ namespace FITExamAPI.Service
                     ExamId = q.ExamId,
                     DifficultyLevel = q.DifficultyLevel,
                     ExamName = q.ExamName,
+                    Images = q.Images,
                     Options = q.Options.Select(a => new Answer
                     {
                         Id = a.Id,
@@ -176,6 +177,7 @@ namespace FITExamAPI.Service
                     ExamId = q.ExamId,
                     DifficultyLevel = q.DifficultyLevel,
                     ExamName = q.ExamName,
+                    Images = q.Images,
                     Options = q.Options.Select(a => new Answer
                     {
                         Id = a.Id,

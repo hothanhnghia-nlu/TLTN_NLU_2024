@@ -86,6 +86,7 @@ public class ProfileFragment extends Fragment {
 
         // Google Sign in
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.web_client_id))
                 .requestEmail()
                 .build();
 
@@ -167,6 +168,7 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
     // Google log-in
     private void googleLogIn() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());

@@ -96,7 +96,7 @@ const ProfilePage = () => {
                                                     </li>
 
                                                     <li>
-                                                        <span className="title">Giới tinh:</span>
+                                                        <span className="title">Giới tính:</span>
                                                         <span className="text">{user.gender}</span>
                                                     </li>
                                                 </ul>

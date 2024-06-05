@@ -197,9 +197,10 @@ const ExamList = () => {
                                                 <tbody>
                                                 {currentItems && currentItems.filter((current) => keys.some(key => current[key].toLowerCase().includes(query)))
                                                     .map((item, index) => {
+                                                        const realIndex = itemOffset + index + 1;
                                                         return (
                                                             <tr key={`exams-${index}`}>
-                                                                <td>{item.id}</td>
+                                                                <td>{realIndex}</td>
                                                                 <td>
                                                                     <h2>{item.name}</h2>
                                                                 </td>

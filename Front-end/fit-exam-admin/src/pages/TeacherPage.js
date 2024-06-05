@@ -9,7 +9,7 @@ import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {CSVLink} from "react-csv";
 
-const AccountPage = () => {
+const TeacherPage = () => {
     TabTitle('Giảng viên | FIT Exam Admin');
 
     const [listTeachers, setListTeachers] = useState([]);
@@ -135,8 +135,9 @@ const AccountPage = () => {
         if (listTeachers && listTeachers.length > 0) {
             result.push(["Id", "Họ tên", "Email", "Số điện thoại", "Ngày sinh", "Giới tính"])
             listTeachers.map((item, index) => {
+                const realIndex = itemOffset + index + 1;
                 let arr = [];
-                arr[0] = item.id;
+                arr[0] = realIndex;
                 arr[1] = item.name;
                 arr[2] = item.email;
                 arr[3] = item.phone;
@@ -215,9 +216,10 @@ const AccountPage = () => {
                                                 <tbody>
                                                 {currentItems && currentItems.filter((current) => keys.some(key => current[key].toLowerCase().includes(query)))
                                                     .map((item, index) => {
+                                                        const realIndex = itemOffset + index + 1;
                                                         return (
                                                             <tr key={`teachers-${index}`}>
-                                                                <td>{item.id}</td>
+                                                                <td>{realIndex}</td>
                                                                 <td>
                                                                     <h2>
                                                                         {item.image && item.image.url ? (
@@ -423,4 +425,4 @@ const AccountPage = () => {
     )
 }
 
-export default AccountPage;
+export default TeacherPage;

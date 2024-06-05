@@ -7,6 +7,7 @@ namespace FITExamAPI.Repository
         Task<Result> CreateAsync(Result result);
         Task<List<Result>> GetAllAsync();
         Task<List<Result>> GetAllByUserIdAsync(int userId);
+        Task<List<Result>> GetAllByTeacherIdAsync(int teacherId);
         Task<Result?> GetByIdAsync(int id);
         Task<Result?> GetByUserIdAsync(int userId);
 

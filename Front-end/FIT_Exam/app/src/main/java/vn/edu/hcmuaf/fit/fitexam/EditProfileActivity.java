@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,6 +33,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.File;
@@ -63,10 +68,13 @@ public class EditProfileActivity extends AppCompatActivity {
     TextView tvMessage;
     ImageView btnBack;
     Button btnSave;
+    ProgressDialog progressDialog;
     AutoCompleteTextView acGender, acFaculty;
     CircleImageView cvProfileImage, btnOpenGallery;
     Uri mUri;
     LoginSession session;
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
     String[] gender = new String[]{"Nam", "Nữ", "Khác"};
     String[] faculty;
     int[] facultyId;
@@ -115,6 +123,14 @@ public class EditProfileActivity extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
         btnBack = findViewById(R.id.btnBack);
 
+        // Google Sign in
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.web_client_id))
+                .requestEmail()
+                .build();
+
+        gsc = GoogleSignIn.getClient(this, gso);
+
         session = new LoginSession(getApplicationContext());
         String userId = LoginSession.getIdKey();
 
@@ -146,6 +162,11 @@ public class EditProfileActivity extends AppCompatActivity {
         btnOpenGallery.setOnClickListener(v -> {
             openGallery();
         });
+
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Đang cập nhật...");
+        progressDialog.setCancelable(false);
 
         btnSave.setOnClickListener(view -> {
             if (checkInternetPermission()) {
@@ -232,7 +253,10 @@ public class EditProfileActivity extends AppCompatActivity {
                             getFaculty();
                         }
 
-                        if (user.getImage() != null) {
+                        String googlePhotoUrl = getPhotoFromGoogleLogIn();
+                        if (googlePhotoUrl != null && !googlePhotoUrl.isEmpty()) {
+                            Glide.with(getApplicationContext()).load(googlePhotoUrl).into(cvProfileImage);
+                        } else if (user.getImage() != null) {
                             String imageUrl = user.getImage().getUrl();
                             Glide.with(getApplicationContext()).load(imageUrl).into(cvProfileImage);
                         }
@@ -245,6 +269,21 @@ public class EditProfileActivity extends AppCompatActivity {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });
+    }
+
+    // Google log-in
+    private String getPhotoFromGoogleLogIn() {
+        String result = "";
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            Uri photoUrl = account.getPhotoUrl();
+
+            if (photoUrl != null) {
+                String avatar = photoUrl.toString();
+                result += avatar;
+            }
+        }
+        return result;
     }
 
     @SuppressLint("SetTextI18n")
@@ -260,6 +299,7 @@ public class EditProfileActivity extends AppCompatActivity {
             tvMessage.setVisibility(View.VISIBLE);
             tvMessage.setText("Vui lòng điền đầy đủ thông tin.");
         } else {
+            progressDialog.show();
             updateUser(id, name, phone, email, dob, gender, facultyId);
         }
     }
@@ -284,6 +324,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 handleUpdateUser(id, name, phone, email, dob, gender, facultyId, avatar);
             } else {
                 Toast.makeText(this, "Tệp không tồn tại hoặc không đọc được", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         } else {
             handleUpdateUser(id, name, phone, email, dob, gender, facultyId, null);
@@ -301,6 +342,7 @@ public class EditProfileActivity extends AppCompatActivity {
         update.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                progressDialog.dismiss();
                 if (response.isSuccessful()) {
                     Log log = new Log(id, Log.ALERT, getPhoneIpAddress(), "Edit profile",
                             "Email: " + emailSession + " is edited profile successful", Log.SUCCESS);
@@ -322,6 +364,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                progressDialog.dismiss();
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });

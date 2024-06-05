@@ -219,8 +219,8 @@ namespace FITExamAPI.Migrations
                     b.Property<int?>("ExamId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("OverallTime")
-                        .HasColumnType("int");
+                    b.Property<double?>("OverallTime")
+                        .HasColumnType("double");
 
                     b.Property<double?>("Score")
                         .HasColumnType("double");

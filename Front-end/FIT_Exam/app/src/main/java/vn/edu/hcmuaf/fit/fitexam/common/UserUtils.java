@@ -11,25 +11,16 @@ import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.model.User;
 
 public class UserUtils {
-    private static Context context;
 
-    public static void getUserId(String email) {
-        getUserIdByEmail(email, userId -> {
+    public static void getUserId(Context context, String email) {
+        getUserIdByEmail(context, email, userId -> {
             if (userId != null) {
                 LoginSession.saveIdKeySession(userId);
             }
         });
     }
 
-    public static void getUserIdGoogle(String email) {
-        getUserIdByEmail(email, userId -> {
-            if (userId != null) {
-                LoginSession.saveLoginSession(userId, email, "");
-            }
-        });
-    }
-
-    public static void getUserIdByEmail(String email, final UserIdCallback callback) {
+    public static void getUserIdByEmail(Context context, String email, final UserIdCallback callback) {
         Retrofit retrofit = ApiService.getClient(context);
         ApiService apiService = retrofit.create(ApiService.class);
 
@@ -54,40 +45,4 @@ public class UserUtils {
         });
     }
 
-    public static String getUserEmail(int id) {
-        final StringBuilder builder = new StringBuilder();
-        getUserEmailById(id, email -> {
-            if (email != null) {
-                builder.append(email);
-            }
-        });
-        return builder.toString();
-    }
-
-    public static void getUserEmailById(int id, final UserIdCallback callback) {
-        Retrofit retrofit = ApiService.getClient(context);
-        ApiService apiService = retrofit.create(ApiService.class);
-
-        Call<User> call = apiService.getUser(id);
-
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()) {
-                    User user = response.body();
-                    assert user != null;
-                    String email = user.getEmail();
-                    callback.onUserIdReceived(email);
-                } else {
-                    callback.onUserIdReceived(null);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.e("API_ERROR", "Error occurred: " + t.getMessage());
-                callback.onUserIdReceived(null);
-            }
-        });
-    }
 }

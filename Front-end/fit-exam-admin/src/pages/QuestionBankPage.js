@@ -14,7 +14,7 @@ import {
 import {deleteQuestion, updateQuestion} from "../service/QuestionService";
 import {fetchAllAnswerByQuestionId} from "../service/AnswerService";
 
-const ExamList = () => {
+const QuestionBankPage = () => {
     TabTitle('Ngân hàng câu hỏi | FIT Exam Admin');
 
     const [listQuestions, setListQuestions] = useState([]);
@@ -306,9 +306,10 @@ const ExamList = () => {
                                                 <tbody>
                                                 {currentItems && currentItems.filter((current) => keys.some(key => current[key].toLowerCase().includes(query)))
                                                     .map((item, index) => {
+                                                        const realIndex = itemOffset + index + 1;
                                                         return (
                                                             <tr key={`questions-${index}`}>
-                                                                <td>{item.id}</td>
+                                                                <td>{realIndex}</td>
                                                                 <td>
                                                                     <h2>{item.content.length > 30 ? item.content.substring(0, 30) + '...' : item.content}</h2>
                                                                 </td>
@@ -506,20 +507,20 @@ const ExamList = () => {
             </div>
 
             <div id="view_question" className="modal fade" role="dialog">
-                <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-dialog modal-dialog-centered modal-fullscreen">
                     <div className="modal-content modal-content1">
                         <div className="modal-header modal-header1">
                             <h4 className="modal-title">Chi tiết câu hỏi</h4>
                             <button type="button" className="close" data-dismiss="modal">&times;</button>
                         </div>
-                        <div className="modal-body">
+                        <div>
                             {contentToDisplay}
                             {imageToDisplay}
                             <div className="table-responsive">
                                 <table className="table custom-table datatable">
                                     <thead className="thead-light">
                                     <tr>
-                                        <th>#</th>
+                                        <th>Mã câu hỏi</th>
                                         <th>Nội dung câu trả lời</th>
                                         <th>Đúng/sai</th>
                                     </tr>
@@ -698,4 +699,4 @@ const ExamList = () => {
     )
 }
 
-export default ExamList;
+export default QuestionBankPage;

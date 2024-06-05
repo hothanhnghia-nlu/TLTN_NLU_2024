@@ -50,7 +50,7 @@ public class NewPasswordActivity extends AppCompatActivity {
 
         session = new LoginSession(getApplicationContext());
         email = getIntent().getStringExtra("email");
-        UserUtils.getUserId(email);
+        UserUtils.getUserId(this, email);
 
         btnSave.setOnClickListener(view -> {
             handleChangePassword();

@@ -191,7 +191,7 @@ const Index = () => {
                                                         listExams.slice(-5).reverse().map((item, index) => {
                                                             return (
                                                                 <tr key={`exams-${index}`}>
-                                                                    <td>{item.id}</td>
+                                                                    <td>{index + 1}</td>
                                                                     <td>{item.name}</td>
                                                                     <td>
                                                                         {item.subject ? (
@@ -253,7 +253,7 @@ const Index = () => {
                                                 listStudents.slice(-5).reverse().map((item, index) => {
                                                     return (
                                                         <tr key={`students-${index}`}>
-                                                            <td>{item.id}</td>
+                                                            <td>{index + 1}</td>
                                                             <td>
                                                                 <h2>
                                                                     {item.image && item.image.url ? (
