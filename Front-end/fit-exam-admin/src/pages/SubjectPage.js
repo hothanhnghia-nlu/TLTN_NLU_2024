@@ -16,6 +16,7 @@ const SubjectPage = () => {
     const [dataSubjectEdit, setDataSubjectEdit] = useState({});
     const [dataSubjectDelete, setDataSubjectDelete] = useState({});
     const [dataExport, setDataExport] = useState([]);
+    const [loadingAPI, setLoadingAPI] = useState(false);
 
     const [id, setId] = useState('');
     const [name, setName] = useState('');
@@ -77,6 +78,8 @@ const SubjectPage = () => {
         }
 
         try {
+            setLoadingAPI(true);
+
             let res = await createSubject(id, name, credit, imageFile);
             if (res && res.id) {
                 setId('');
@@ -94,6 +97,8 @@ const SubjectPage = () => {
             }
         } catch (error) {
             console.error("Error creating subject:", error);
+        } finally {
+            setLoadingAPI(false);
         }
     }
 
@@ -117,6 +122,8 @@ const SubjectPage = () => {
         let subjectId = dataSubjectEdit.id;
         const imageFile = selectedImage.file;
         try {
+            setLoadingAPI(true);
+
             let res = await updateSubject(subjectId, name, credit, imageFile);
 
             if (res && subjectId) {
@@ -129,7 +136,9 @@ const SubjectPage = () => {
                 toast.error("Cập nhật môn " + subjectId + " thất bại!");
             }
         } catch (error) {
-            console.error("Error creating subject:", error);
+            console.error("Error updating subject:", error);
+        } finally {
+            setLoadingAPI(false);
         }
     }
 
@@ -376,8 +385,11 @@ const SubjectPage = () => {
                                     </div>
                                 </div>
                                 <div className="m-t-20 text-center">
-                                    <button className="btn btn-primary btn-lg"
-                                    onClick={() => handleSave()}  data-dismiss="modal">Tạo môn học</button>
+                                    <button className="btn btn-primary mr-2" type="submit"
+                                            onClick={handleSave}>
+                                        {loadingAPI && <i className="fas fa-sync fa-spin"></i>}
+                                        &nbsp;Tạo môn học
+                                    </button>
                                 </div>
                         </div>
                     </div>
@@ -450,8 +462,11 @@ const SubjectPage = () => {
                                 </div>
                             </div>
                             <div className="m-t-20 text-center">
-                                <button className="btn btn-primary btn-lg"
-                                        onClick={() => handleUpdate()}  data-dismiss="modal">Lưu thay đổi</button>
+                                <button className="btn btn-primary mr-2" type="submit"
+                                    onClick={handleUpdate}>
+                                    {loadingAPI && <i className="fas fa-sync fa-spin"></i>}
+                                    &nbsp;Lưu thay đổi
+                                </button>
                             </div>
                         </div>
                     </div>
