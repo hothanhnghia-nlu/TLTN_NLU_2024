@@ -5,14 +5,9 @@ import Header from "../components/Header";
 import ReactPaginate from "react-paginate";
 import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import {
-    createQuestion,
-    fetchAllQuestionByUserId,
-    fetchQuestionById,
-    fetchShuffleQuestions
-} from "../service/QuestionService";
-import {deleteQuestion, updateQuestion} from "../service/QuestionService";
+import {deleteQuestion, fetchAllQuestionByUserId, fetchQuestionById, updateQuestion} from "../service/QuestionService";
 import {fetchAllAnswerByQuestionId} from "../service/AnswerService";
+import exportFromJSON from 'export-from-json';
 
 const QuestionBankPage = () => {
     TabTitle('Ngân hàng câu hỏi | FIT Exam Admin');
@@ -20,24 +15,25 @@ const QuestionBankPage = () => {
     const [listQuestions, setListQuestions] = useState([]);
     const [listAnswers, setListAnswers] = useState([]);
     const [question, setQuestion] = useState({});
-    const [totalQuestions, setTotalQuestions] = useState(0);
     const [dataQuestionEdit, setDataQuestionEdit] = useState({});
     const [dataQuestionDelete, setDataQuestionDelete] = useState({});
-    
+    const [filterQuery, setFilterQuery] = useState('');
+    const [query, setQuery] = useState('');
+    const [loadingAPI, setLoadingAPI] = useState(false);
+
     const [content, setContent] = useState('');
     const [examName, setExamName] = useState('');
+    const [subjectId, setSubjectId] = useState('');
     const [answerNum, setAnswerNum] = useState(0);
     const [options, setOptions] = useState([]);
-    const [answer, setAnswer] = useState('');
+    const [correctAnswers, setCorrectAnswers] = useState('');
     const [difficultyLevel, setDifficultyLevel] = useState('');
+    const [isMultipleChoice, setIsMultipleChoice] = useState(false);
     const [selectedImage, setSelectedImage] = useState({
         file: null,
         name: '',
         preview: ''
     });
-
-    const [query, setQuery] = useState('');
-    const keys = ["content"];
 
     const userId = localStorage.getItem("id");
 
@@ -49,7 +45,6 @@ const QuestionBankPage = () => {
         let res = await fetchAllQuestionByUserId({id});
         if (res) {
             setListQuestions(res);
-            setTotalQuestions(res.length);
         }
     }
 
@@ -57,14 +52,6 @@ const QuestionBankPage = () => {
         let res = await fetchQuestionById({id});
         if (res) {
             setQuestion(res);
-        }
-    }
-
-    const handleShuffleQuestions = async (id) => {
-        let res = await fetchShuffleQuestions({id});
-        if (res) {
-            setListQuestions(res);
-            setTotalQuestions(res.length);
         }
     }
 
@@ -77,20 +64,56 @@ const QuestionBankPage = () => {
     }
 
     const [currentItems, setCurrentItems] = useState(null);
+    const [filteredItems, setFilteredItems] = useState([]);
     const [pageCount, setPageCount] = useState(0);
     const [itemOffset, setItemOffset] = useState(0);
     const itemsPerPage = 5;
 
     useEffect(() => {
+        handleShow();
+    }, [filterQuery]);
+
+    useEffect(() => {
         const endOffset = itemOffset + itemsPerPage;
-        setCurrentItems(listQuestions.slice(itemOffset, endOffset));
-        setPageCount(Math.ceil(totalQuestions / itemsPerPage));
-    }, [itemOffset, itemsPerPage, listQuestions, totalQuestions]);
+        const itemsToDisplay = filterQuery ? filteredItems : listQuestions;
+        setCurrentItems(itemsToDisplay.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(itemsToDisplay.length / itemsPerPage));
+    }, [itemOffset, itemsPerPage, filteredItems, filterQuery, listQuestions]);
+
+    const handleShow = () => {
+        if (filterQuery) {
+            const filtered = listQuestions.filter(item => {
+                return item.exam.subject.name.toLowerCase().includes(filterQuery.toLowerCase());
+            });
+            setFilteredItems(filtered);
+        } else {
+            setFilteredItems(listQuestions);
+        }
+        setItemOffset(0);
+    }
 
     const handlePageClick = (event) => {
-        const newOffset = (event.selected * itemsPerPage) % totalQuestions;
+        const newOffset = (event.selected * itemsPerPage) % (filterQuery ? filteredItems.length : listQuestions.length);
         setItemOffset(newOffset);
-    };
+    }
+
+    const handleDownload = () => {
+        if (!filterQuery) {
+            toast.error("Vui lòng nhập môn thi!");
+            return;
+        }
+
+        if (filteredItems.length === 0 || !filteredItems[0].exam?.subject?.name) {
+            toast.error("Không tìm thấy môn thi!");
+            return;
+        }
+
+        const item = filteredItems[0];
+        const fileName = item.exam.subject.name.replace(/\s+/g, '-');
+        const exportType = 'xml';
+
+        exportFromJSON({ data: filteredItems, fileName, exportType });
+    }
 
     const handleAnswerNumChange = (event) => {
         const value = event.target.value;
@@ -101,13 +124,13 @@ const QuestionBankPage = () => {
         } else {
             const parsedValue = parseInt(value, 10);
             if (!isNaN(parsedValue) && parsedValue >= 0) {
-                setAnswerNum(parsedValue);
-
                 const newOptions = Array(parsedValue).fill('').map((_, index) => options[index] || { content: '', isCorrect: false });
+
+                setAnswerNum(parsedValue);
                 setOptions(newOptions);
             }
         }
-    };
+    }
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -118,52 +141,22 @@ const QuestionBankPage = () => {
                 preview: URL.createObjectURL(file)
             });
         }
-    };
-
-    const handleSave = async () => {
-        const imageFile = selectedImage?.file || null;
-
-        if (!content || !difficultyLevel || !options || !answer || !answerNum) {
-            toast.error("Vui lòng điền đầy đủ thông tin!");
-            return;
-        }
-
-        try {
-            options.forEach(option => {
-                option.isCorrect = option.content === answer;
-            });
-
-            let res = await createQuestion(content, difficultyLevel, options, imageFile, examName);
-            if (res && res.id) {
-                setContent('');
-                setDifficultyLevel('');
-                setOptions([]);
-                setSelectedImage(null);
-                setAnswer('');
-                setAnswerNum(0);
-
-                toast.success("Tạo bài thi thành công!");
-            } else {
-                toast.error("Tạo câu hỏi thất bại!");
-            }
-        } catch (error) {
-            console.error("Error creating question:", error);
-        }
     }
 
     useEffect(() => {
         if (dataQuestionEdit && dataQuestionEdit.options) {
             setContent(dataQuestionEdit.content);
             setDifficultyLevel(dataQuestionEdit.difficultyLevel);
+            setIsMultipleChoice(dataQuestionEdit.isMutipleChoice);
             setOptions(dataQuestionEdit.options);
             setExamName(dataQuestionEdit.examName);
-            setOptions(dataQuestionEdit.options);
+            setExamName(dataQuestionEdit.examName);
+            setSubjectId(dataQuestionEdit.subjectId);
 
-            const correctOption = dataQuestionEdit.options.find(option => option.isCorrect);
+            const correctOptions = dataQuestionEdit.options.filter(option => option.isCorrect);
+            const correctAnswersString = correctOptions.map(option => option.content).join(', ');
 
-            if (correctOption) {
-                setAnswer(correctOption.content);
-            }
+            setCorrectAnswers(correctAnswersString);
         }
     }, [dataQuestionEdit]);
 
@@ -180,11 +173,13 @@ const QuestionBankPage = () => {
         const questionId = dataQuestionEdit.id;
 
         try {
+            setLoadingAPI(true);
+
             options.forEach(option => {
-                option.isCorrect = option.content === answer;
+                option.isCorrect = correctAnswers.split('\n').includes(option.content);
             });
 
-            let res = await updateQuestion(questionId, content, difficultyLevel, options, imageFile, examName);
+            let res = await updateQuestion(questionId, content, difficultyLevel, isMultipleChoice, options, imageFile, examName, subjectId);
             if (res && questionId) {
                 toast.success("Cập nhật câu hỏi thành công!");
                 window.location.reload();
@@ -193,6 +188,8 @@ const QuestionBankPage = () => {
             }
         } catch (error) {
             console.error("Error creating question:", error);
+        } finally {
+            setLoadingAPI(false);
         }
     }
 
@@ -254,35 +251,31 @@ const QuestionBankPage = () => {
                     <div>
                         <div className="card flex-fill">
                             <div className="card-header">
-                                <div className="row filter-row">
+                                <div className="row align-items-center">
                                     <div className="col-md-6">
                                         <div className="form-focus">
                                             <input type="text" className="form-control floating"
                                                    onChange={(e) => setQuery(e.target.value)}/>
-                                            <label className="focus-label">Câu hỏi</label>
+                                            <label className="focus-label">Tìm kiếm Câu hỏi</label>
                                         </div>
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
+                                        <div className="form-focus">
+                                            <input
+                                                type="text"
+                                                className="form-control floating"
+                                                onChange={(e) => setFilterQuery(e.target.value)}
+                                            />
+                                            <label className="focus-label">Lọc theo Môn thi</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-2">
                                         <div className="text-right">
-                                            <div className="dropdown">
-                                                <Link className="btn btn-outline-primary float-right mr-4 dropdown-toggle"
-                                                      to="#" role="button" data-toggle="dropdown" aria-expanded="false"
-                                                      style={{borderRadius: "50px", textTransform: "none"}}>
-                                                    Thêm câu hỏi <span></span>
-                                                </Link>
-
-                                                <div className="dropdown-menu">
-                                                    <Link to="#" className="dropdown-item" data-toggle="modal" data-target="#add_question">Thêm thủ công</Link>
-                                                    <Link to="#" className="dropdown-item" data-toggle="modal" >Thêm từ file</Link>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <button className="btn btn-outline-secondary float-right mr-4"
-                                                        style={{borderRadius: "50px", textTransform: "none"}}
-                                                onClick={() => handleShuffleQuestions(userId)}>
-                                                   <i className="fas fa-sync"></i> Trộn câu hỏi
-                                                </button>
-                                            </div>
+                                            <button className="btn btn-outline-info"
+                                                onClick={handleDownload}>
+                                                <img src="assets/img/xml-file.png" alt=""/>
+                                                <span className="ml-1">Xuất file XML</span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -304,7 +297,7 @@ const QuestionBankPage = () => {
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                {currentItems && currentItems.filter((current) => keys.some(key => current[key].toLowerCase().includes(query)))
+                                                {currentItems && currentItems.filter(item => item.content.toLowerCase().includes(query.toLowerCase()))
                                                     .map((item, index) => {
                                                         const realIndex = itemOffset + index + 1;
                                                         return (
@@ -392,120 +385,6 @@ const QuestionBankPage = () => {
             </div>
 
 
-            <div id="add_question" className="modal fade" role="dialog">
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h4 className="modal-title">Thêm câu hỏi</h4>
-                            <button type="button" className="close" data-dismiss="modal">&times;</button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="row">
-                                <div className="col-sm-12">
-                                    <div className="form-group">
-                                        <label>Nội dung câu hỏi</label>
-                                        <textarea className="form-control" required="required"
-                                               value={content}
-                                               onChange={(event) => {
-                                                   setContent(event.target.value);
-                                               }}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-sm-8">
-                                    <label>Tên bài thi</label>
-                                    <input type="text" className="form-control" required="required"
-                                           value={examName}
-                                           onChange={(event) => {
-                                               setExamName(event.target.value);
-                                           }}
-                                    />
-                                </div>
-                                <div className="col-sm-4">
-                                    <div className="form-group">
-                                        <label>Số câu trả lời</label>
-                                        <input type="number" className="form-control" required="required"
-                                               value={answerNum}
-                                               onChange={handleAnswerNumChange}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            {Array.from({ length: Math.ceil(answerNum / 2) }).map((_, rowIndex) => (
-                                <div className="row" key={rowIndex}>
-                                    {options.slice(rowIndex * 2, rowIndex * 2 + 2).map((option, index) => (
-                                        <div className="col-sm-6" key={rowIndex * 2 + index}>
-                                            <div className="form-group">
-                                                <label>Lựa chọn {String.fromCharCode(65 + rowIndex * 2 + index)}</label>
-                                                <textarea className="form-control" required="required"
-                                                       value={option.content}
-                                                       onChange={(event) => {
-                                                           const newOptions = [...options];
-                                                           newOptions[rowIndex * 2 + index].content = event.target.value;
-                                                           setOptions(newOptions);
-                                                       }}
-                                                />
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ))}
-                            <div className="row">
-                                <div className="col-sm-6">
-                                    <div className="form-group">
-                                        <label>Đáp án đúng</label>
-                                        <textarea className="form-control" required="required"
-                                               value={answer}
-                                               onChange={(event) => {
-                                                   setAnswer(event.target.value);
-                                               }}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-sm-6">
-                                    <div className="form-group">
-                                        <label>Độ khó</label>
-                                        <select
-                                            className="form-control select"
-                                            value={difficultyLevel}
-                                            onChange={(event) => setDifficultyLevel(event.target.value)}>
-                                            <option value="default">---Chọn độ khó---</option>
-                                            <option value="Dễ">Dễ</option>
-                                            <option value="Trung bình">Trung bình</option>
-                                            <option value="Khó">Khó</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-sm-8">
-                                    <div className="form-group">
-                                        <label>Ảnh minh họa (nếu có)</label>
-                                        <input
-                                            type="file"
-                                            className="form-control"
-                                            accept="image/*"
-                                            onChange={handleFileChange}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-sm-4">
-                                    {selectedImage && (
-                                        <img src={selectedImage.preview} width="100" height="120" alt="images-question"/>
-                                    )}
-                                </div>
-                            </div>
-                            <div className="m-t-20 text-center">
-                                <button type="submit" className="btn btn-primary btn-lg"
-                                        onClick={() => handleSave()}>Tạo câu hỏi</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div id="view_question" className="modal fade" role="dialog">
                 <div className="modal-dialog modal-dialog-centered modal-fullscreen">
                     <div className="modal-content modal-content1">
@@ -513,7 +392,7 @@ const QuestionBankPage = () => {
                             <h4 className="modal-title">Chi tiết câu hỏi</h4>
                             <button type="button" className="close" data-dismiss="modal">&times;</button>
                         </div>
-                        <div>
+                        <div style={{margin: '8px'}}>
                             {contentToDisplay}
                             {imageToDisplay}
                             <div className="table-responsive">
@@ -567,7 +446,7 @@ const QuestionBankPage = () => {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-sm-8">
+                                <div className="col-sm-4">
                                     <label>Tên bài thi</label>
                                     <input type="text" className="form-control" required="required"
                                            value={examName}
@@ -577,10 +456,26 @@ const QuestionBankPage = () => {
                                     />
                                 </div>
                                 <div className="col-sm-4">
+                                    <label>Đa lựa chọn?</label>
+                                    <select
+                                        className="form-control select"
+                                        value={dataQuestionEdit.isMutipleChoice ? 'true' : 'false'}
+                                        onChange={(event) => setIsMultipleChoice(event.target.value === 'true')}>
+                                        <option value="true">Phải</option>
+                                        <option value="false">Không</option>
+                                    </select>
+                                </div>
+                                <input type="number" className="form-control" hidden="hidden"
+                                       value={subjectId}
+                                       onChange={(event) => {
+                                           setSubjectId(event.target.value);
+                                       }}
+                                />
+                                <div className="col-sm-4">
                                     <div className="form-group">
                                         <label>Số câu trả lời</label>
                                         <input type="number" className="form-control" required="required"
-                                               value={options.length}
+                                               value={answerNum}
                                                onChange={handleAnswerNumChange}
                                         />
                                     </div>
@@ -625,9 +520,9 @@ const QuestionBankPage = () => {
                                     <div className="form-group">
                                         <label>Đáp án đúng</label>
                                         <textarea className="form-control" required="required"
-                                               value={answer}
+                                               value={correctAnswers}
                                                onChange={(event) => {
-                                                   setAnswer(event.target.value);
+                                                   setCorrectAnswers(event.target.value);
                                                }}
                                         />
                                     </div>
@@ -667,7 +562,10 @@ const QuestionBankPage = () => {
                             </div>
                             <div className="m-t-20 text-center">
                                 <button type="submit" className="btn btn-primary btn-lg"
-                                        onClick={() => handleUpdate()}>Lưu thay đổi</button>
+                                        onClick={() => handleUpdate()}>
+                                    {loadingAPI && <i className="fas fa-sync fa-spin"></i>}
+                                    &nbsp;Lưu thay đổi
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -694,6 +592,7 @@ const QuestionBankPage = () => {
                     </div>
                 </div>
             </div>
+
             <ToastContainer/>
         </>
     )

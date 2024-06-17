@@ -47,6 +47,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Retrofit;
 import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
+import vn.edu.hcmuaf.fit.fitexam.model.Faculty;
+import vn.edu.hcmuaf.fit.fitexam.model.Image;
 import vn.edu.hcmuaf.fit.fitexam.model.Log;
 import vn.edu.hcmuaf.fit.fitexam.model.User;
 
@@ -128,41 +130,49 @@ public class ProfileFragment extends Fragment {
         userInfo.enqueue(new Callback<User>() {
             @SuppressLint("SetTextI18n")
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful()) {
                     User user = response.body();
 
                     if (user != null) {
-                        tvName.setText(user.getName());
-                        tvEmail.setText(user.getEmail());
-                        tvPhone.setText(user.getPhone());
-                        tvGender.setText(user.getGender());
+                        String name = user.getName();
+                        String email = user.getEmail();
+                        String phone = user.getPhone();
+                        String dob = user.getDob();
+                        String gender = user.getGender();
+                        Faculty faculty = user.getFaculty();
+                        Image avatar = user.getImage();
 
-                        if (user.getDob() != null) {
-                            tvDob.setText(convertDateType(user.getDob()));
+                        if (!name.isEmpty() || !email.isEmpty() || !phone.isEmpty()
+                                || !dob.isEmpty() || !gender.isEmpty()) {
+                            tvName.setText(name);
+                            tvEmail.setText(email);
+                            tvPhone.setText(phone);
+                            tvGender.setText(gender);
+                            tvDob.setText(convertDateType(dob));
+                        } else {
+                            tvName.setText("Trống");
+                            tvEmail.setText("Trống");
+                            tvPhone.setText("Trống");
+                            tvGender.setText("Trống");
+                            tvDob.setText("Trống");
                         }
 
-                        if (user.getFaculty() != null) {
-                            tvFaculty.setText("Khoa " + user.getFaculty().getName());
+                        if (faculty != null) {
+                            tvFaculty.setText("Khoa " + faculty.getName());
                         }
 
-                        if (user.getImage() != null) {
-                            String imageUrl = user.getImage().getUrl();
+                        if (avatar != null) {
+                            String imageUrl = avatar.getUrl();
                             Glide.with(getContext()).load(imageUrl).into(cvProfileImage);
                         }
-                    } else {
-                        tvName.setText("Trống");
-                        tvEmail.setText("Trống");
-                        tvPhone.setText("Trống");
-                        tvGender.setText("Trống");
-                        tvDob.setText("Trống");
                     }
                 }
                 swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -230,14 +240,14 @@ public class ProfileFragment extends Fragment {
 
         logoutLog.enqueue(new Callback<Log>() {
             @Override
-            public void onResponse(Call<Log> call, Response<Log> response) {
+            public void onResponse(@NonNull Call<Log> call, @NonNull Response<Log> response) {
                 if (response.isSuccessful()) {
                     android.util.Log.e("API_SUCCESS", "Logs: " + response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<Log> call, Throwable t) {
+            public void onFailure(@NonNull Call<Log> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });
@@ -251,6 +261,9 @@ public class ProfileFragment extends Fragment {
 
     @SuppressLint("SimpleDateFormat")
     private String convertDateType(String inputDate) {
+        if (inputDate == null) {
+            return null;
+        }
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
         try {

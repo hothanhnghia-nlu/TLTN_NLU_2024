@@ -12,7 +12,6 @@ const SubjectPage = () => {
     TabTitle('Môn học | FIT Exam Admin');
 
     const [listSubjects, setListSubjects] = useState([]);
-    const [totalSubjects, setTotalSubjects] = useState(0);
     const [dataSubjectEdit, setDataSubjectEdit] = useState({});
     const [dataSubjectDelete, setDataSubjectDelete] = useState({});
     const [dataExport, setDataExport] = useState([]);
@@ -28,7 +27,6 @@ const SubjectPage = () => {
     });
 
     const [query, setQuery] = useState('');
-    const keys = ["id", "name"];
 
     useEffect(() => {
         getSubjects();
@@ -38,25 +36,44 @@ const SubjectPage = () => {
         let res = await fetchAllSubject();
         if (res) {
             setListSubjects(res);
-            setTotalSubjects(res.length);
         }
     }
 
     const [currentItems, setCurrentItems] = useState(null);
+    const [searchedItems, setSearchItems] = useState([]);
     const [pageCount, setPageCount] = useState(0);
     const [itemOffset, setItemOffset] = useState(0);
     const itemsPerPage = 5;
 
     useEffect(() => {
+        handleSearch();
+    }, [query]);
+
+    useEffect(() => {
         const endOffset = itemOffset + itemsPerPage;
-        setCurrentItems(listSubjects.slice(itemOffset, endOffset));
-        setPageCount(Math.ceil(totalSubjects / itemsPerPage));
-    }, [itemOffset, itemsPerPage, listSubjects, totalSubjects]);
+        const itemsToDisplay = query ? searchedItems : listSubjects;
+        setCurrentItems(itemsToDisplay.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(itemsToDisplay.length / itemsPerPage));
+    }, [itemOffset, itemsPerPage, listSubjects, query, searchedItems]);
 
     const handlePageClick = (event) => {
-        const newOffset = (event.selected * itemsPerPage) % totalSubjects;
+        const newOffset = (event.selected * itemsPerPage) % (query ? searchedItems.length : listSubjects.length);
         setItemOffset(newOffset);
-    };
+    }
+
+    const handleSearch = () => {
+        if (query) {
+            const filtered = listSubjects.filter(item => {
+                const id = item.id.toLowerCase();
+                const name = item.name.toLowerCase();
+                return id.includes(query.toLowerCase()) || name.includes(query.toLowerCase());
+            });
+            setSearchItems(filtered);
+        } else {
+            setSearchItems(listSubjects);
+        }
+        setItemOffset(0);
+    }
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -206,7 +223,7 @@ const SubjectPage = () => {
                     <div>
                         <div className="card flex-fill">
                             <div className="card-header">
-                                <div className="row filter-row">
+                                <div className="row align-items-center">
                                     <div className="col-md-6">
                                         <div className="form-focus">
                                             <input type="text" className="form-control floating"
@@ -251,40 +268,40 @@ const SubjectPage = () => {
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                {currentItems && currentItems.filter((current) => keys.some(key => current[key].toLowerCase().includes(query)))
-                                                    .map((item, index) => {
-                                                        return (
-                                                            <tr key={`subjects-${index}`}>
-                                                                <td>{item.id}</td>
-                                                                <td>
-                                                                    <h2>{item.name}</h2>
-                                                                </td>
-                                                                <td className="text-center">
-                                                                    {item.image && item.image.url ? (
-                                                                        <img src={item.image.url} alt={item.name} style={{ maxWidth: '50px', maxHeight: '70px' }} />
-                                                                    ) : (
-                                                                        <span>No Image</span>
-                                                                    )}
-                                                                </td>
-                                                                <td className="text-center">{item.credit}</td>
-                                                                <td className="text-right">
-                                                                    <button type="submit" data-toggle="modal"
-                                                                            data-target="#edit_subject"
-                                                                            className="btn btn-primary btn-sm mb-1"
-                                                                            onClick={() => handleEditSubject(item)}>
-                                                                        <i className="far fa-edit" title="Sửa"></i>
-                                                                    </button>
-                                                                    <button type="submit" data-toggle="modal"
-                                                                            data-target="#delete_subject"
-                                                                            className="btn btn-danger btn-sm mb-1"
-                                                                            onClick={() => handleDeleteSubject(item)}
-                                                                            style={{marginLeft: '5px'}}>
-                                                                        <i className="far fa-trash-alt" title="Xóa"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        )
-                                                    })
+                                                {currentItems && currentItems.map((item, index) => {
+                                                    return (
+                                                        <tr key={`subjects-${index}`}>
+                                                            <td>{item.id}</td>
+                                                            <td>
+                                                                <h2>{item.name}</h2>
+                                                            </td>
+                                                            <td className="text-center">
+                                                                {item.image && item.image.url ? (
+                                                                    <img src={item.image.url} alt={item.name}
+                                                                         style={{maxWidth: '50px', maxHeight: '70px'}}/>
+                                                                ) : (
+                                                                    <span>No Image</span>
+                                                                )}
+                                                            </td>
+                                                            <td className="text-center">{item.credit}</td>
+                                                            <td className="text-right">
+                                                                <button type="submit" data-toggle="modal"
+                                                                        data-target="#edit_subject"
+                                                                        className="btn btn-primary btn-sm mb-1"
+                                                                        onClick={() => handleEditSubject(item)}>
+                                                                    <i className="far fa-edit" title="Sửa"></i>
+                                                                </button>
+                                                                <button type="submit" data-toggle="modal"
+                                                                        data-target="#delete_subject"
+                                                                        className="btn btn-danger btn-sm mb-1"
+                                                                        onClick={() => handleDeleteSubject(item)}
+                                                                        style={{marginLeft: '5px'}}>
+                                                                    <i className="far fa-trash-alt" title="Xóa"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })
                                                 }
                                                 </tbody>
                                             </table>
@@ -327,70 +344,70 @@ const SubjectPage = () => {
                             <button type="button" className="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div className="modal-body">
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Mã môn học</label>
-                                            <input type="number" className="form-control" required="required"
-                                                   value={id}
-                                                   onChange={(event) => {
-                                                       setId(event.target.value);
-                                                   }}
-                                                   min="0"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Số tín chỉ</label>
-                                            <input type="number" className="form-control" required="required"
-                                                   value={credit}
-                                                   onChange={(event) => {
-                                                       setCredit(event.target.value);
-                                                   }}
-                                                   min="0"
-                                            />
-                                        </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="form-group">
+                                        <label>Mã môn học</label>
+                                        <input type="number" className="form-control" required="required"
+                                               value={id}
+                                               onChange={(event) => {
+                                                   setId(event.target.value);
+                                               }}
+                                               min="0"
+                                        />
                                     </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-sm-12">
-                                        <div className="form-group">
-                                            <label>Tên môn học</label>
-                                            <input type="text" className="form-control" required="required"
-                                                   value={name}
-                                                   onChange={(event) => {
-                                                       setName(event.target.value);
-                                                   }}
-                                            />
-                                        </div>
+                                <div className="col-sm-6">
+                                    <div className="form-group">
+                                        <label>Số tín chỉ</label>
+                                        <input type="number" className="form-control" required="required"
+                                               value={credit}
+                                               onChange={(event) => {
+                                                   setCredit(event.target.value);
+                                               }}
+                                               min="0"
+                                        />
                                     </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-sm-8">
-                                        <div className="form-group">
-                                            <label>Hình ảnh</label>
-                                            <input
-                                                type="file"
-                                                className="form-control"
-                                                accept="image/*"
-                                                onChange={handleFileChange}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-4">
-                                        {selectedImage && (
-                                            <img src={selectedImage.preview} width="100" height="120" alt={name}/>
-                                        )}
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-12">
+                                    <div className="form-group">
+                                        <label>Tên môn học</label>
+                                        <input type="text" className="form-control" required="required"
+                                               value={name}
+                                               onChange={(event) => {
+                                                   setName(event.target.value);
+                                               }}
+                                        />
                                     </div>
                                 </div>
-                                <div className="m-t-20 text-center">
-                                    <button className="btn btn-primary mr-2" type="submit"
-                                            onClick={handleSave}>
-                                        {loadingAPI && <i className="fas fa-sync fa-spin"></i>}
-                                        &nbsp;Tạo môn học
-                                    </button>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-8">
+                                    <div className="form-group">
+                                        <label>Hình ảnh</label>
+                                        <input
+                                            type="file"
+                                            className="form-control"
+                                            accept="image/*"
+                                            onChange={handleFileChange}
+                                        />
+                                    </div>
                                 </div>
+                                <div className="col-sm-4">
+                                    {selectedImage && (
+                                        <img src={selectedImage.preview} width="100" height="120" alt={name}/>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="m-t-20 text-center">
+                                <button className="btn btn-primary mr-2" type="submit"
+                                        onClick={handleSave}>
+                                    {loadingAPI && <i className="fas fa-sync fa-spin"></i>}
+                                    &nbsp;Tạo môn học
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -457,13 +474,13 @@ const SubjectPage = () => {
                                 </div>
                                 <div className="col-sm-4">
                                     {selectedImage && (
-                                        <img src={selectedImage.preview} width="100" height="120" alt={name} />
+                                        <img src={selectedImage.preview} width="100" height="120" alt={name}/>
                                     )}
                                 </div>
                             </div>
                             <div className="m-t-20 text-center">
                                 <button className="btn btn-primary mr-2" type="submit"
-                                    onClick={handleUpdate}>
+                                        onClick={handleUpdate}>
                                     {loadingAPI && <i className="fas fa-sync fa-spin"></i>}
                                     &nbsp;Lưu thay đổi
                                 </button>

@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="170dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="5dp"
-    android:layout_marginEnd="17dp"
-    android:layout_marginTop="2dp"
-    android:layout_marginBottom="12dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cvSubject"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="10dp"
     app:strokeColor="#F6F6F6"
@@ -20,19 +17,19 @@
         android:gravity="center"
         android:padding="12dp">
 
-            <ImageView
-                android:id="@+id/subjectImage"
-                android:layout_width="120dp"
-                android:layout_height="120dp"/>
+        <ImageView
+            android:id="@+id/subjectImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"/>
 
-            <TextView
-                android:id="@+id/subjectName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Subject name"
-                android:textSize="16sp"
-                android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/subjectName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Subject name"
+            android:textSize="16sp"
+            android:textColor="@color/black"/>
 
     </LinearLayout>
 

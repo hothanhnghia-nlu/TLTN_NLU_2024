@@ -50,7 +50,7 @@ public class SubjectActivity extends AppCompatActivity {
         shimmerSubject = findViewById(R.id.shimmer_subjects);
         btnBack = findViewById(R.id.btnBack);
 
-        recyclerSubject.setHasFixedSize(true);
+//        recyclerSubject.setHasFixedSize(true);
         recyclerSubject.setLayoutManager(new GridLayoutManager(this, 2));
         shimmerSubject.startShimmer();
 

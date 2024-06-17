@@ -8,11 +8,9 @@ import ReactPaginate from "react-paginate";
 
 const LogPage = () => {
     TabTitle('Nhật ký | FIT Exam Admin');
-    
+
     const [listLogs, setListLogs] = useState([]);
-    const [totalLogs, setTotalLogs] = useState([]);
     const [query, setQuery] = useState('');
-    const keys = ["source", "content"];
 
     useEffect(() => {
         getLogs();
@@ -22,7 +20,6 @@ const LogPage = () => {
         let res = await fetchAllLog();
         if (res) {
             setListLogs(res);
-            setTotalLogs(res.length);
         }
     }
 
@@ -40,20 +37,41 @@ const LogPage = () => {
     }
 
     const [currentItems, setCurrentItems] = useState(null);
+    const [searchedItems, setSearchItems] = useState(null);
     const [pageCount, setPageCount] = useState(0);
     const [itemOffset, setItemOffset] = useState(0);
     const itemsPerPage = 5;
 
     useEffect(() => {
+        handleSearch();
+    }, [query]);
+
+    useEffect(() => {
         const endOffset = itemOffset + itemsPerPage;
-        setCurrentItems(listLogs.slice(itemOffset, endOffset));
-        setPageCount(Math.ceil(totalLogs / itemsPerPage));
-    }, [itemOffset, itemsPerPage, listLogs, totalLogs]);
+        const itemsToDisplay = query ? searchedItems : listLogs;
+        setCurrentItems(itemsToDisplay.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(itemsToDisplay.length / itemsPerPage));
+    }, [itemOffset, itemsPerPage, listLogs, query, searchedItems]);
 
     const handlePageClick = (event) => {
-        const newOffset = (event.selected * itemsPerPage) % totalLogs;
+        const newOffset = (event.selected * itemsPerPage) % (query ? searchedItems.length : listLogs.length);
         setItemOffset(newOffset);
-    };
+    }
+
+    const handleSearch = () => {
+        if (query) {
+            const filtered = listLogs.filter(item => {
+                const userName = item.user ? item.user.name.toLowerCase() : '';
+                const source = item.source.toLowerCase();
+                const ip = item.ip.toLowerCase();
+                return userName.includes(query.toLowerCase()) || source.includes(query.toLowerCase()) || ip.includes(query.toLowerCase());
+            });
+            setSearchItems(filtered);
+        } else {
+            setSearchItems(listLogs);
+        }
+        setItemOffset(0);
+    }
 
     return (
         <>
@@ -80,7 +98,6 @@ const LogPage = () => {
                         <div className="card flex-fill">
                             <div className="card-header">
                                 <div className="row filter-row">
-                                    <div className="col-md-6"/>
                                     <div className="col-md-6">
                                         <div className="form-focus">
                                             <input type="text" className="form-control floating"
@@ -88,6 +105,7 @@ const LogPage = () => {
                                             <label className="focus-label">Tìm kiếm</label>
                                         </div>
                                     </div>
+                                    <div className="col-md-6"/>
                                 </div>
                             </div>
                             <div className="card-body">
@@ -108,8 +126,7 @@ const LogPage = () => {
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                {currentItems && currentItems.filter((current) => keys.some(key => current[key].toLowerCase().includes(query)))
-                                                    .map((item, index) => {
+                                                {currentItems && currentItems.map((item, index) => {
                                                     return (
                                                         <tr key={`logs-${index}`}>
                                                             <td>{item.id}</td>
@@ -125,7 +142,7 @@ const LogPage = () => {
                                                             <td>{item.ip}</td>
                                                             <td>{item.content}</td>
                                                             <td>{getLogStatus(item)}</td>
-                                                            <td>{convertDate({ date: item.createdAt })}</td>
+                                                            <td>{convertDate({date: item.createdAt})}</td>
                                                         </tr>
                                                     )
                                                 })

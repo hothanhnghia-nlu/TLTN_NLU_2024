@@ -41,7 +41,7 @@ const Index = () => {
         getTeachers(1);
         getSubjects();
         getExams(userId);
-    }, [])
+    }, [userId])
 
     const getStudents = async (role) => {
         let res = await fetchAllUser({ role });

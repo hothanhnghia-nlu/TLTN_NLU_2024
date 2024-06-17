@@ -8,16 +8,14 @@ const fetchQuestionById = ({id}) => {
     return axios.get(`questions/${id}`);
 }
 
-const fetchShuffleQuestions = ({id}) => {
-    return axios.get(`questions/shuffle/user?id=${id}`);
-}
-
-const createQuestion = async (content, difficultyLevel, options, imageFile, examName) => {
+const createQuestion = async (content, difficultyLevel, isMultipleChoice, options, imageFile, examName, subjectId) => {
     const formData = new FormData();
     formData.append('content', content);
     formData.append('difficultyLevel', difficultyLevel);
+    formData.append('isMultipleChoice', isMultipleChoice);
     formData.append('imageFile', imageFile);
     formData.append('examName', examName);
+    formData.append('subjectId', subjectId);
 
     options.forEach((option, index) => {
         formData.append(`options[${index}].content`, option.content);
@@ -31,13 +29,15 @@ const createQuestion = async (content, difficultyLevel, options, imageFile, exam
     });
 }
 
-const updateQuestion = async (id, content, difficultyLevel, options, imageFile, examName) => {
+const updateQuestion = async (id, content, difficultyLevel, isMultipleChoice, options, imageFile, examName, subjectId) => {
     const formData = new FormData();
     formData.append('id', id);
     formData.append('content', content);
     formData.append('difficultyLevel', difficultyLevel);
+    formData.append('isMultipleChoice', isMultipleChoice);
     formData.append('imageFile', imageFile);
     formData.append('examName', examName);
+    formData.append('subjectId', subjectId);
 
     options.forEach((option, index) => {
         formData.append(`options[${index}].content`, option.content);
@@ -55,4 +55,4 @@ const deleteQuestion = (id) => {
     return axios.delete(`questions/${id}`);
 }
 
-export {fetchAllQuestionByUserId, fetchQuestionById, fetchShuffleQuestions, createQuestion, updateQuestion, deleteQuestion};
+export {fetchAllQuestionByUserId, fetchQuestionById, createQuestion, updateQuestion, deleteQuestion};

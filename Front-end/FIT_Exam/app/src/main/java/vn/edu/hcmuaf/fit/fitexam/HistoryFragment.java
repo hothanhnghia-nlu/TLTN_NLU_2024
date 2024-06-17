@@ -10,7 +10,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import vn.edu.hcmuaf.fit.fitexam.R;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
@@ -34,13 +33,9 @@ import java.util.Collections;
 import java.util.List;
 
 import vn.edu.hcmuaf.fit.fitexam.adapter.ExamHistoryAdapter;
-import vn.edu.hcmuaf.fit.fitexam.adapter.HistoryAdapter;
 import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
-import vn.edu.hcmuaf.fit.fitexam.model.Exam;
-import vn.edu.hcmuaf.fit.fitexam.model.Image;
 import vn.edu.hcmuaf.fit.fitexam.model.Result;
-import vn.edu.hcmuaf.fit.fitexam.model.Subject;
 
 public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     RecyclerView recyclerExamHistory;
@@ -116,7 +111,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         resultList.enqueue(new Callback<ArrayList<Result>>() {
             @Override
-            public void onResponse(Call<ArrayList<Result>> call, Response<ArrayList<Result>> response) {
+            public void onResponse(@NonNull Call<ArrayList<Result>> call, @NonNull Response<ArrayList<Result>> response) {
                 if (response.isSuccessful()) {
                     results = response.body();
 
@@ -137,7 +132,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Result>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<Result>> call, @NonNull Throwable t) {
                 Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });

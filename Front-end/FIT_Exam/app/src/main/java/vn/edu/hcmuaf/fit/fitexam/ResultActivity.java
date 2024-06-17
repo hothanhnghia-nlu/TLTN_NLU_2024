@@ -1,5 +1,6 @@
 package vn.edu.hcmuaf.fit.fitexam;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,10 +11,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import vn.edu.hcmuaf.fit.fitexam.adapter.ResultAdapter;
 import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
-import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
-import vn.edu.hcmuaf.fit.fitexam.model.Answer;
-import vn.edu.hcmuaf.fit.fitexam.model.Exam;
-import vn.edu.hcmuaf.fit.fitexam.model.Question;
 import vn.edu.hcmuaf.fit.fitexam.model.Result;
 import vn.edu.hcmuaf.fit.fitexam.model.ResultDetail;
 
@@ -23,7 +20,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,7 +71,7 @@ public class ResultActivity extends AppCompatActivity {
 
         resultDetail.enqueue(new Callback<ArrayList<ResultDetail>>() {
             @Override
-            public void onResponse(Call<ArrayList<ResultDetail>> call, Response<ArrayList<ResultDetail>> response) {
+            public void onResponse(@NonNull Call<ArrayList<ResultDetail>> call, @NonNull Response<ArrayList<ResultDetail>> response) {
                 if (response.isSuccessful()) {
                     ArrayList<ResultDetail> details = response.body();
 
@@ -98,7 +94,7 @@ public class ResultActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<ResultDetail>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<ResultDetail>> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });

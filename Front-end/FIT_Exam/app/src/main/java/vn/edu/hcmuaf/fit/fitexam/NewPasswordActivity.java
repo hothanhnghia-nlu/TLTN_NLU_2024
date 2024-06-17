@@ -1,5 +1,6 @@
 package vn.edu.hcmuaf.fit.fitexam;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -27,7 +28,6 @@ import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
 import vn.edu.hcmuaf.fit.fitexam.common.UserUtils;
 import vn.edu.hcmuaf.fit.fitexam.model.Log;
-import vn.edu.hcmuaf.fit.fitexam.model.User;
 
 public class NewPasswordActivity extends AppCompatActivity {
     TextInputEditText edPassword, edConfPassword;
@@ -90,7 +90,7 @@ public class NewPasswordActivity extends AppCompatActivity {
 
         changePassword.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 if (response.isSuccessful()) {
                     Log log = new Log(id, Log.ALERT, getPhoneIpAddress(), "Reset password",
                             "Email: " + email + " resets password successful", Log.SUCCESS);
@@ -115,7 +115,7 @@ public class NewPasswordActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });
@@ -129,14 +129,14 @@ public class NewPasswordActivity extends AppCompatActivity {
 
         passwordLog.enqueue(new Callback<Log>() {
             @Override
-            public void onResponse(Call<Log> call, Response<Log> response) {
+            public void onResponse(@NonNull Call<Log> call, @NonNull Response<Log> response) {
                 if (response.isSuccessful()) {
                     android.util.Log.e("API_SUCCESS", "Logs: " + response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<Log> call, Throwable t) {
+            public void onFailure(@NonNull Call<Log> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });

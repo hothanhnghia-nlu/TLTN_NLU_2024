@@ -12,12 +12,11 @@ const ExamResultPage = () => {
 
     const [listResults, setListResults] = useState([]);
     const [listAnswers, setListAnswers] = useState([]);
-    const [totalResults, setTotalResults] = useState([]);
     const [dataExport, setDataExport] = useState([]);
     const [query, setQuery] = useState('');
 
     const userId = localStorage.getItem("id");
-    
+
     useEffect(() => {
         getResults(userId);
     }, [userId]);
@@ -26,7 +25,6 @@ const ExamResultPage = () => {
         let res = await fetchAllResultByTeacherId({id});
         if (res) {
             setListResults(res);
-            setTotalResults(res.length);
         }
     }
 
@@ -43,20 +41,40 @@ const ExamResultPage = () => {
     }
 
     const [currentItems, setCurrentItems] = useState(null);
+    const [searchedItems, setSearchItems] = useState([]);
     const [pageCount, setPageCount] = useState(0);
     const [itemOffset, setItemOffset] = useState(0);
     const itemsPerPage = 5;
 
     useEffect(() => {
+        handleSearch();
+    }, [query]);
+
+    useEffect(() => {
         const endOffset = itemOffset + itemsPerPage;
-        setCurrentItems(listResults.slice(itemOffset, endOffset));
-        setPageCount(Math.ceil(totalResults / itemsPerPage));
-    }, [itemOffset, itemsPerPage, listResults, totalResults]);
+        const itemsToDisplay = query ? searchedItems : listResults;
+        setCurrentItems(itemsToDisplay.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(itemsToDisplay.length / itemsPerPage));
+    }, [itemOffset, itemsPerPage, listResults, query, searchedItems]);
 
     const handlePageClick = (event) => {
-        const newOffset = (event.selected * itemsPerPage) % totalResults;
+        const newOffset = (event.selected * itemsPerPage) % (query ? searchedItems.length : listResults.length);
         setItemOffset(newOffset);
-    };
+    }
+
+    const handleSearch = () => {
+        if (query) {
+            const filtered = listResults.filter(item => {
+                const userName = item.user ? item.user.name.toLowerCase() : '';
+                const examName = item.exam ? item.exam.name.toLowerCase() : '';
+                return userName.includes(query.toLowerCase()) || examName.includes(query.toLowerCase());
+            });
+            setSearchItems(filtered);
+        } else {
+            setSearchItems(listResults);
+        }
+        setItemOffset(0);
+    }
 
     const currentDate = () => {
         const currentDate = new Date();
@@ -66,24 +84,34 @@ const ExamResultPage = () => {
         return `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
     }
 
-    const getUsersExport = (event, done) => {
-        let result = [];
-        if (listResults && listResults.length > 0) {
-            result.push(["STT", "Tên thí sinh", "Tên bài thi", "Tổng số câu đúng", "Điểm thi", "Tổng thời gian thi", "Ngày thi"])
-            listResults.map((item, index) => {
-                let arr = [];
-                arr[0] = item.id;
-                arr[1] = item.user.name;
-                arr[2] = item.exam.name;
-                arr[3] = item.totalCorrectAnswer;
-                arr[4] = item.score;
-                arr[5] = item.overallTime;
-                arr[6] = convertDate({date: item.examDate});
+    const getResultsExport = (event, done) => {
+        const exportHeaders = ["STT", "Tên thí sinh", "Tên bài thi", "Môn thi", "Tổng số câu đúng", "Điểm thi", "Tổng thời gian thi", "Ngày thi"];
+        let result = [exportHeaders];
+
+        const addItemsToResult = (items) => {
+            items.forEach((item, index) => {
+                let arr = [
+                    item.id,
+                    item.user.name,
+                    item.exam.name,
+                    item.exam.subject.name,
+                    item.totalCorrectAnswer,
+                    item.score,
+                    item.overallTime,
+                    convertDate({ date: item.examDate })
+                ];
                 result.push(arr);
             });
-            setDataExport(result);
-            done();
+        };
+
+        if (query) {
+            addItemsToResult(searchedItems);
+        } else {
+            addItemsToResult(listResults);
         }
+
+        setDataExport(result);
+        done();
     }
 
     const getClassification = (item) => {
@@ -135,8 +163,12 @@ const ExamResultPage = () => {
                                 <div className="row align-items-center">
                                     <div className="col-md-6">
                                         <div className="form-focus">
-                                            <input type="text" className="form-control floating" onChange={(e) => setQuery(e.target.value)}/>
-                                            <label className="focus-label">Tên thí sinh</label>
+                                            <input
+                                                type="text"
+                                                className="form-control floating"
+                                                onChange={(e) => setQuery(e.target.value)}
+                                            />
+                                            <label className="focus-label">Tìm theo tên thí sinh hoặc bài thi</label>
                                         </div>
                                     </div>
                                     <div className="col-md-6">
@@ -146,7 +178,7 @@ const ExamResultPage = () => {
                                                 className="btn btn-outline-primary mr-2"
                                                 data={dataExport}
                                                 asyncOnClick={true}
-                                                onClick={getUsersExport}>
+                                                onClick={getResultsExport}>
                                                 <img src="assets/img/excel.png" alt=""/>
                                                 <span className="ml-2">Excel</span>
                                             </CSVLink>
@@ -173,42 +205,41 @@ const ExamResultPage = () => {
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                {currentItems && currentItems.filter(current => current.user.name.toLowerCase().includes(query))
-                                                    .map((item, index) => {
-                                                        return (
-                                                            <tr key={`results-${index}`}>
-                                                                <td>{item.id}</td>
-                                                                <td>
-                                                                    {item.user ? (
-                                                                        <h2>{item.user.name}</h2>
-                                                                    ) : (
-                                                                        <span>Invalid user</span>
-                                                                    )}
-                                                                </td>
-                                                                <td>
-                                                                    {item.exam ? (
-                                                                        <h2>{item.exam.name}</h2>
-                                                                    ) : (
-                                                                        <span>Invalid exam</span>
-                                                                    )}
-                                                                </td>
-                                                                <td className="text-center">{item.totalCorrectAnswer}</td>
-                                                                <td className="text-center">{item.score}</td>
-                                                                {getClassification(item)}
-                                                                <td className="text-center">{convertToMinutesSeconds(item.overallTime)}</td>
-                                                                <td>{convertDate({date: item.examDate})}</td>
-                                                                <td className="text-right">
-                                                                    <button type="submit" data-toggle="modal"
-                                                                            data-target="#view_answer"
-                                                                            className="btn btn-primary btn-sm mb-1"
-                                                                            onClick={() => handleViewAnswer(item.id)}>
-                                                                        <i className="far fa-eye" title="Xem"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        )
-                                                    })
-                                                }
+                                                {currentItems && currentItems.map((item, index) => (
+                                                    <tr key={`results-${index}`}>
+                                                        <td>{item.id}</td>
+                                                        <td>
+                                                            {item.user ? (
+                                                                <h2>{item.user.name}</h2>
+                                                            ) : (
+                                                                <span>Invalid user</span>
+                                                            )}
+                                                        </td>
+                                                        <td>
+                                                            {item.exam ? (
+                                                                <h2>{item.exam.name}</h2>
+                                                            ) : (
+                                                                <span>Invalid exam</span>
+                                                            )}
+                                                        </td>
+                                                        <td className="text-center">{item.totalCorrectAnswer}</td>
+                                                        <td className="text-center">{item.score}</td>
+                                                        {getClassification(item)}
+                                                        <td className="text-center">{convertToMinutesSeconds(item.overallTime)}</td>
+                                                        <td>{convertDate({date: item.examDate})}</td>
+                                                        <td className="text-right">
+                                                            <button
+                                                                type="submit"
+                                                                data-toggle="modal"
+                                                                data-target="#view_answer"
+                                                                className="btn btn-primary btn-sm mb-1"
+                                                                onClick={() => handleViewAnswer(item.id)}
+                                                            >
+                                                                <i className="far fa-eye" title="Xem"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
                                                 </tbody>
                                             </table>
 

@@ -13,7 +13,6 @@ const FacultyPage = () => {
     TabTitle('Quản lý khoa | FIT Exam Admin');
 
     const [listFaculties, setListFaculties] = useState([]);
-    const [totalFaculties, setTotalFaculties] = useState(0);
     const [dataFacultyEdit, setDataFacultyEdit] = useState({});
     const [dataFacultyDelete, setDataFacultyDelete] = useState({});
     const [dataExport, setDataExport] = useState([]);
@@ -28,25 +27,45 @@ const FacultyPage = () => {
         let res = await fetchAllFaculty();
         if (res) {
             setListFaculties(res);
-            setTotalFaculties(res.length);
         }
     }
 
     const [currentItems, setCurrentItems] = useState(null);
+    const [searchedItems, setSearchItems] = useState([]);
     const [pageCount, setPageCount] = useState(0);
     const [itemOffset, setItemOffset] = useState(0);
     const itemsPerPage = 5;
 
     useEffect(() => {
+        handleSearch();
+    }, [query]);
+
+    useEffect(() => {
         const endOffset = itemOffset + itemsPerPage;
-        setCurrentItems(listFaculties.slice(itemOffset, endOffset));
-        setPageCount(Math.ceil(totalFaculties / itemsPerPage));
-    }, [itemOffset, itemsPerPage, listFaculties, totalFaculties]);
+        const itemsToDisplay = query ? searchedItems : listFaculties;
+        setCurrentItems(itemsToDisplay.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(itemsToDisplay.length / itemsPerPage));
+    }, [itemOffset, itemsPerPage, listFaculties, query, searchedItems]);
 
     const handlePageClick = (event) => {
-        const newOffset = (event.selected * itemsPerPage) % totalFaculties;
+        const newOffset = (event.selected * itemsPerPage) % (query ? searchedItems.length : listFaculties.length);
         setItemOffset(newOffset);
-    };
+    }
+
+    const handleSearch = () => {
+        if (query) {
+            const filtered = listFaculties.filter(item => {
+                const name = item.name.toLowerCase();
+                const email = item.email.toLowerCase();
+                const phone = item.phone.toLowerCase();
+                return name.includes(query.toLowerCase()) || email.includes(query.toLowerCase()) || phone.includes(query.toLowerCase());
+            });
+            setSearchItems(filtered);
+        } else {
+            setSearchItems(listFaculties);
+        }
+        setItemOffset(0);
+    }
 
     const handleSave = async () => {
         let res = await createFaculty(name);
@@ -155,7 +174,7 @@ const FacultyPage = () => {
                     <div>
                         <div className="card flex-fill">
                             <div className="card-header">
-                                <div className="row filter-row">
+                                <div className="row align-items-center">
                                     <div className="col-md-6">
                                         <div className="form-focus">
                                             <input type="text" className="form-control floating"
@@ -198,30 +217,29 @@ const FacultyPage = () => {
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                {currentItems && currentItems.filter(current => current.name.toLowerCase().includes(query))
-                                                    .map((item, index) => {
-                                                        return (
-                                                            <tr key={`faculties-${index}`}>
-                                                                <td>{item.id}</td>
-                                                                <td>{item.name}</td>
-                                                                <td className="text-right">
-                                                                    <button type="submit" data-toggle="modal"
-                                                                            data-target="#edit_faculty"
-                                                                            className="btn btn-primary btn-sm mb-1"
-                                                                            onClick={() => handleEditFaculty(item)}>
-                                                                        <i className="far fa-edit" title="Sửa"></i>
-                                                                    </button>
-                                                                    <button type="submit" data-toggle="modal"
-                                                                            data-target="#delete_faculty"
-                                                                            className="btn btn-danger btn-sm mb-1"
-                                                                            onClick={() => handleDeleteFaculty(item)}
-                                                                            style={{marginLeft: '5px'}}>
-                                                                        <i className="far fa-trash-alt" title="Xóa"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        )
-                                                    })
+                                                {currentItems && currentItems.map((item, index) => {
+                                                    return (
+                                                        <tr key={`faculties-${index}`}>
+                                                            <td>{item.id}</td>
+                                                            <td>{item.name}</td>
+                                                            <td className="text-right">
+                                                                <button type="submit" data-toggle="modal"
+                                                                        data-target="#edit_faculty"
+                                                                        className="btn btn-primary btn-sm mb-1"
+                                                                        onClick={() => handleEditFaculty(item)}>
+                                                                    <i className="far fa-edit" title="Sửa"></i>
+                                                                </button>
+                                                                <button type="submit" data-toggle="modal"
+                                                                        data-target="#delete_faculty"
+                                                                        className="btn btn-danger btn-sm mb-1"
+                                                                        onClick={() => handleDeleteFaculty(item)}
+                                                                        style={{marginLeft: '5px'}}>
+                                                                    <i className="far fa-trash-alt" title="Xóa"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })
                                                 }
                                                 </tbody>
                                             </table>

@@ -25,7 +25,6 @@ import vn.edu.hcmuaf.fit.fitexam.model.Answer;
 import vn.edu.hcmuaf.fit.fitexam.model.Exam;
 import vn.edu.hcmuaf.fit.fitexam.model.Image;
 import vn.edu.hcmuaf.fit.fitexam.model.Question;
-import vn.edu.hcmuaf.fit.fitexam.model.Result;
 import vn.edu.hcmuaf.fit.fitexam.model.ResultDetail;
 
 public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultViewHolder> {
@@ -86,7 +85,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultView
 
                 // Add TextView for each answer
                 List<Answer> answers = question.getOptions();
-                String[] optionPrefixes = {"A. ", "B. ", "C. ", "D. ", "E. "};
+                String[] optionPrefixes = {"A. ", "B. ", "C. ", "D. ", "E. ", "F. ", "G. ", "H. ", "I. ", "J. "};
                 for (int i = 0; i < answers.size(); i++) {
                     Answer a = answers.get(i);
                     TextView tvAnswer = new TextView(answerContainer.getContext());

@@ -22,7 +22,6 @@ import java.util.List;
 
 import vn.edu.hcmuaf.fit.fitexam.R;
 import vn.edu.hcmuaf.fit.fitexam.ResultActivity;
-import vn.edu.hcmuaf.fit.fitexam.model.Exam;
 import vn.edu.hcmuaf.fit.fitexam.model.Result;
 
 public class ExamHistoryAdapter extends RecyclerView.Adapter<ExamHistoryAdapter.HistoryViewHolder> {

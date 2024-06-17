@@ -1,6 +1,7 @@
 package vn.edu.hcmuaf.fit.fitexam;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -105,7 +106,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         changePassword.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 if (response.isSuccessful()) {
                     Log log = new Log(id, Log.ALERT, getPhoneIpAddress(), "Change password",
                             "Email: " + email + " is changed password successful", Log.SUCCESS);
@@ -128,7 +129,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });
@@ -142,7 +143,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         information.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful()) {
                     User user = response.body();
 
@@ -156,7 +157,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });
@@ -170,14 +171,14 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         passwordLog.enqueue(new Callback<Log>() {
             @Override
-            public void onResponse(Call<Log> call, Response<Log> response) {
+            public void onResponse(@NonNull Call<Log> call, @NonNull Response<Log> response) {
                 if (response.isSuccessful()) {
                     android.util.Log.e("API_SUCCESS", "Logs: " + response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<Log> call, Throwable t) {
+            public void onFailure(@NonNull Call<Log> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });

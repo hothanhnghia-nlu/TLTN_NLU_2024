@@ -1,5 +1,6 @@
 package vn.edu.hcmuaf.fit.fitexam;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -40,6 +41,7 @@ import retrofit2.Retrofit;
 import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
 import vn.edu.hcmuaf.fit.fitexam.common.UserIdCallback;
+import vn.edu.hcmuaf.fit.fitexam.common.UserUtils;
 import vn.edu.hcmuaf.fit.fitexam.model.Log;
 import vn.edu.hcmuaf.fit.fitexam.model.User;
 
@@ -113,11 +115,19 @@ public class LoginActivity extends AppCompatActivity {
             tvMessage.setVisibility(View.VISIBLE);
             tvMessage.setText("Vui lòng nhập email hoặc mật khẩu.");
         } else {
-            addUser(email, password);
+            UserUtils.getUserStatusByEmail(this, email, userStatus -> {
+                if (userStatus != 0) {
+                    loginUser(email, password);
+                } else {
+                    tvMessage.setVisibility(View.VISIBLE);
+                    tvMessage.setText("Tài khoản của bạn đang bị khóa.\n" +
+                            "Vui lòng liên hệ quản trị viên hoặc tạo tài khoản mới.");
+                }
+            });
         }
     }
 
-    private void addUser(String txtEmail, String txtPassword) {
+    private void loginUser(String txtEmail, String txtPassword) {
         String bodyType = "multipart/form-data";
         RequestBody email = RequestBody.create(MediaType.parse(bodyType), txtEmail);
         RequestBody password = RequestBody.create(MediaType.parse(bodyType), txtPassword);
@@ -130,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
         login.enqueue(new Callback<User>() {
             @SuppressLint("SetTextI18n")
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 getUserId(txtEmail, userId -> {
                     if (userId == null) {
                         return;
@@ -160,7 +170,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });
@@ -174,14 +184,14 @@ public class LoginActivity extends AppCompatActivity {
 
         loginLog.enqueue(new Callback<Log>() {
             @Override
-            public void onResponse(Call<Log> call, Response<Log> response) {
+            public void onResponse(@NonNull Call<Log> call, @NonNull Response<Log> response) {
                 if (response.isSuccessful()) {
                     android.util.Log.e("API_SUCCESS", "Logs: " + response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<Log> call, Throwable t) {
+            public void onFailure(@NonNull Call<Log> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });
@@ -246,7 +256,7 @@ public class LoginActivity extends AppCompatActivity {
         Call<User> register = apiService.register(name, email, null, password);
         register.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful()) {
                     handleAlertDialog(account);
                 } else {
@@ -255,7 +265,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });
@@ -275,7 +285,7 @@ public class LoginActivity extends AppCompatActivity {
         Call<User> login = apiService.login(email, password);
         login.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 getUserId(txtEmail, userId -> {
                     if (userId == null) {
                         return;
@@ -299,7 +309,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });
@@ -313,7 +323,7 @@ public class LoginActivity extends AppCompatActivity {
 
         call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 if (response.isSuccessful()) {
                     String userId = response.body();
                     callback.onUserIdReceived(userId);
@@ -323,7 +333,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
                 callback.onUserIdReceived(null);
             }

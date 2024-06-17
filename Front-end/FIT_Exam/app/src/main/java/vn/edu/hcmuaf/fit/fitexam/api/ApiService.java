@@ -31,7 +31,7 @@ import vn.edu.hcmuaf.fit.fitexam.model.utils.ResultDetailConst;
 import vn.edu.hcmuaf.fit.fitexam.model.utils.UserConst;
 
 public interface ApiService {
-    String apiUrl = "https://10.51.86.11/api/";
+    String apiUrl = "https://192.168.124.110/api/";
 
     static Retrofit getClient(Context context) {
         OkHttpClient client = UnsafeOkHttpClient.getUnsafeOkHttpClient(context);
@@ -57,6 +57,8 @@ public interface ApiService {
 
     @GET("users/id")
     Call<String> getUserId(@Query("email") String email);
+    @GET("users/status")
+    Call<Integer> getUserStatus(@Query("email") String email);
     @GET("users/{id}")
     Call<User> getUser(@Path(UserConst.KEY_ID) int id);
 
@@ -88,8 +90,8 @@ public interface ApiService {
     @GET("exams/subject")
     Call<ArrayList<Exam>> getAllExamsBySubjectId(@Query("id") String id);
 
-    @GET("questions/exam")
-    Call<ArrayList<Question>> getAllQuestionsByExamId(@Query("id") int id);
+    @GET("questions/shuffle")
+    Call<ArrayList<Question>> getAllQuestionsByExamId(@Query("examId") int examId);
 
     @Multipart
     @POST("results")

@@ -44,25 +44,31 @@
         </com.google.android.material.appbar.AppBarLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="10dp"
-        android:gravity="center">
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="3">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/total"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="20dp"
             android:backgroundTint="#f6b93b"
             app:cardCornerRadius="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:padding="10dp">
 
                 <TextView
@@ -72,7 +78,7 @@
                     android:text="0"
                     android:textColor="@color/white"
                     android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -80,24 +86,24 @@
                     android:layout_marginTop="5dp"
                     android:text="Câu hỏi"
                     android:textColor="@color/white"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/right"
-            android:layout_width="80dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/total"
-            android:layout_marginStart="40dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="20dp"
             android:backgroundTint="#2ed573"
             app:cardCornerRadius="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:padding="10dp">
 
                 <TextView
@@ -107,7 +113,7 @@
                     android:text="0"
                     android:textColor="@color/white"
                     android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -115,25 +121,23 @@
                     android:layout_marginTop="5dp"
                     android:text="Đúng"
                     android:textColor="@color/white"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </LinearLayout>
-
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/wrong"
-            android:layout_width="80dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/right"
-            android:layout_marginStart="40dp"
+            android:layout_weight="1"
             android:backgroundTint="#ff6b81"
             app:cardCornerRadius="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:padding="10dp">
 
                 <TextView
@@ -143,7 +147,7 @@
                     android:text="0"
                     android:textColor="@color/white"
                     android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -151,12 +155,11 @@
                     android:layout_marginTop="5dp"
                     android:text="Sai"
                     android:textColor="@color/white"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </LinearLayout>
-
         </androidx.cardview.widget.CardView>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_result"

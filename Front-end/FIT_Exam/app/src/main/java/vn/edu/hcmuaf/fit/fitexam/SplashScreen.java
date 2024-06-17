@@ -2,7 +2,6 @@ package vn.edu.hcmuaf.fit.fitexam;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import vn.edu.hcmuaf.fit.fitexam.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;

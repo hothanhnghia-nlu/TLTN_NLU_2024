@@ -1,6 +1,7 @@
 package vn.edu.hcmuaf.fit.fitexam;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -23,19 +24,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -59,9 +59,9 @@ import vn.edu.hcmuaf.fit.fitexam.model.utils.UserAnswer;
 public class QuestionActivity extends AppCompatActivity {
     TextView tvExamName, tvNumberOfQuestion, tvCountDown, tvQuestion;
     ImageView ivFigure;
-    RadioGroup radioGroup;
+    RadioGroup answerRadioGroup;
     Button btnNext, btnContinuous, btnPrevious, btnSubmit;
-    RelativeLayout rlTwoButton;
+    LinearLayout answerCheckboxGroup, rlTwoButton;
     CountDownTimer countDownTimer;
     DBHelper dbHelper;
     LoginSession session;
@@ -69,7 +69,7 @@ public class QuestionActivity extends AppCompatActivity {
     private String examDateTime;
     private int numberOfQuestions, examID, examTime;
     private ArrayList<Question> questions;
-    private int currentQuestion = 0;
+    private int currentQuestionIndex = 0;
     private boolean continuousMode = false;
 
     @SuppressLint("MissingInflatedId")
@@ -83,7 +83,8 @@ public class QuestionActivity extends AppCompatActivity {
         tvCountDown = findViewById(R.id.timer);
         tvQuestion = findViewById(R.id.question);
         ivFigure = findViewById(R.id.figure);
-        radioGroup = findViewById(R.id.answerRadioGroup);
+        answerRadioGroup = findViewById(R.id.answerRadioGroup);
+        answerCheckboxGroup = findViewById(R.id.answerCheckboxGroup);
         btnPrevious = findViewById(R.id.btnPrevious);
         btnContinuous = findViewById(R.id.btnContinuous);
         btnNext = findViewById(R.id.btnNext);
@@ -111,18 +112,15 @@ public class QuestionActivity extends AppCompatActivity {
             Toast.makeText(this, "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
         }
 
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                for (int i = 0; i < group.getChildCount(); i++) {
-                    RadioButton rb = (RadioButton) group.getChildAt(i);
-                    if (rb.getId() == checkedId) {
-                        rb.setTextColor(Color.WHITE);
-                        rb.setBackground(ContextCompat.getDrawable(QuestionActivity.this, R.drawable.border_radio_button_checked));
-                    } else {
-                        rb.setTextColor(Color.BLACK);
-                        rb.setBackground(ContextCompat.getDrawable(QuestionActivity.this, R.drawable.border_radio_button));
-                    }
+        answerRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            for (int i = 0; i < group.getChildCount(); i++) {
+                RadioButton rb = (RadioButton) group.getChildAt(i);
+                if (rb.getId() == checkedId) {
+                    rb.setTextColor(Color.WHITE);
+                    rb.setBackground(ContextCompat.getDrawable(QuestionActivity.this, R.drawable.border_radio_button_checked));
+                } else {
+                    rb.setTextColor(Color.BLACK);
+                    rb.setBackground(ContextCompat.getDrawable(QuestionActivity.this, R.drawable.border_radio_button));
                 }
             }
         });
@@ -171,7 +169,11 @@ public class QuestionActivity extends AppCompatActivity {
                     for (Question question : questions) {
                         dbHelper.saveQuestion(question);
                     }
-                    displayQuestion(currentQuestion);
+                    if (!questions.isEmpty()) {
+                        displayQuestion(questions.get(currentQuestionIndex));
+                    } else {
+                        Log.e("API_ERROR", "No questions found");
+                    }
                 } else {
                     Log.e("API_ERROR", "Response code: " + response.code());
                 }
@@ -185,12 +187,15 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
-    private void displayQuestion(int index) {
-        Question question = questions.get(index);
+    private void displayQuestion(Question question) {
+        int index = currentQuestionIndex;
         List<Image> images = question.getImages();
 
         tvNumberOfQuestion.setText(String.format("%d/%s", index + 1, numberOfQuestions));
         tvQuestion.setText(String.format("Câu %d: %s", index + 1, question.getContent()));
+
+        answerRadioGroup.removeAllViews();
+        answerCheckboxGroup.removeAllViews();
 
         if (images != null && !images.isEmpty()) {
             for (int i = 0; i < images.size(); i++) {
@@ -201,51 +206,98 @@ public class QuestionActivity extends AppCompatActivity {
         } else {
             ivFigure.setVisibility(View.GONE);
         }
+        
+        String[] optionPrefixes = {"A. ", "B. ", "C. ", "D. ", "E. ", "F. ", "G. ", "H. ", "I. ", "J. "};
+        int[] savedAnswerIds = dbHelper.getUserAnswers(question.getId());
 
-        radioGroup.removeAllViews();
+        if (question.isMultipleChoice()) {
+            answerRadioGroup.setVisibility(View.GONE);
+            answerCheckboxGroup.setVisibility(View.VISIBLE);
+            for (int i = 0; i < question.getOptions().size(); i++) {
+                Answer option = question.getOptions().get(i);
+                CheckBox checkBox = new CheckBox(this);
+                checkBox.setText(optionPrefixes[i] + option.getContent());
+                checkBox.setTag(option);
 
-        int savedAnswerId = dbHelper.getUserAnswer(question.getId());
-        String[] optionPrefixes = {"A. ", "B. ", "C. ", "D. ", "E. "};
+                int checkBoxId = View.generateViewId();
+                checkBox.setId(checkBoxId);
 
-        for (int i = 0; i < question.getOptions().size(); i++) {
-            Answer option = question.getOptions().get(i);
-            RadioButton radioButton = new RadioButton(this);
-            radioButton.setText(optionPrefixes[i] + option.getContent());
-            radioButton.setTag(option);
+                checkBox.setBackground(ContextCompat.getDrawable(this, R.drawable.border_radio_button));
 
-            int radioButtonId = View.generateViewId();
-            radioButton.setId(radioButtonId);
+                int paddingStartEnd = getResources().getDimensionPixelSize(R.dimen.radio_button_padding_start_end);
+                int paddingTopBottom = getResources().getDimensionPixelSize(R.dimen.radio_button_padding_top_bottom);
+                checkBox.setPadding(paddingStartEnd, paddingTopBottom, paddingStartEnd, paddingTopBottom);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                radioButton.setBackground(ContextCompat.getDrawable(this, R.drawable.border_radio_button));
-            } else {
-                radioButton.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.border_radio_button));
+                int marginTop = getResources().getDimensionPixelSize(R.dimen.radio_button_margin_top);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                layoutParams.setMargins(0, marginTop, 0, 0);
+                checkBox.setLayoutParams(layoutParams);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    if (Arrays.stream(savedAnswerIds).anyMatch(id -> id == option.getId())) {
+                        checkBox.setChecked(true);
+                        checkBox.setTextColor(Color.WHITE);
+                        checkBox.setBackground(ContextCompat.getDrawable(this, R.drawable.border_radio_button_checked));
+                    } else {
+                        checkBox.setTextColor(Color.BLACK);
+                        checkBox.setBackground(ContextCompat.getDrawable(this, R.drawable.border_radio_button));
+                    }
+                }
+
+                checkBox.setOnClickListener(v -> {
+                    if (checkBox.isChecked()) {
+                        checkBox.setTextColor(Color.WHITE);
+                        checkBox.setBackground(ContextCompat.getDrawable(QuestionActivity.this, R.drawable.border_radio_button_checked));
+                    } else {
+                        checkBox.setTextColor(Color.BLACK);
+                        checkBox.setBackground(ContextCompat.getDrawable(QuestionActivity.this, R.drawable.border_radio_button));
+                    }
+                });
+
+                answerCheckboxGroup.addView(checkBox, i);
             }
+        } else {
+            answerRadioGroup.setVisibility(View.VISIBLE);
+            answerCheckboxGroup.setVisibility(View.GONE);
+            for (int i = 0; i < question.getOptions().size(); i++) {
+                Answer option = question.getOptions().get(i);
+                RadioButton radioButton = new RadioButton(this);
+                radioButton.setText(optionPrefixes[i] + option.getContent());
+                radioButton.setTag(option);
 
-            int paddingStartEnd = getResources().getDimensionPixelSize(R.dimen.radio_button_padding_start_end);
-            int paddingTopBottom = getResources().getDimensionPixelSize(R.dimen.radio_button_padding_top_bottom);
-            radioButton.setPadding(paddingStartEnd, paddingTopBottom, paddingStartEnd, paddingTopBottom);
+                int radioButtonId = View.generateViewId();
+                radioButton.setId(radioButtonId);
 
-            int marginTop = getResources().getDimensionPixelSize(R.dimen.radio_button_margin_top);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            layoutParams.setMargins(0, marginTop, 0, 0);
-            radioButton.setLayoutParams(layoutParams);
+                radioButton.setBackground(ContextCompat.getDrawable(this, R.drawable.border_radio_button));
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                int paddingStartEnd = getResources().getDimensionPixelSize(R.dimen.radio_button_padding_start_end);
+                int paddingTopBottom = getResources().getDimensionPixelSize(R.dimen.radio_button_padding_top_bottom);
+                radioButton.setPadding(paddingStartEnd, paddingTopBottom, paddingStartEnd, paddingTopBottom);
+
+                int marginTop = getResources().getDimensionPixelSize(R.dimen.radio_button_margin_top);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                layoutParams.setMargins(0, marginTop, 0, 0);
+                radioButton.setLayoutParams(layoutParams);
+
                 ColorStateList colorStateList = ContextCompat.getColorStateList(this, R.color.radio_button_color);
                 radioButton.setButtonTintList(colorStateList);
-            }
 
-            if (option.getId() == savedAnswerId) {
-                radioButton.setChecked(true);
-                radioButton.setTextColor(Color.WHITE);
-                radioButton.setBackground(ContextCompat.getDrawable(this, R.drawable.border_radio_button_checked));
-            }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    if (Arrays.stream(savedAnswerIds).anyMatch(id -> id == option.getId())) {
+                        radioButton.setChecked(true);
+                        radioButton.setTextColor(Color.WHITE);
+                        radioButton.setBackground(ContextCompat.getDrawable(this, R.drawable.border_radio_button_checked));
+                    }
+                }
 
-            radioGroup.addView(radioButton, i);
+                answerRadioGroup.addView(radioButton, i);
+            }
         }
 
         updateButtonVisibility();
@@ -256,11 +308,11 @@ public class QuestionActivity extends AppCompatActivity {
         if (!continuousMode) {
             showContinuousMode();
         } else {
-            if (currentQuestion < questions.size() - 1) {
-                currentQuestion++;
-                displayQuestion(currentQuestion);
+            if (currentQuestionIndex < questions.size() - 1) {
+                currentQuestionIndex++;
+                displayQuestion(questions.get(currentQuestionIndex));
 
-                btnContinuous.setEnabled(currentQuestion < questions.size() - 1);
+                btnContinuous.setEnabled(currentQuestionIndex < questions.size() - 1);
             } else {
                 saveSelectedAnswer();
             }
@@ -269,18 +321,18 @@ public class QuestionActivity extends AppCompatActivity {
 
     private void showPreviousQuestion() {
         saveSelectedAnswer();
-        if (currentQuestion > 0) {
-            currentQuestion--;
-            displayQuestion(currentQuestion);
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            displayQuestion(questions.get(currentQuestionIndex));
             btnContinuous.setEnabled(true);
         }
     }
 
     private void showContinuousMode() {
         saveSelectedAnswer();
-        if (currentQuestion < questions.size() - 1) {
-            currentQuestion++;
-            displayQuestion(currentQuestion);
+        if (currentQuestionIndex < questions.size() - 1) {
+            currentQuestionIndex++;
+            displayQuestion(questions.get(currentQuestionIndex));
 
             continuousMode = true;
             btnNext.setVisibility(View.GONE);
@@ -293,19 +345,33 @@ public class QuestionActivity extends AppCompatActivity {
             btnNext.setVisibility(View.VISIBLE);
             rlTwoButton.setVisibility(View.GONE);
         }
-        btnPrevious.setEnabled(currentQuestion > 0);
-        btnNext.setEnabled(currentQuestion < questions.size() - 1);
+        btnPrevious.setEnabled(currentQuestionIndex > 0);
+        btnNext.setEnabled(currentQuestionIndex < questions.size() - 1);
     }
 
     private void saveSelectedAnswer() {
-        int selectedAnswerId = radioGroup.getCheckedRadioButtonId();
-        if (selectedAnswerId != -1) {
-            RadioButton selectedRadioButton = findViewById(selectedAnswerId);
-            if (selectedRadioButton != null) {
-                Answer selectedAnswer = (Answer) selectedRadioButton.getTag();
+        Question currentQuestion = questions.get(currentQuestionIndex);
 
-                dbHelper.deleteUserAnswer(questions.get(currentQuestion).getId());
-                dbHelper.saveUserAnswer(questions.get(currentQuestion).getId(), selectedAnswer.getId(), selectedAnswer.isCorrect());
+        if (!currentQuestion.isMultipleChoice()) {
+            int selectedAnswerId = answerRadioGroup.getCheckedRadioButtonId();
+            if (selectedAnswerId != -1) {
+                RadioButton selectedRadioButton = findViewById(selectedAnswerId);
+                if (selectedRadioButton != null) {
+                    Answer selectedAnswer = (Answer) selectedRadioButton.getTag();
+
+                    dbHelper.deleteUserAnswer(currentQuestion.getId());
+                    dbHelper.saveUserAnswer(currentQuestion.getId(), selectedAnswer.getId(), selectedAnswer.isCorrect());
+                }
+            }
+        } else {
+            int questionId = questions.get(currentQuestionIndex).getId();
+            dbHelper.deleteUserAnswer(questionId);
+            for (int i = 0; i < answerCheckboxGroup.getChildCount(); i++) {
+                CheckBox checkBox = (CheckBox) answerCheckboxGroup.getChildAt(i);
+                if (checkBox.isChecked()) {
+                    Answer selectedAnswer = (Answer) checkBox.getTag();
+                    dbHelper.saveUserAnswer(questionId, selectedAnswer.getId(), selectedAnswer.isCorrect());
+                }
             }
         }
     }
@@ -345,8 +411,8 @@ public class QuestionActivity extends AppCompatActivity {
         List<Integer> unansweredQuestions = new ArrayList<>();
 
         for (int i = 0; i < questions.size(); i++) {
-            int savedAnswerId = dbHelper.getUserAnswer(questions.get(i).getId());
-            if (savedAnswerId == -1) {
+            int[] savedAnswerIds = dbHelper.getUserAnswers(questions.get(i).getId());
+            if (savedAnswerIds.length == 0) {
                 unansweredQuestions.add(i + 1);
             }
         }
@@ -422,23 +488,18 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     private void processExamResult(int correctAnswers) {
-        saveExamResult(correctAnswers, new SaveExamResultCallback() {
-            @Override
-            public void onResult(double score) {
-                runOnUiThread(() -> {
-                    if (score >= 5.0) {
-                        showResultDialog(ContextCompat.getDrawable(
-                                QuestionActivity.this, R.drawable.icon_right), "Đạt",
-                                "Chúc mừng bạn đã thi đậu với số điểm: " + score);
-                    } else {
-                        showResultDialog(ContextCompat.getDrawable(
-                                        QuestionActivity.this, R.drawable.icon_wrong), "Không đạt",
-                                "Rất tiếc, bạn đã thi trượt với số điểm: " + score);
-                    }
-                    dbHelper.deleteAllSelection();
-                });
+        saveExamResult(correctAnswers, score -> runOnUiThread(() -> {
+            if (score >= 5.0) {
+                showResultDialog(ContextCompat.getDrawable(
+                        QuestionActivity.this, R.drawable.icon_right), "Đạt",
+                        "Chúc mừng bạn đã thi đậu với số điểm: " + score);
+            } else {
+                showResultDialog(ContextCompat.getDrawable(
+                                QuestionActivity.this, R.drawable.icon_wrong), "Không đạt",
+                        "Rất tiếc, bạn đã thi trượt với số điểm: " + score);
             }
-        });
+            dbHelper.deleteAllSelection();
+        }));
     }
 
     private void showResultDialog(Drawable image, String result, String message) {
@@ -486,7 +547,7 @@ public class QuestionActivity extends AppCompatActivity {
 
         create.enqueue(new Callback<Result>() {
             @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
+            public void onResponse(@NonNull Call<Result> call, @NonNull Response<Result> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     int resultId = response.body().getId();
                     saveResultDetail(resultId);
@@ -497,7 +558,7 @@ public class QuestionActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Result> call, Throwable t) {
+            public void onFailure(@NonNull Call<Result> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });

@@ -9,6 +9,7 @@ public class Question implements Serializable {
     private String content;
     private int examId;
     private String difficultyLevel;
+    private boolean isMultipleChoice;
     private Exam exam;
     private List<Image> images;
     private List<Answer> options;
@@ -56,6 +57,14 @@ public class Question implements Serializable {
 
     public void setDifficultyLevel(String difficultyLevel) {
         this.difficultyLevel = difficultyLevel;
+    }
+
+    public boolean isMultipleChoice() {
+        return isMultipleChoice;
+    }
+
+    public void setMultipleChoice(boolean multipleChoice) {
+        isMultipleChoice = multipleChoice;
     }
 
     public Exam getExam() {

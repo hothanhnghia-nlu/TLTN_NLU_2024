@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -32,8 +33,6 @@ import retrofit2.Retrofit;
 import vn.edu.hcmuaf.fit.fitexam.adapter.TakeExamAdapter;
 import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.model.Exam;
-import vn.edu.hcmuaf.fit.fitexam.model.Image;
-import vn.edu.hcmuaf.fit.fitexam.model.Subject;
 
 public class TakeExamFragment extends Fragment {
     RecyclerView recyclerTakeExam;
@@ -93,11 +92,13 @@ public class TakeExamFragment extends Fragment {
 
         subjectList.enqueue(new Callback<ArrayList<Exam>>() {
             @Override
-            public void onResponse(Call<ArrayList<Exam>> call, Response<ArrayList<Exam>> response) {
+            public void onResponse(@NonNull Call<ArrayList<Exam>> call, @NonNull Response<ArrayList<Exam>> response) {
                 if (response.isSuccessful()) {
                     exams = response.body();
 
                     if (exams != null && !exams.isEmpty()) {
+                        Collections.reverse(exams);
+
                         shimmerTakeExam.stopShimmer();
                         shimmerTakeExam.setVisibility(View.GONE);
                         recyclerTakeExam.setVisibility(View.VISIBLE);
@@ -110,7 +111,7 @@ public class TakeExamFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Exam>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<Exam>> call, @NonNull Throwable t) {
                 Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });

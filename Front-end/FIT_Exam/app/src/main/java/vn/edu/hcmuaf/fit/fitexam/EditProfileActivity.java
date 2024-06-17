@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -209,7 +210,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -226,7 +227,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         userInfo.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful()) {
                     User user = response.body();
 
@@ -265,7 +266,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });
@@ -341,7 +342,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         update.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 progressDialog.dismiss();
                 if (response.isSuccessful()) {
                     Log log = new Log(id, Log.ALERT, getPhoneIpAddress(), "Edit profile",
@@ -363,7 +364,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 progressDialog.dismiss();
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
@@ -378,14 +379,14 @@ public class EditProfileActivity extends AppCompatActivity {
 
         editLog.enqueue(new Callback<Log>() {
             @Override
-            public void onResponse(Call<Log> call, Response<Log> response) {
+            public void onResponse(@NonNull Call<Log> call, @NonNull Response<Log> response) {
                 if (response.isSuccessful()) {
                     android.util.Log.e("API_SUCCESS", "Logs: " + response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<Log> call, Throwable t) {
+            public void onFailure(@NonNull Call<Log> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });
@@ -421,7 +422,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         facultyList.enqueue(new Callback<ArrayList<Faculty>>() {
             @Override
-            public void onResponse(Call<ArrayList<Faculty>> call, Response<ArrayList<Faculty>> response) {
+            public void onResponse(@NonNull Call<ArrayList<Faculty>> call, @NonNull Response<ArrayList<Faculty>> response) {
                 if (response.isSuccessful()) {
                     ArrayList<Faculty> faculties = response.body();
 
@@ -439,7 +440,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Faculty>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<Faculty>> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });

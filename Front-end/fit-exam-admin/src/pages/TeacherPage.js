@@ -13,7 +13,6 @@ const TeacherPage = () => {
     TabTitle('Giảng viên | FIT Exam Admin');
 
     const [listTeachers, setListTeachers] = useState([]);
-    const [totalTeachers, setTotalTeachers] = useState(0);
     const [dataTeacherEdit, setDataTeacherEdit] = useState({});
     const [dataTeacherDelete, setDataTeacherDelete] = useState({});
     const [dataExport, setDataExport] = useState([]);
@@ -27,7 +26,6 @@ const TeacherPage = () => {
     const [status, setStatus] = useState('');
 
     const [query, setQuery] = useState('');
-    const keys = ["name", "email", "phone"];
 
     useEffect(() => {
         getTeachers(1);
@@ -37,7 +35,6 @@ const TeacherPage = () => {
         let res = await fetchAllUser({role});
         if (res) {
             setListTeachers(res);
-            setTotalTeachers(res.length);
         }
     }
 
@@ -63,20 +60,41 @@ const TeacherPage = () => {
     }
 
     const [currentItems, setCurrentItems] = useState(null);
+    const [searchedItems, setSearchItems] = useState([]);
     const [pageCount, setPageCount] = useState(0);
     const [itemOffset, setItemOffset] = useState(0);
     const itemsPerPage = 5;
 
     useEffect(() => {
+        handleSearch();
+    }, [query]);
+
+    useEffect(() => {
         const endOffset = itemOffset + itemsPerPage;
-        setCurrentItems(listTeachers.slice(itemOffset, endOffset));
-        setPageCount(Math.ceil(totalTeachers / itemsPerPage));
-    }, [itemOffset, itemsPerPage, listTeachers, totalTeachers]);
+        const itemsToDisplay = query ? searchedItems : listTeachers;
+        setCurrentItems(itemsToDisplay.slice(itemOffset, endOffset));
+        setPageCount(Math.ceil(itemsToDisplay.length / itemsPerPage));
+    }, [itemOffset, itemsPerPage, listTeachers, query, searchedItems]);
 
     const handlePageClick = (event) => {
-        const newOffset = (event.selected * itemsPerPage) % totalTeachers;
+        const newOffset = (event.selected * itemsPerPage) % (query ? searchedItems.length : listTeachers.length);
         setItemOffset(newOffset);
-    };
+    }
+
+    const handleSearch = () => {
+        if (query) {
+            const filtered = listTeachers.filter(item => {
+                const name = item.name.toLowerCase();
+                const email = item.email.toLowerCase();
+                const phone = item.phone.toLowerCase();
+                return name.includes(query.toLowerCase()) || email.includes(query.toLowerCase()) || phone.includes(query.toLowerCase());
+            });
+            setSearchItems(filtered);
+        } else {
+            setSearchItems(listTeachers);
+        }
+        setItemOffset(0);
+    }
 
     useEffect(() => {
         if (dataTeacherEdit) {
@@ -129,7 +147,7 @@ const TeacherPage = () => {
             toast.error("Xóa giáo viên " + id + " thất bại!");
         }
     }
-    
+
     const getUsersExport = (event, done) => {
         let result = [];
         if (listTeachers && listTeachers.length > 0) {
@@ -177,7 +195,8 @@ const TeacherPage = () => {
                                 <div className="row align-items-center">
                                     <div className="col-md-6">
                                         <div className="form-focus">
-                                            <input type="text" className="form-control floating" onChange={(e) => setQuery(e.target.value)}/>
+                                            <input type="text" className="form-control floating"
+                                                   onChange={(e) => setQuery(e.target.value)}/>
                                             <label className="focus-label">Họ tên, email, SĐT</label>
                                         </div>
                                     </div>
@@ -214,49 +233,58 @@ const TeacherPage = () => {
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                {currentItems && currentItems.filter((current) => keys.some(key => current[key].toLowerCase().includes(query)))
-                                                    .map((item, index) => {
-                                                        const realIndex = itemOffset + index + 1;
-                                                        return (
-                                                            <tr key={`teachers-${index}`}>
-                                                                <td>{realIndex}</td>
-                                                                <td>
-                                                                    <h2>
-                                                                        {item.image && item.image.url ? (
-                                                                            <div className="avatar text-white">
-                                                                                <img src={item.image.url} alt={item.name} style={{maxWidth: '50px', maxHeight: '70px'}}/>
-                                                                            </div>
-                                                                        ) : (
-                                                                            <span></span>
-                                                                        )}
-                                                                        {item.name}
-                                                                    </h2>
-                                                                </td>
-                                                                <td>{item.email}</td>
-                                                                <td>{item.phone}</td>
-                                                                <td>{convertDate({date: item.dob})}</td>
-                                                                <td className="text-center">{item.gender}</td>
-                                                                <td className="text-center">{getStatus(item)}</td>
-                                                                <td className="text-right">
-                                                                    <div className="dropdown dropdown-action">
-                                                                        <Link to="#" className="action-icon dropdown-toggle"
-                                                                              data-toggle="dropdown" aria-expanded="false"><i
-                                                                            className="fas fa-ellipsis-v"></i></Link>
-                                                                        <div className="dropdown-menu dropdown-menu-right">
-                                                                            <Link className="dropdown-item" to="#" title="Edit"
-                                                                                  data-toggle="modal" data-target="#edit_user"
-                                                                                  onClick={() => handleEditTeacher(item)}>
-                                                                                <i className="fas fa-pencil-alt m-r-5"></i> Chỉnh sửa</Link>
-                                                                            <Link className="dropdown-item" to="#" title="Delete"
-                                                                                  data-toggle="modal" data-target="#delete_user"
-                                                                                  onClick={() => handleDeleteTeacher(item)}>
-                                                                                <i className="fas fa-trash-alt m-r-5"></i> Xóa</Link>
+                                                {currentItems && currentItems.map((item, index) => {
+                                                    const realIndex = itemOffset + index + 1;
+                                                    return (
+                                                        <tr key={`teachers-${index}`}>
+                                                            <td>{realIndex}</td>
+                                                            <td>
+                                                                <h2>
+                                                                    {item.image && item.image.url ? (
+                                                                        <div className="avatar text-white">
+                                                                            <img src={item.image.url} alt={item.name}
+                                                                                 style={{
+                                                                                     maxWidth: '50px',
+                                                                                     maxHeight: '70px'
+                                                                                 }}/>
                                                                         </div>
+                                                                    ) : (
+                                                                        <span></span>
+                                                                    )}
+                                                                    {item.name}
+                                                                </h2>
+                                                            </td>
+                                                            <td>{item.email}</td>
+                                                            <td>{item.phone}</td>
+                                                            <td>{convertDate({date: item.dob})}</td>
+                                                            <td className="text-center">{item.gender}</td>
+                                                            <td className="text-center">{getStatus(item)}</td>
+                                                            <td className="text-right">
+                                                                <div className="dropdown dropdown-action">
+                                                                    <Link to="#" className="action-icon dropdown-toggle"
+                                                                          data-toggle="dropdown"
+                                                                          aria-expanded="false"><i
+                                                                        className="fas fa-ellipsis-v"></i></Link>
+                                                                    <div className="dropdown-menu dropdown-menu-right">
+                                                                        <Link className="dropdown-item" to="#"
+                                                                              title="Edit"
+                                                                              data-toggle="modal"
+                                                                              data-target="#edit_user"
+                                                                              onClick={() => handleEditTeacher(item)}>
+                                                                            <i className="fas fa-pencil-alt m-r-5"></i> Chỉnh
+                                                                            sửa</Link>
+                                                                        <Link className="dropdown-item" to="#"
+                                                                              title="Delete"
+                                                                              data-toggle="modal"
+                                                                              data-target="#delete_user"
+                                                                              onClick={() => handleDeleteTeacher(item)}>
+                                                                            <i className="fas fa-trash-alt m-r-5"></i> Xóa</Link>
                                                                     </div>
-                                                                </td>
-                                                            </tr>
-                                                        )
-                                                    })
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })
                                                 }
                                                 </tbody>
                                             </table>
@@ -392,7 +420,9 @@ const TeacherPage = () => {
                                 </div>
                                 <div className="m-t-20 text-center">
                                     <button className="btn btn-primary btn-lg mb-3"
-                                            onClick={() => handleUpdate(dataTeacherEdit.id)}  data-dismiss="modal">Lưu thay đổi</button>
+                                            onClick={() => handleUpdate(dataTeacherEdit.id)} data-dismiss="modal">Lưu
+                                        thay đổi
+                                    </button>
                                 </div>
                             </form>
                         </div>

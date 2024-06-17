@@ -13,9 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +25,7 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,7 +37,6 @@ import vn.edu.hcmuaf.fit.fitexam.adapter.TakeExamAdapter;
 import vn.edu.hcmuaf.fit.fitexam.api.ApiService;
 import vn.edu.hcmuaf.fit.fitexam.common.LoginSession;
 import vn.edu.hcmuaf.fit.fitexam.model.Exam;
-import vn.edu.hcmuaf.fit.fitexam.model.Image;
 import vn.edu.hcmuaf.fit.fitexam.model.Result;
 import vn.edu.hcmuaf.fit.fitexam.model.Subject;
 import vn.edu.hcmuaf.fit.fitexam.model.User;
@@ -123,7 +121,7 @@ public class HomeFragment extends Fragment {
 
         userInfo.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful()) {
                     User user = response.body();
 
@@ -134,7 +132,7 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                 android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });
@@ -148,22 +146,25 @@ public class HomeFragment extends Fragment {
 
         subjectList.enqueue(new Callback<ArrayList<Subject>>() {
             @Override
-            public void onResponse(Call<ArrayList<Subject>> call, Response<ArrayList<Subject>> response) {
+            public void onResponse(@NonNull Call<ArrayList<Subject>> call, @NonNull Response<ArrayList<Subject>> response) {
                 if (response.isSuccessful()) {
                     ArrayList<Subject> subjects = response.body();
 
                     if (subjects != null && !subjects.isEmpty()) {
+                        int endIndex = Math.min(subjects.size(), 3);
+                        List<Subject> sublist = subjects.subList(0, endIndex);
+
                         shimmerSubject.stopShimmer();
                         shimmerSubject.setVisibility(View.GONE);
                         recyclerSubject.setVisibility(View.VISIBLE);
-                        subjectAdapter = new SubjectHomeAdapter(getContext(), subjects);
+                        subjectAdapter = new SubjectHomeAdapter(getContext(), sublist);
                         recyclerSubject.setAdapter(subjectAdapter);
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Subject>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<Subject>> call, @NonNull Throwable t) {
                 Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });
@@ -177,22 +178,26 @@ public class HomeFragment extends Fragment {
 
         subjectList.enqueue(new Callback<ArrayList<Exam>>() {
             @Override
-            public void onResponse(Call<ArrayList<Exam>> call, Response<ArrayList<Exam>> response) {
+            public void onResponse(@NonNull Call<ArrayList<Exam>> call, @NonNull Response<ArrayList<Exam>> response) {
                 if (response.isSuccessful()) {
                     ArrayList<Exam> exams = response.body();
 
                     if (exams != null && !exams.isEmpty()) {
+                        Collections.reverse(exams);
+                        int endIndex = Math.min(exams.size(), 2);
+                        List<Exam> sublist = exams.subList(0, endIndex);
+
                         shimmerTakeExam.stopShimmer();
                         shimmerTakeExam.setVisibility(View.GONE);
                         recyclerTakeExam.setVisibility(View.VISIBLE);
-                        examAdapter = new TakeExamAdapter(getContext(), exams);
+                        examAdapter = new TakeExamAdapter(getContext(), sublist);
                         recyclerTakeExam.setAdapter(examAdapter);
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Exam>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<Exam>> call, @NonNull Throwable t) {
                 Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });
@@ -206,24 +211,26 @@ public class HomeFragment extends Fragment {
 
         resultList.enqueue(new Callback<ArrayList<Result>>() {
             @Override
-            public void onResponse(Call<ArrayList<Result>> call, Response<ArrayList<Result>> response) {
+            public void onResponse(@NonNull Call<ArrayList<Result>> call, @NonNull Response<ArrayList<Result>> response) {
                 if (response.isSuccessful()) {
                     results = response.body();
 
                     if (results != null && !results.isEmpty()) {
                         Collections.reverse(results);
+                        int endIndex = Math.min(results.size(), 3);
+                        List<Result> sublist = results.subList(0, endIndex);
 
                         shimmerExamHistory.stopShimmer();
                         shimmerExamHistory.setVisibility(View.GONE);
                         recyclerExamHistory.setVisibility(View.VISIBLE);
-                        historyAdapter = new HistoryAdapter(getContext(), results);
+                        historyAdapter = new HistoryAdapter(getContext(), sublist);
                         recyclerExamHistory.setAdapter(historyAdapter);
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Result>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<Result>> call, @NonNull Throwable t) {
                 Log.e("API_ERROR", "Error occurred: " + t.getMessage());
             }
         });

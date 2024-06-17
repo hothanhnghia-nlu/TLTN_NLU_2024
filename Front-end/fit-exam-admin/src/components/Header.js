@@ -41,14 +41,14 @@ const Header = () => {
                     <Link id="mobile_btn" className="mobile_btn float-left" to="#sidebar">
                         <i className="fas fa-bars" aria-hidden="true"></i>
                     </Link>
-                    <Link id="toggle_btn" className="float-left" to="">
+                    <Link id="toggle_btn" className="float-left" to="javascript:void(0);">
                         <img src="assets/img/sidebar/icon-21.png" alt="" />
                     </Link>
 
                     <ul className="nav float-left">
                         <li>
                             <Link to="/" className="mobile-logo d-md-block d-lg-none d-block">
-                                <img src="assets/img/logo1.png" alt="" width="30" height="30" />
+                                <img src="assets/img/logo_fit.png" alt="" width="30" height="30" />
                             </Link>
                         </li>
                     </ul>

@@ -114,7 +114,7 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
 
         tvExamName.setText(examName);
         tvMessage.setText("Hãy chọn câu trả lời của bạn bằng cách nhấn chọn " +
-                "một trong các đáp án trong mỗi câu hỏi.");
+                "một hoặc nhiều đáp án trong mỗi câu hỏi.");
         tvTime.setText(examTime + " phút");
 
         btnYes.setOnClickListener(view -> {
@@ -168,6 +168,8 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
 
     @SuppressLint("SetTextI18n")
     private void showCheckDateDialog() {
+        String email = LoginSession.getEmailKey();
+
         dismissDialog();
 
         Activity activity = (Activity) context;
@@ -175,7 +177,10 @@ public class TakeExamAdapter extends RecyclerView.Adapter<TakeExamAdapter.TakeEx
         if (activity.isFinishing()) {
             return;
         }
-
+        if (email == null) {
+            showAlertDialog();
+            return;
+        }
         Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_alert_dialog);

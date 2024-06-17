@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,20 +74,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public void saveUserAnswer(int questionId, int answerId, boolean isCorrect) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        int savedAnswerId = getUserAnswer(questionId);
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_QUESTION_ID, questionId);
+        values.put(COLUMN_ANSWER_ID, answerId);
+        values.put(COLUMN_IS_CORRECT, isCorrect ? 1 : 0);
 
-        if (savedAnswerId != answerId) {
-            ContentValues values = new ContentValues();
-            values.put(COLUMN_QUESTION_ID, questionId);
-            values.put(COLUMN_ANSWER_ID, answerId);
-            values.put(COLUMN_IS_CORRECT, isCorrect ? 1 : 0);
-
-            db.replace(USER_ANSWERS_TABLE, null, values);
-        }
-
+        db.replace(USER_ANSWERS_TABLE, null, values);
         db.close();
     }
-
 
     @SuppressLint("Range")
     public int getUserAnswer(int questionId) {
@@ -107,18 +102,27 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @SuppressLint("Range")
-    public boolean isAnswerCorrect(int questionId) {
+    public int[] getUserAnswers(int questionId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(USER_ANSWERS_TABLE, new String[]{COLUMN_IS_CORRECT},
-                COLUMN_QUESTION_ID + "=?", new String[]{String.valueOf(questionId)},
-                null, null, null);
+        List<Integer> answerIds = new ArrayList<>();
 
-        if (cursor != null && cursor.moveToFirst()) {
-            boolean isCorrect = cursor.getInt(cursor.getColumnIndex(COLUMN_IS_CORRECT)) == 1;
-            cursor.close();
-            return isCorrect;
+        String query = "SELECT " + COLUMN_ANSWER_ID + " FROM " + USER_ANSWERS_TABLE +
+                " WHERE " + COLUMN_QUESTION_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(questionId)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                answerIds.add(cursor.getInt(cursor.getColumnIndex(COLUMN_ANSWER_ID)));
+            } while (cursor.moveToNext());
         }
-        return false;
+
+        cursor.close();
+        db.close();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return answerIds.stream().mapToInt(i -> i).toArray();
+        }
+        return null;
     }
 
     // Methods to save and retrieve questions and answers
@@ -143,10 +147,16 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @SuppressLint("Range")
-    public List<UserAnswer> getAllUserAnswers() {
-        List<UserAnswer> userAnswers = new ArrayList<>();
+    public List<UserAnswer> getLatestUserAnswers() {
+        List<UserAnswer> latestUserAnswers = new ArrayList<>();
+        Map<Integer, List<UserAnswer>> latestUserAnswersMap = new HashMap<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM user_answers", null);
+        Cursor cursor = db.rawQuery("SELECT ua.*, q.content AS questionContent, a.content AS answerContent " +
+                "FROM user_answers ua " +
+                "JOIN questions q ON ua.question_id = q.id " +
+                "JOIN answers a ON ua.answer_id = a.id " +
+                "ORDER BY ua.id DESC", null);
+
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
@@ -155,61 +165,52 @@ public class DBHelper extends SQLiteOpenHelper {
                 boolean isCorrect = cursor.getInt(cursor.getColumnIndex(COLUMN_IS_CORRECT)) == 1;
 
                 UserAnswer userAnswer = new UserAnswer(id, questionId, answerId, isCorrect);
-                userAnswers.add(userAnswer);
+                if (!latestUserAnswersMap.containsKey(questionId)) {
+                    latestUserAnswersMap.put(questionId, new ArrayList<>());
+                }
+                latestUserAnswersMap.get(questionId).add(userAnswer);
             } while (cursor.moveToNext());
             cursor.close();
         }
         db.close();
-        return userAnswers;
+
+        for (List<UserAnswer> answers : latestUserAnswersMap.values()) {
+            latestUserAnswers.addAll(answers);
+        }
+
+        return latestUserAnswers;
     }
 
     @SuppressLint("Range")
-    public List<UserAnswer> getLatestUserAnswers() {
-        List<UserAnswer> latestUserAnswers = new ArrayList<>();
-        Map<Integer, UserAnswer> latestUserAnswersMap = new HashMap<>();
+    public int countCorrectAnswers() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM user_answers ORDER BY id DESC", null);
+        Cursor cursor = db.rawQuery("SELECT q.id, COUNT(a.id) as correctCount, " +
+                "(SELECT COUNT(*) FROM answers WHERE question_id = q.id AND is_correct = 1) as totalCorrect " +
+                "FROM questions q " +
+                "LEFT JOIN user_answers ua ON q.id = ua.question_id AND ua.is_correct = 1 " +
+                "LEFT JOIN answers a ON ua.answer_id = a.id AND a.is_correct = 1 " +
+                "GROUP BY q.id", null);
+
+        int correctQuestions = 0;
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
-                int questionId = cursor.getInt(cursor.getColumnIndex(COLUMN_QUESTION_ID));
-                int answerId = cursor.getInt(cursor.getColumnIndex(COLUMN_ANSWER_ID));
-                boolean isCorrect = cursor.getInt(cursor.getColumnIndex(COLUMN_IS_CORRECT)) == 1;
+                int correctCount = cursor.getInt(cursor.getColumnIndex("correctCount"));
+                int totalCorrect = cursor.getInt(cursor.getColumnIndex("totalCorrect"));
 
-                if (!latestUserAnswersMap.containsKey(questionId) || id > latestUserAnswersMap.get(questionId).getId()) {
-                    UserAnswer userAnswer = new UserAnswer(id, questionId, answerId, isCorrect);
-                    latestUserAnswersMap.put(questionId, userAnswer);
+                if (correctCount == totalCorrect && totalCorrect != 0) {
+                    correctQuestions++;
                 }
             } while (cursor.moveToNext());
             cursor.close();
         }
         db.close();
-        latestUserAnswers.addAll(latestUserAnswersMap.values());
-        return latestUserAnswers;
-    }
-
-    public int countCorrectAnswers() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + USER_ANSWERS_TABLE + " WHERE " + COLUMN_IS_CORRECT + " = 1", null);
-        int count = 0;
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                count = cursor.getInt(0);
-            }
-            cursor.close();
-        }
-        return count;
+        return correctQuestions;
     }
 
     public void deleteUserAnswer(int questionId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        try {
-            db.delete(USER_ANSWERS_TABLE, "question_id=?", new String[]{String.valueOf(questionId)});
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            db.close();
-        }
+        db.delete(USER_ANSWERS_TABLE, COLUMN_QUESTION_ID + " = ?", new String[]{String.valueOf(questionId)});
+        db.close();
     }
 
     public void deleteAllSelection() {

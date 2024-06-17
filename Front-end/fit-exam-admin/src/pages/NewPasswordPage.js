@@ -93,7 +93,7 @@ const NewPasswordPage = () => {
                     <div className="account-box">
                         <div className="account-wrapper">
                             <div className="form-group">
-                                <label>Mật khẩu</label>
+                                <label>Mật khẩu mới</label>
                                 <input
                                     type="password"
                                     className="form-control"
@@ -104,7 +104,7 @@ const NewPasswordPage = () => {
                                 {passwordError && <div style={{ color: 'red' }}>{passwordError}</div>}
                             </div>
                             <div className="form-group">
-                                <label>Nhập lại mật khẩu</label>
+                                <label>Xác nhận mật khẩu mới</label>
                                 <input
                                     type="password"
                                     className="form-control"
