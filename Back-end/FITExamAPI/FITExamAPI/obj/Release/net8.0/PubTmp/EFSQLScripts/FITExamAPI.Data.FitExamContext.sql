@@ -10,7 +10,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     ALTER DATABASE CHARACTER SET utf8mb4;
 
@@ -24,7 +24,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE TABLE `Faculties` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -42,7 +42,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE TABLE `Subjects` (
         `Id` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
@@ -61,7 +61,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE TABLE `Users` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -90,7 +90,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE TABLE `Exams` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -116,7 +116,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE TABLE `Logs` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -141,14 +141,14 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE TABLE `Questions` (
         `Id` int NOT NULL AUTO_INCREMENT,
         `Content` longtext CHARACTER SET utf8mb4 NULL,
         `ExamId` int NULL,
         `DifficultyLevel` varchar(255) CHARACTER SET utf8mb4 NULL,
-        `ShuffleOrder` int NULL,
+        `IsMultipleChoice` tinyint(1) NULL,
         CONSTRAINT `PK_Questions` PRIMARY KEY (`Id`),
         CONSTRAINT `FK_Questions_Exams_ExamId` FOREIGN KEY (`ExamId`) REFERENCES `Exams` (`Id`)
     ) CHARACTER SET=utf8mb4;
@@ -163,7 +163,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE TABLE `Results` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -172,7 +172,7 @@ BEGIN
         `TotalCorrectAnswer` int NULL,
         `Score` double NULL,
         `ExamDate` datetime(6) NULL,
-        `OverallTime` int NULL,
+        `OverallTime` double NULL,
         CONSTRAINT `PK_Results` PRIMARY KEY (`Id`),
         CONSTRAINT `FK_Results_Exams_ExamId` FOREIGN KEY (`ExamId`) REFERENCES `Exams` (`Id`),
         CONSTRAINT `FK_Results_Users_UserId` FOREIGN KEY (`UserId`) REFERENCES `Users` (`Id`)
@@ -188,7 +188,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE TABLE `Answers` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -209,7 +209,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE TABLE `Images` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -234,7 +234,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE TABLE `ResultDetails` (
         `Id` int NOT NULL AUTO_INCREMENT,
@@ -258,7 +258,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE INDEX `IX_Answers_QuestionId` ON `Answers` (`QuestionId`);
 
@@ -272,7 +272,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE INDEX `IX_Exams_CreatorId` ON `Exams` (`CreatorId`);
 
@@ -286,7 +286,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE INDEX `IX_Exams_SubjectId` ON `Exams` (`SubjectId`);
 
@@ -300,7 +300,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE INDEX `IX_Images_QuestionId` ON `Images` (`QuestionId`);
 
@@ -314,7 +314,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE UNIQUE INDEX `IX_Images_SubjectId` ON `Images` (`SubjectId`);
 
@@ -328,7 +328,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE UNIQUE INDEX `IX_Images_UserId` ON `Images` (`UserId`);
 
@@ -342,7 +342,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE INDEX `IX_Logs_UserId` ON `Logs` (`UserId`);
 
@@ -356,7 +356,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE INDEX `IX_Questions_ExamId` ON `Questions` (`ExamId`);
 
@@ -370,7 +370,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE INDEX `IX_ResultDetails_AnswerId` ON `ResultDetails` (`AnswerId`);
 
@@ -384,7 +384,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE INDEX `IX_ResultDetails_QuestionId` ON `ResultDetails` (`QuestionId`);
 
@@ -398,7 +398,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE INDEX `IX_ResultDetails_ResultId` ON `ResultDetails` (`ResultId`);
 
@@ -412,7 +412,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE INDEX `IX_Results_ExamId` ON `Results` (`ExamId`);
 
@@ -426,7 +426,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE INDEX `IX_Results_UserId` ON `Results` (`UserId`);
 
@@ -440,7 +440,7 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     CREATE INDEX `IX_Users_FacultyId` ON `Users` (`FacultyId`);
 
@@ -454,62 +454,10 @@ DROP PROCEDURE IF EXISTS MigrationsScript;
 DELIMITER //
 CREATE PROCEDURE MigrationsScript()
 BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134359_OfficialMigration') THEN
+    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240612145209_OfficialMigration') THEN
 
     INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-    VALUES ('20240524134359_OfficialMigration', '8.0.4');
-
-    END IF;
-END //
-DELIMITER ;
-CALL MigrationsScript();
-DROP PROCEDURE MigrationsScript;
-
-COMMIT;
-
-START TRANSACTION;
-
-DROP PROCEDURE IF EXISTS MigrationsScript;
-DELIMITER //
-CREATE PROCEDURE MigrationsScript()
-BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240524134519_FakeMigration') THEN
-
-    INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-    VALUES ('20240524134519_FakeMigration', '8.0.4');
-
-    END IF;
-END //
-DELIMITER ;
-CALL MigrationsScript();
-DROP PROCEDURE MigrationsScript;
-
-COMMIT;
-
-START TRANSACTION;
-
-DROP PROCEDURE IF EXISTS MigrationsScript;
-DELIMITER //
-CREATE PROCEDURE MigrationsScript()
-BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240529155015_UpdateMigration') THEN
-
-    ALTER TABLE `Results` MODIFY COLUMN `OverallTime` double NULL;
-
-    END IF;
-END //
-DELIMITER ;
-CALL MigrationsScript();
-DROP PROCEDURE MigrationsScript;
-
-DROP PROCEDURE IF EXISTS MigrationsScript;
-DELIMITER //
-CREATE PROCEDURE MigrationsScript()
-BEGIN
-    IF NOT EXISTS(SELECT 1 FROM `__EFMigrationsHistory` WHERE `MigrationId` = '20240529155015_UpdateMigration') THEN
-
-    INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-    VALUES ('20240529155015_UpdateMigration', '8.0.4');
+    VALUES ('20240612145209_OfficialMigration', '8.0.4');
 
     END IF;
 END //

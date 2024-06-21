@@ -59,7 +59,7 @@ namespace FITExamAPI.Service
                 }
             }
 
-            var exam = await _context.Exams.FirstOrDefaultAsync(e => e.Name == question.ExamName);
+            var exam = await _context.Exams.FirstOrDefaultAsync(e => e.Name == question.ExamName && e.SubjectId == question.SubjectId);
 
             if (exam != null)
             {
@@ -84,7 +84,7 @@ namespace FITExamAPI.Service
                     Content = q.Content,
                     ExamId = q.ExamId,
                     DifficultyLevel = q.DifficultyLevel,
-                    ExamName = q.ExamName,
+                    ExamName = q.Exam != null ? q.Exam.Name : null,
                     Images = q.Images,
                     Options = q.Options.Select(a => new Answer
                     {
@@ -93,18 +93,18 @@ namespace FITExamAPI.Service
                         IsCorrect = a.IsCorrect,
                         QuestionId = a.QuestionId
                     }).ToList(),
-                    Exam = new Exam
+                    Exam = q.Exam != null ? new Exam
                     {
                         Id = q.Exam.Id,
                         Name = q.Exam.Name,
                         SubjectId = q.Exam.SubjectId,
                         CreatorId = q.Exam.CreatorId,
-                        Subject = new Subject
+                        Subject = q.Exam.Subject != null ? new Subject
                         {
                             Id = q.Exam.Subject.Id,
                             Name = q.Exam.Subject.Name,
-                        }
-                    }
+                        } : null
+                    } : null
                 })
                 .ToListAsync();
 
@@ -113,12 +113,13 @@ namespace FITExamAPI.Service
                 if (question.Exam != null)
                 {
                     question.ExamName = question.Exam.Name;
+                    question.SubjectId = question.Exam.SubjectId;
                 }
             }
 
             return questions;
         }
-        
+
         public async Task<List<Question>> GetAllByExamIdAsync(int examId)
         {
             var questions = await _context.Questions
@@ -127,7 +128,6 @@ namespace FITExamAPI.Service
                 .ThenInclude(e => e.Subject)
                 .Include(q => q.Options)
                 .Where(q => q.ExamId == examId)
-                .OrderBy(q => q.ShuffleOrder)
                 .ToListAsync();
 
             foreach (var question in questions)
@@ -135,6 +135,7 @@ namespace FITExamAPI.Service
                 if (question.Exam != null)
                 {
                     question.ExamName = question.Exam.Name;
+                    question.SubjectId = question.Exam.SubjectId;
                 }
             }
 
@@ -149,7 +150,6 @@ namespace FITExamAPI.Service
                 .ThenInclude(e => e.Subject)
                 .Include(q => q.Options)
                 .Where(q => q.Exam.CreatorId == userId)
-                .OrderBy(q => q.ShuffleOrder)
                 .ToListAsync();
 
             foreach (var question in questions)
@@ -157,6 +157,7 @@ namespace FITExamAPI.Service
                 if (question.Exam != null)
                 {
                     question.ExamName = question.Exam.Name;
+                    question.SubjectId = question.Exam.SubjectId;
                 }
             }
 
@@ -207,6 +208,7 @@ namespace FITExamAPI.Service
             if (question.Exam != null)
             {
                 question.ExamName = question.Exam.Name;
+                question.SubjectId = question.Exam.SubjectId;
             }
             return question;
         }
@@ -279,7 +281,8 @@ namespace FITExamAPI.Service
                 }
             }
 
-            var exam = await _context.Exams.FirstOrDefaultAsync(e => e.Name == question.ExamName);
+            var exam = await _context.Exams.FirstOrDefaultAsync(e => e.Name == question.ExamName && e.SubjectId == question.SubjectId);
+            
             if (exam != null)
             {
                 existingQuestion.ExamId = exam.Id;
@@ -321,48 +324,41 @@ namespace FITExamAPI.Service
             return question;
         }
 
-        public async Task<List<Question>?> ShuffleByExamId(int examId)
+        public async Task<List<Question>?> ShuffleAsync(int examId)
         {
-            var questions = await _context.Questions
-                .Include(q => q.Images)
-                .Include(q => q.Exam)
-                .ThenInclude(e => e.Subject)
-                .Include(q => q.Options)
-                .Where(q => q.ExamId == examId)
-                .ToListAsync();
-
-            var shuffledQuestions = questions.OrderBy(q => Guid.NewGuid()).ToList();
-
-            for (int i = 0; i < shuffledQuestions.Count; i++)
+            try
             {
-                shuffledQuestions[i].ShuffleOrder = i;
+                var questions = await _context.Questions
+                    .Include(q => q.Images)
+                    .Include(q => q.Exam)
+                    .ThenInclude(e => e.Subject)
+                    .Include(q => q.Options)
+                    .Where(q => q.Exam.Id == examId)
+                    .ToListAsync();
+
+                var random = new Random();
+                for (int i = questions.Count - 1; i > 0; i--)
+                {
+                    int j = random.Next(0, i + 1);
+                    SwapQuestions(questions, i, j);
+                }
+
+                await _context.SaveChangesAsync();
+
+                return questions;
             }
-
-            await _context.SaveChangesAsync();
-
-            return shuffledQuestions;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return null;
+            }
         }
-        
-        public async Task<List<Question>?> ShuffleByUserId(int userId)
+
+        private void SwapQuestions(List<Question> questions, int i, int j)
         {
-            var questions = await _context.Questions
-                .Include(q => q.Images)
-                .Include(q => q.Exam)
-                .ThenInclude(e => e.Subject)
-                .Include(q => q.Options)
-                .Where(q => q.Exam.CreatorId == userId)
-                .ToListAsync();
-
-            var shuffledQuestions = questions.OrderBy(q => Guid.NewGuid()).ToList();
-
-            for (int i = 0; i < shuffledQuestions.Count; i++)
-            {
-                shuffledQuestions[i].ShuffleOrder = i;
-            }
-
-            await _context.SaveChangesAsync();
-
-            return shuffledQuestions;
+            var temp = questions[i];
+            questions[i] = questions[j];
+            questions[j] = temp;
         }
 
     }

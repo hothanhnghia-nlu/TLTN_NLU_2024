@@ -10,7 +10,7 @@ namespace FITExamAPI.Models
         public int? ExamId { get; set; }
         [MaxLength(255)]
         public string? DifficultyLevel { get; set; } = string.Empty;
-        public int? ShuffleOrder { get; set; }
+        public bool? IsMultipleChoice { get; set; }
         public virtual Exam? Exam { get; set; }
         public virtual ICollection<Image>? Images { get; set; } = new List<Image>();
         public virtual ICollection<Answer>? Options { get; set; } = new List<Answer>();
@@ -20,5 +20,7 @@ namespace FITExamAPI.Models
         public IFormFile? ImageFile { get; set; }
         [NotMapped]
         public string? ExamName { get; set; }
+        [NotMapped]
+        public string? SubjectId { get; set; }
     }
 }

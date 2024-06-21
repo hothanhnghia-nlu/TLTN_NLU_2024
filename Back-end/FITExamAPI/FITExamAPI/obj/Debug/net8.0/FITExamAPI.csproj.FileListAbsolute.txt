@@ -30,7 +30,6 @@ D:\TLTN_NLU\Back-end\FITExamAPI\FITExamAPI\obj\Debug\net8.0\refint\FITExamAPI.dl
 D:\TLTN_NLU\Back-end\FITExamAPI\FITExamAPI\obj\Debug\net8.0\FITExamAPI.pdb
 D:\TLTN_NLU\Back-end\FITExamAPI\FITExamAPI\obj\Debug\net8.0\FITExamAPI.genruntimeconfig.cache
 D:\TLTN_NLU\Back-end\FITExamAPI\FITExamAPI\obj\Debug\net8.0\ref\FITExamAPI.dll
-D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Microsoft.CodeAnalysis.Features.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\appsettings.Development.json
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\appsettings.json
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\FITExamAPI.exe
@@ -39,9 +38,11 @@ D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\FITExamAPI.runt
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\FITExamAPI.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\FITExamAPI.pdb
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\BCrypt.Net-Core.dll
+D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\CloudinaryDotNet.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\dotenv.net.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Humanizer.dll
+D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\MailKit.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Razor.Language.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Microsoft.Build.dll
@@ -52,6 +53,7 @@ D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Microsoft.CodeA
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.Features.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Microsoft.CodeAnalysis.Elfie.dll
+D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Microsoft.CodeAnalysis.Features.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Microsoft.CodeAnalysis.Razor.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Microsoft.CodeAnalysis.Scripting.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Microsoft.CodeAnalysis.Workspaces.dll
@@ -72,6 +74,7 @@ D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Microsoft.Visua
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
+D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\MimeKit.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Mono.TextTemplating.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\MySqlConnector.dll
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\Newtonsoft.Json.dll
@@ -266,6 +269,3 @@ D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Debug\net8.0\refint\FITExamA
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Debug\net8.0\FITExamAPI.pdb
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Debug\net8.0\FITExamAPI.genruntimeconfig.cache
 D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\obj\Debug\net8.0\ref\FITExamAPI.dll
-D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
-D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\MailKit.dll
-D:\TLTN_NLU_2024\Back-end\FITExamAPI\FITExamAPI\bin\Debug\net8.0\MimeKit.dll

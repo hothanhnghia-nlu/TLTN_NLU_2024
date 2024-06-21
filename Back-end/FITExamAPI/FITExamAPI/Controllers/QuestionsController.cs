@@ -99,18 +99,15 @@ namespace FITExamAPI.Controllers
             return Ok("Question " + id + " is deleted successfully");
         }
 
-        [HttpGet("shuffle/exam")]
-        public async Task<IActionResult> ShuffleQuestionsByExamId([FromQuery] int id)
+        [HttpGet("shuffle")]
+        public async Task<ActionResult<IEnumerable<Question>>> ShuffleQuestions([FromQuery] int examId)
         {
-            var questions = await _questionRepository.ShuffleByExamId(id);
+            var questions = await _questionRepository.ShuffleAsync(examId);
 
-            return Ok(questions);
-        }
-
-        [HttpGet("shuffle/user")]
-        public async Task<IActionResult> ShuffleQuestionsByUserId([FromQuery] int id)
-        {
-            var questions = await _questionRepository.ShuffleByUserId(id);
+            if (questions == null || !questions.Any())
+            {
+                return NotFound("No questions found for the specified user and subject.");
+            }
 
             return Ok(questions);
         }

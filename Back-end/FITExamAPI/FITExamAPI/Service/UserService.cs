@@ -61,6 +61,17 @@ namespace FITExamAPI.Service
             }
             return user.Id.ToString();
         }
+        
+        public async Task<sbyte?> GetStatusAsync(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null)
+            {
+                return null;
+            }
+            return user.Status;
+        }
 
         public async Task<User?> UpdateAsync(int id, [FromForm] User user)
         {

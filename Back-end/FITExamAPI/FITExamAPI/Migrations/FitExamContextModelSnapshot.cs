@@ -195,8 +195,8 @@ namespace FITExamAPI.Migrations
                     b.Property<int?>("ExamId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ShuffleOrder")
-                        .HasColumnType("int");
+                    b.Property<bool?>("IsMultipleChoice")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 

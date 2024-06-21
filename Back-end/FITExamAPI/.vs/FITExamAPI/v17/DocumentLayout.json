@@ -3,36 +3,24 @@
   "WorkspaceRootPath": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\controllers\\resultscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\controllers\\resultscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\service\\questionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\service\\questionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\repository\\questionrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\repository\\questionrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\service\\resultservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\service\\resultservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\controllers\\questionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\controllers\\questionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\repository\\resultrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\repository\\resultrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\service\\questionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\service\\questionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\service\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\service\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\repository\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\repository\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|d:\\tltn_nlu_2024\\back-end\\fitexamapi\\fitexamapi\\controllers\\resultscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3E795419-78FE-4E32-97BA-7A46AEA42409}|FITExamAPI\\FITExamAPI.csproj|solutionrelative:fitexamapi\\controllers\\resultscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -59,45 +47,6 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ResultsController.cs",
-              "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Controllers\\ResultsController.cs",
-              "RelativeDocumentMoniker": "FITExamAPI\\Controllers\\ResultsController.cs",
-              "ToolTip": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Controllers\\ResultsController.cs",
-              "RelativeToolTip": "FITExamAPI\\Controllers\\ResultsController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAfAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-29T16:45:08.15Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ResultService.cs",
-              "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Service\\ResultService.cs",
-              "RelativeDocumentMoniker": "FITExamAPI\\Service\\ResultService.cs",
-              "ToolTip": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Service\\ResultService.cs",
-              "RelativeToolTip": "FITExamAPI\\Service\\ResultService.cs",
-              "ViewState": "AQIAAFsAAAAAAAAAAAAowGQAAAASAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-29T16:42:02.443Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ResultRepository.cs",
-              "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Repository\\ResultRepository.cs",
-              "RelativeDocumentMoniker": "FITExamAPI\\Repository\\ResultRepository.cs",
-              "ToolTip": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Repository\\ResultRepository.cs",
-              "RelativeToolTip": "FITExamAPI\\Repository\\ResultRepository.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAAAAAAYAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-29T16:41:06.052Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
               "Title": "QuestionService.cs",
               "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Service\\QuestionService.cs",
               "RelativeDocumentMoniker": "FITExamAPI\\Service\\QuestionService.cs",
@@ -111,6 +60,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "QuestionRepository.cs",
+              "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Repository\\QuestionRepository.cs",
+              "RelativeDocumentMoniker": "FITExamAPI\\Repository\\QuestionRepository.cs",
+              "ToolTip": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Repository\\QuestionRepository.cs",
+              "RelativeToolTip": "FITExamAPI\\Repository\\QuestionRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-07T14:20:24.017Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\appsettings.json",
               "RelativeDocumentMoniker": "FITExamAPI\\appsettings.json",
@@ -123,40 +85,27 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "UsersController.cs",
-              "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Controllers\\UsersController.cs",
-              "RelativeDocumentMoniker": "FITExamAPI\\Controllers\\UsersController.cs",
-              "ToolTip": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Controllers\\UsersController.cs",
-              "RelativeToolTip": "FITExamAPI\\Controllers\\UsersController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAANAAAA",
+              "DocumentIndex": 3,
+              "Title": "QuestionsController.cs",
+              "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Controllers\\QuestionsController.cs",
+              "RelativeDocumentMoniker": "FITExamAPI\\Controllers\\QuestionsController.cs",
+              "ToolTip": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Controllers\\QuestionsController.cs",
+              "RelativeToolTip": "FITExamAPI\\Controllers\\QuestionsController.cs",
+              "ViewState": "AQIAAGIAAAAAAAAAAAAAAAAAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-26T04:46:53.575Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-07T14:20:40.079Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "UserRepository.cs",
-              "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Repository\\UserRepository.cs",
-              "RelativeDocumentMoniker": "FITExamAPI\\Repository\\UserRepository.cs",
-              "ToolTip": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Repository\\UserRepository.cs",
-              "RelativeToolTip": "FITExamAPI\\Repository\\UserRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAYAAAA",
+              "DocumentIndex": 4,
+              "Title": "ResultsController.cs",
+              "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Controllers\\ResultsController.cs",
+              "RelativeDocumentMoniker": "FITExamAPI\\Controllers\\ResultsController.cs",
+              "ToolTip": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Controllers\\ResultsController.cs",
+              "RelativeToolTip": "FITExamAPI\\Controllers\\ResultsController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAfAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-26T04:45:14.917Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "UserService.cs",
-              "DocumentMoniker": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Service\\UserService.cs",
-              "RelativeDocumentMoniker": "FITExamAPI\\Service\\UserService.cs",
-              "ToolTip": "D:\\TLTN_NLU_2024\\Back-end\\FITExamAPI\\FITExamAPI\\Service\\UserService.cs",
-              "RelativeToolTip": "FITExamAPI\\Service\\UserService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-26T04:44:27.352Z"
+              "WhenOpened": "2024-05-29T16:45:08.15Z"
             }
           ]
         }

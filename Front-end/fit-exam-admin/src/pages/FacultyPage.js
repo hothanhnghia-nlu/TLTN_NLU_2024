@@ -56,9 +56,7 @@ const FacultyPage = () => {
         if (query) {
             const filtered = listFaculties.filter(item => {
                 const name = item.name.toLowerCase();
-                const email = item.email.toLowerCase();
-                const phone = item.phone.toLowerCase();
-                return name.includes(query.toLowerCase()) || email.includes(query.toLowerCase()) || phone.includes(query.toLowerCase());
+                return name.includes(query.toLowerCase());
             });
             setSearchItems(filtered);
         } else {

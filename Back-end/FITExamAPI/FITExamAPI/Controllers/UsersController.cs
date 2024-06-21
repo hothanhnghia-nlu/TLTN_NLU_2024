@@ -72,6 +72,16 @@ namespace FITExamAPI.Controllers
             }
             return await _userRepository.GetIdAsync(email);
         }
+        
+        [HttpGet("status")]
+        public async Task<ActionResult<sbyte?>> GetUserStatus([FromQuery] string email)
+        {
+            if (_context.Users == null)
+            {
+                return NotFound();
+            }
+            return await _userRepository.GetStatusAsync(email);
+        }
 
         [HttpPost("send-mail")]
         public async Task<IActionResult> SendMail([FromForm] User user)
