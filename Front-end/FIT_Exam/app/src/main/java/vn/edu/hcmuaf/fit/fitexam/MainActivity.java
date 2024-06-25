@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
     }
+
     private boolean isLoggedIn() {
         String email = LoginSession.getEmailKey();
         if (email != null) {
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    // Handle logout dialog
+    // Hiển thị hộp thoại Thông báo
     @SuppressLint("SetTextI18n")
     private void handleAlertDialog() {
         Dialog dialog = new Dialog(this);

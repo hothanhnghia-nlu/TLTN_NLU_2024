@@ -58,6 +58,7 @@ const LogPage = () => {
         setItemOffset(newOffset);
     }
 
+    // Thực hiện Tìm kiếm thông tin
     const handleSearch = () => {
         if (query) {
             const filtered = listLogs.filter(item => {

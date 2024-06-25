@@ -66,6 +66,7 @@ const NewPasswordPage = () => {
         return regex.test(password);
     }
 
+    // Thực hiện Lưu thay đổi
     const handleSaveChange = async () => {
         if (!password || !confPassword) {
             toast.error("Vui lòng nhập mật khẩu!");

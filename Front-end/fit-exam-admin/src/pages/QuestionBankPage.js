@@ -55,6 +55,7 @@ const QuestionBankPage = () => {
         }
     }
 
+    // Thực hiện Xem Câu hỏi
     const handleViewQuestion = async (id) => {
         let res = await fetchAllAnswerByQuestionId({id});
         if (res) {
@@ -97,7 +98,8 @@ const QuestionBankPage = () => {
         setItemOffset(newOffset);
     }
 
-    const handleDownload = () => {
+    // Thực hiện Xuất file XML
+    const handleExportXMLFile = () => {
         if (!filterQuery) {
             toast.error("Vui lòng nhập môn thi!");
             return;
@@ -132,6 +134,7 @@ const QuestionBankPage = () => {
         }
     }
 
+    // Thực hiện Chọn file
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -168,6 +171,7 @@ const QuestionBankPage = () => {
         setDataQuestionDelete(question);
     }
 
+    // Thực hiện Cập nhật câu hỏi
     const handleUpdate = async () => {
         const imageFile = selectedImage?.file || null;
         const questionId = dataQuestionEdit.id;
@@ -193,6 +197,7 @@ const QuestionBankPage = () => {
         }
     }
 
+    // Thực hiện Xác nhận xóa
     const confirmDelete = async () => {
         let questionId = dataQuestionDelete.id;
         let res = await deleteQuestion(questionId);
@@ -272,7 +277,7 @@ const QuestionBankPage = () => {
                                     <div className="col-md-2">
                                         <div className="text-right">
                                             <button className="btn btn-outline-info"
-                                                onClick={handleDownload}>
+                                                onClick={handleExportXMLFile}>
                                                 <img src="assets/img/xml-file.png" alt=""/>
                                                 <span className="ml-1">Xuất file XML</span>
                                             </button>

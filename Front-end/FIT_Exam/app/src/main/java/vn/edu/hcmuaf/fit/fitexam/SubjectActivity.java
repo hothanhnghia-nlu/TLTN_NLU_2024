@@ -50,7 +50,6 @@ public class SubjectActivity extends AppCompatActivity {
         shimmerSubject = findViewById(R.id.shimmer_subjects);
         btnBack = findViewById(R.id.btnBack);
 
-//        recyclerSubject.setHasFixedSize(true);
         recyclerSubject.setLayoutManager(new GridLayoutManager(this, 2));
         shimmerSubject.startShimmer();
 
@@ -58,6 +57,7 @@ public class SubjectActivity extends AppCompatActivity {
         View v = searchView.findViewById(androidx.appcompat.R.id.search_plate);
         v.setBackgroundColor(Color.TRANSPARENT);
 
+        // Tìm kiếm Môn học
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -77,12 +77,14 @@ public class SubjectActivity extends AppCompatActivity {
             Toast.makeText(this, "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
         }
 
+        // Nút Trở lại
         btnBack.setOnClickListener(view -> {
             finish();
         });
 
     }
 
+    // Lấy Danh sách Môn học
     private void loadSubjectList() {
         Retrofit retrofit = ApiService.getClient(this);
         ApiService apiService = retrofit.create(ApiService.class);
@@ -114,6 +116,7 @@ public class SubjectActivity extends AppCompatActivity {
         });
     }
 
+    // Lọc Danh sách Môn học
     private void filterList(String text) {
         List<Subject> filteredList = new ArrayList<>();
         for (Subject subject : subjects) {

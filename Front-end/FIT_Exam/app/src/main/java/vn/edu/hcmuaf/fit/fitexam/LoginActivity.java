@@ -83,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
+        // Nút Đăng nhập
         btnLogin.setOnClickListener(view -> {
             if (checkInternetPermission()) {
                 handleLogin();
@@ -91,21 +92,25 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        // Nút Đăng ký
         btnSignup.setOnClickListener(view -> {
             Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
             startActivity(intent);
         });
 
+        // Nút Quên mật khẩu
         btnForgotPassword.setOnClickListener(view -> {
             Intent intent = new Intent(LoginActivity.this, ResetPasswordActivity.class);
             startActivity(intent);
         });
 
+        // Nút Đăng nhập Google
         btnLoginGoogle.setOnClickListener(view -> {
             handleLoginGoogle();
         });
     }
 
+    // Thực hiện chức năng Đăng nhập
     @SuppressLint("SetTextI18n")
     private void handleLogin() {
         String email = edEmail.getText().toString().trim();
@@ -176,6 +181,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    // Thêm vào nhật ký hệ thống
     private void addLog(Log log) {
         Retrofit retrofit = ApiService.getClient(this);
         ApiService apiService = retrofit.create(ApiService.class);
@@ -197,12 +203,13 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    // Lấy điạ chỉ IP của điện thoại
     private String getPhoneIpAddress() {
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         return Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
     }
 
-    // Login with Google
+    // Thực hiện chức năng Đăng nhập với Google
     private void handleLoginGoogle() {
         gsc.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
             @Override
@@ -340,7 +347,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    // Handle alert dialog
+    // Hiển thị hộp thoại Thông báo
     @SuppressLint("SetTextI18n")
     private void handleAlertDialog(GoogleSignInAccount account) {
         Dialog dialog = new Dialog(this);

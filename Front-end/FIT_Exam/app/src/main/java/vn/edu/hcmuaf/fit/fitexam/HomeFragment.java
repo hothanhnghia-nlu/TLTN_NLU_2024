@@ -99,20 +99,24 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getActivity(), "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
         }
 
+        // Nút Xem tất cả Môn học
         btnSee1.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), SubjectActivity.class);
             startActivity(intent);
         });
 
+        // Nút Xem tất cả Bài thi
         btnSee2.setOnClickListener(v -> {
             replaceFragment(new TakeExamFragment());
         });
 
+        // Nút Xem tất cả Lịch sử thi
         btnSee3.setOnClickListener(v -> {
             replaceFragment(new HistoryFragment());
         });
     }
 
+    // Lấy tên người dùng
     private void loadStudentName(int id) {
         Retrofit retrofit = ApiService.getClient(getContext());
         ApiService apiService = retrofit.create(ApiService.class);
@@ -138,6 +142,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    // Lấy Danh sách Môn học
     private void loadSubjectList() {
         Retrofit retrofit = ApiService.getClient(getContext());
         ApiService apiService = retrofit.create(ApiService.class);
@@ -170,6 +175,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    // Lấy Danh sách Bài thi
     private void loadTakeExamList() {
         Retrofit retrofit = ApiService.getClient(getContext());
         ApiService apiService = retrofit.create(ApiService.class);
@@ -203,6 +209,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    // Lấy Danh sách Lịch sử thi
     private void loadHistoryList(int id) {
         Retrofit retrofit = ApiService.getClient(getContext());
         ApiService apiService = retrofit.create(ApiService.class);

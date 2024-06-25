@@ -58,6 +58,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         String id = LoginSession.getIdKey();
         String email = LoginSession.getEmailKey();
 
+        // Nút Lưu thay đổi
         btnSave.setOnClickListener(view -> {
             handleChangePassword(Integer.parseInt(id), email);
         });
@@ -71,6 +72,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         ChangePasswordActivity.this.getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
+    // Hiện thực chức năng Thay đổi mật khẩu
     @SuppressLint("SetTextI18n")
     private void handleChangePassword(int id, String email) {
         String oldPassword = edOldPassword.getText().toString().trim();
@@ -95,6 +97,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         }
     }
 
+    // Cập nhật mật khẩu
     private void updatePassword(int id, String email, String txtPassword) {
         String bodyType = "multipart/form-data";
         RequestBody password = RequestBody.create(MediaType.parse(bodyType), txtPassword);
@@ -135,34 +138,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         });
     }
 
-    private void getUserPassword(int userId, final UserIdCallback callback) {
-        Retrofit retrofit = ApiService.getClient(this);
-        ApiService apiService = retrofit.create(ApiService.class);
-
-        Call<User> information = apiService.getUser(userId);
-
-        information.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
-                if (response.isSuccessful()) {
-                    User user = response.body();
-
-                    if (user != null) {
-                        String userPassword = user.getPassword();
-                        callback.onUserIdReceived(userPassword);
-                    } else {
-                        callback.onUserIdReceived(null);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                android.util.Log.e("API_ERROR", "Error occurred: " + t.getMessage());
-            }
-        });
-    }
-
+    // Thêm vào nhật ký hệ thống
     private void addLog(Log log) {
         Retrofit retrofit = ApiService.getClient(this);
         ApiService apiService = retrofit.create(ApiService.class);
@@ -184,11 +160,13 @@ public class ChangePasswordActivity extends AppCompatActivity {
         });
     }
 
+    // Lấy địa chỉ IP của điện thoại
     private String getPhoneIpAddress() {
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         return Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
     }
 
+    // Kiểm tra mật khẩu hợp lệ
     public boolean isPasswordValid(final String password) {
         Pattern pattern;
         Matcher matcher;
@@ -197,6 +175,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         return matcher.matches();
     }
 
+    // Hiển thị hộp thoại Hủy tác vụ
     private void showCancelDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 

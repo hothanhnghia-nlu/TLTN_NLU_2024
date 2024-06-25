@@ -1,9 +1,5 @@
 import axios from "./customizeAxios";
 
-const fetchAllExam = () => {
-    return axios.get("exams");
-}
-
 const fetchAllExamByCreatorId = ({id}) => {
     return axios.get(`exams/creator?id=${id}`);
 }
@@ -20,4 +16,4 @@ const deleteExam = (id) => {
     return axios.delete(`exams/${id}`);
 }
 
-export {fetchAllExam, fetchAllExamByCreatorId, createExam, updateExam, deleteExam};
+export {fetchAllExamByCreatorId, createExam, updateExam, deleteExam};

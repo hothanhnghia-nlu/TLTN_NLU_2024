@@ -40,20 +40,24 @@ public class ResetPasswordActivity extends AppCompatActivity {
         layoutEmail = findViewById(R.id.LinearLayout_Email);
         layoutPinView = findViewById(R.id.LinearLayout_PinView);
 
+        // Nút Gửi mã
         btnSend.setOnClickListener(view -> {
             handleSendOTP();
         });
 
+        // Nút Gửi lại mã
         btnResend.setOnClickListener(view -> {
             handleReSendOTP();
         });
 
+        // Nút Xác thực mã
         btnConfirm.setOnClickListener(view -> {
             handleConfirm();
         });
 
     }
 
+    // Thực hiện Xác thực mã
     private void handleConfirm() {
         String inputCode = pinView.getText().toString();
         String email = tvEmail.getText().toString();
@@ -72,6 +76,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         }
     }
 
+    // Thực hiện Gửi mã OTP
     @SuppressLint("SetTextI18n")
     private void handleSendOTP() {
         String email = edEmail.getText().toString();
@@ -95,6 +100,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         }
     }
 
+    // Thực hiện Gửi lại mã OTP
     @SuppressLint("SetTextI18n")
     private void handleReSendOTP() {
         String email = tvEmail.getText().toString();

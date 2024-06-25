@@ -73,6 +73,7 @@ const StudentPage = () => {
         setItemOffset(newOffset);
     }
 
+    // Thực hiện Tìm kiếm Sinh viên
     const handleSearch = () => {
         if (query) {
             const filtered = listStudents.filter(item => {
@@ -112,6 +113,7 @@ const StudentPage = () => {
         setDataStudentDelete(student);
     }
 
+    // Thực hiện Cập nhật Sinh viên
     const handleUpdate = async (id) => {
         let res = await updateUser(id, name, email, phone, dob, gender, role, status);
 
@@ -126,6 +128,7 @@ const StudentPage = () => {
         }
     }
 
+    // Thực hiện Xác nhận xóa
     const confirmDelete = async (id) => {
         let res = await deleteUser({id});
 
@@ -148,6 +151,7 @@ const StudentPage = () => {
         return `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
     }
 
+    // Thực hiện Xuất file Excel
     const getUsersExport = (event, done) => {
         let result = [];
         if (listStudents && listStudents.length > 0) {

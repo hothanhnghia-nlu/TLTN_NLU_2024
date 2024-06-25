@@ -52,12 +52,14 @@ public class NewPasswordActivity extends AppCompatActivity {
         email = getIntent().getStringExtra("email");
         UserUtils.getUserId(this, email);
 
+        // Nút Lưu thay đổi
         btnSave.setOnClickListener(view -> {
             handleChangePassword();
         });
 
     }
 
+    // Thực hiện chức năng Đặt lại mật khẩu
     @SuppressLint("SetTextI18n")
     private void handleChangePassword() {
         String password = edPassword.getText().toString();
@@ -79,6 +81,7 @@ public class NewPasswordActivity extends AppCompatActivity {
         }
     }
 
+    // Cập nhật mật khẩu mới
     private void updatePassword(int id, String txtPassword) {
         String bodyType = "multipart/form-data";
         RequestBody password = RequestBody.create(MediaType.parse(bodyType), txtPassword);
@@ -121,6 +124,7 @@ public class NewPasswordActivity extends AppCompatActivity {
         });
     }
 
+    // Thêm vào nhật ký hệ thống
     private void addLog(Log log) {
         Retrofit retrofit = ApiService.getClient(this);
         ApiService apiService = retrofit.create(ApiService.class);
@@ -142,11 +146,13 @@ public class NewPasswordActivity extends AppCompatActivity {
         });
     }
 
+    // Lấy điạ chỉ IP của điện thoại
     private String getPhoneIpAddress() {
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         return Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
     }
 
+    // Kiểm tra mật khẩu hợp lệ
     public boolean isPasswordValid(final String password) {
         Pattern pattern;
         Matcher matcher;

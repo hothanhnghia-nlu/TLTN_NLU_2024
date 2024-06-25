@@ -64,6 +64,7 @@ public class TakeExamFragment extends Fragment {
         View v = searchView.findViewById(androidx.appcompat.R.id.search_plate);
         v.setBackgroundColor(Color.TRANSPARENT);
 
+        // Tìm kiếm Bài thi
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -84,6 +85,7 @@ public class TakeExamFragment extends Fragment {
         }
     }
 
+    // Lấy Danh sách Bài thi
     private void loadTakeExamList() {
         Retrofit retrofit = ApiService.getClient(getContext());
         ApiService apiService = retrofit.create(ApiService.class);
@@ -117,6 +119,7 @@ public class TakeExamFragment extends Fragment {
         });
     }
 
+    // Lọc Danh sách Bài thi
     private void filterList(String text) {
         List<Exam> filteredList = new ArrayList<>();
         for (Exam exam : exams) {

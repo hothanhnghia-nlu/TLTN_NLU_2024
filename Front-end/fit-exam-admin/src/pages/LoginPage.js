@@ -19,6 +19,7 @@ const LoginPage = () => {
         }
     }, [navigate]);
 
+    // Thực hiện Đăng nhập
     const handleLogin = async () => {
         if (!email || !password) {
             toast.error("Vui lòng nhập email hoặc mật khẩu!");

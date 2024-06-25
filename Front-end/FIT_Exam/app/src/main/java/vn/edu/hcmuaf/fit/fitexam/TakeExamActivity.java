@@ -62,6 +62,7 @@ public class TakeExamActivity extends AppCompatActivity {
         View v = searchView.findViewById(androidx.appcompat.R.id.search_plate);
         v.setBackgroundColor(Color.TRANSPARENT);
 
+        // Tìm kiếm Bài thi
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -86,12 +87,14 @@ public class TakeExamActivity extends AppCompatActivity {
             Toast.makeText(this, "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
         }
 
+        // Nút Trở lại
         btnBack.setOnClickListener(view -> {
             finish();
         });
 
     }
 
+    // Lấy Danh sách Bài thi
     private void loadTakeExamList(String subjectId) {
         Retrofit retrofit = ApiService.getClient(this);
         ApiService apiService = retrofit.create(ApiService.class);
@@ -125,6 +128,7 @@ public class TakeExamActivity extends AppCompatActivity {
         });
     }
 
+    // Lọc Danh sách Bài thi
     private void filterList(String text) {
         List<Exam> filteredList = new ArrayList<>();
         for (Exam exam : exams) {

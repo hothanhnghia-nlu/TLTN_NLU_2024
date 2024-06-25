@@ -19,6 +19,7 @@ const ForgotPasswordPage = () => {
         }
     }, [navigate]);
 
+    // Thực hiện Đặt lại mật khẩu
     const handleResetPassword = async () => {
         if (!email) {
             toast.error("Vui lòng nhập Email!");

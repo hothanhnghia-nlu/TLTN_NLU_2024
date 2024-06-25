@@ -112,6 +112,7 @@ public class QuestionActivity extends AppCompatActivity {
             Toast.makeText(this, "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
         }
 
+        // Hiển thị Lựa chọn câu trả lời - Chọn 1
         answerRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             for (int i = 0; i < group.getChildCount(); i++) {
                 RadioButton rb = (RadioButton) group.getChildAt(i);
@@ -125,6 +126,7 @@ public class QuestionActivity extends AppCompatActivity {
             }
         });
 
+        // Nút Câu sau
         btnNext.setOnClickListener(v -> {
             if (!continuousMode) {
                 showContinuousMode();
@@ -133,18 +135,22 @@ public class QuestionActivity extends AppCompatActivity {
             }
         });
 
+        // Nút Câu tiếp
         btnContinuous.setOnClickListener(v -> {
             showNextQuestion();
         });
 
+        // Nút Câu trước
         btnPrevious.setOnClickListener(v -> {
             showPreviousQuestion();
         });
 
+        // Nút Nộp bài
         btnSubmit.setOnClickListener(v -> {
             handleSubmit();
         });
 
+        // Phím trở lại
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -155,6 +161,7 @@ public class QuestionActivity extends AppCompatActivity {
 
     }
 
+    // Lấy danh sách Câu hỏi
     private void loadQuestion(int examId) {
         Retrofit retrofit = ApiService.getClient(this);
         ApiService apiService = retrofit.create(ApiService.class);
@@ -186,6 +193,7 @@ public class QuestionActivity extends AppCompatActivity {
         });
     }
 
+    // Hiển thị Câu hỏi
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
     private void displayQuestion(Question question) {
         int index = currentQuestionIndex;
@@ -303,6 +311,7 @@ public class QuestionActivity extends AppCompatActivity {
         updateButtonVisibility();
     }
 
+    // Hiển thị Câu hỏi tiếp theo
     private void showNextQuestion() {
         saveSelectedAnswer();
         if (!continuousMode) {
@@ -319,6 +328,7 @@ public class QuestionActivity extends AppCompatActivity {
         }
     }
 
+    // Hiển thị Câu hỏi trước đó
     private void showPreviousQuestion() {
         saveSelectedAnswer();
         if (currentQuestionIndex > 0) {
@@ -328,6 +338,7 @@ public class QuestionActivity extends AppCompatActivity {
         }
     }
 
+    // Hiển thị chế độ chuyển giữa 2 nút
     private void showContinuousMode() {
         saveSelectedAnswer();
         if (currentQuestionIndex < questions.size() - 1) {
@@ -340,6 +351,7 @@ public class QuestionActivity extends AppCompatActivity {
         }
     }
 
+    // Cập nhật trạng thái nút
     private void updateButtonVisibility() {
         if (!continuousMode) {
             btnNext.setVisibility(View.VISIBLE);
@@ -349,6 +361,7 @@ public class QuestionActivity extends AppCompatActivity {
         btnNext.setEnabled(currentQuestionIndex < questions.size() - 1);
     }
 
+    // Lưu câu trả lời đã chọn
     private void saveSelectedAnswer() {
         Question currentQuestion = questions.get(currentQuestionIndex);
 
@@ -376,6 +389,7 @@ public class QuestionActivity extends AppCompatActivity {
         }
     }
 
+    // Đếm ngược Thời gian thi
     private void startCountDown() {
         countDownTimer = new CountDownTimer(timeLeftInMillis, 1000) {
             @Override
@@ -405,6 +419,7 @@ public class QuestionActivity extends AppCompatActivity {
         }
     }
 
+    // Thực hiện nút Nộp bài
     private void handleSubmit() {
         saveSelectedAnswer();
 
@@ -431,10 +446,12 @@ public class QuestionActivity extends AppCompatActivity {
         showSubmitDialog();
     }
 
+    // Thực hiện Nộp bài khi hết giờ
     private void handleSubmitTimesUp() {
         showSubmitTimesUpDialog();
     }
 
+    // Hiển thị hộp thoại Nộp bài
     private void showSubmitDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -453,6 +470,7 @@ public class QuestionActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    // Hiển thị hộp thoại Nộp bài khi hết giờ
     private void showSubmitTimesUpDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -469,6 +487,7 @@ public class QuestionActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    // Hiển thị hộp thoại Hủy tác vụ
     private void showCancelDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -487,6 +506,7 @@ public class QuestionActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    // Thực hiện kết quả thi
     private void processExamResult(int correctAnswers) {
         saveExamResult(correctAnswers, score -> runOnUiThread(() -> {
             if (score >= 5.0) {
@@ -502,6 +522,7 @@ public class QuestionActivity extends AppCompatActivity {
         }));
     }
 
+    // Hiển thị Kết quả thi
     private void showResultDialog(Drawable image, String result, String message) {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -527,6 +548,7 @@ public class QuestionActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    // Lưu Bài làm và Chấm bài tự động
     private void saveExamResult(int correctAnswers, SaveExamResultCallback callback) {
         String userID = LoginSession.getIdKey();
         double examScore = (10.0 / numberOfQuestions) * correctAnswers;
@@ -607,6 +629,7 @@ public class QuestionActivity extends AppCompatActivity {
         });
     }
 
+    // Tính tổng thời gian thi
     private double calcOverallExamTime() {
         String time = tvCountDown.getText().toString();
 

@@ -50,6 +50,7 @@ const EditProfilePage = () => {
         }
     }, [user]);
 
+    // Thực hiện Chọn file
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -61,6 +62,7 @@ const EditProfilePage = () => {
         }
     };
 
+    // Thực hiện Cập nhật thông tin
     const handleUpdate = async () => {
         const userId = user.id;
         const avatar = selectedImage?.file || null;

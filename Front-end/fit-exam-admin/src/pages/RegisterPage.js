@@ -24,6 +24,7 @@ const RegisterPage = () => {
         }
     }, [navigate]);
 
+    // Thực hiện Chọn vai trò
     const handleCheckboxChange = (event) => {
         const value = parseInt(event.target.value, 10);
         setRole(value);
@@ -54,6 +55,7 @@ const RegisterPage = () => {
         return regex.test(password);
     }
 
+    // Thực hiện Đăng ký
     const handleRegister = async () => {
         if (!name || !email || !password || !confPassword) {
             toast.error("Vui lòng điền đầy đủ thông tin!");

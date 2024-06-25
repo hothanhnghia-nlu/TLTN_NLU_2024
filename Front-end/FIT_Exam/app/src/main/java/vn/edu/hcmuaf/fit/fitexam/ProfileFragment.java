@@ -106,21 +106,25 @@ public class ProfileFragment extends Fragment {
             Toast.makeText(getActivity(), "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
         }
 
+        // Nút Chỉnh sửa hồ sơ
         editProfile.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), EditProfileActivity.class);
             startActivity(intent);
         });
 
+        // Nút Thay đổi mật khẩu
         changePassword.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
             startActivity(intent);
         });
 
+        // Nút Đăng xuất
         logout.setOnClickListener(v -> {
             handleLogoutDialog();
         });
     }
 
+    // Lấy thông tin cá nhân
     private void getUserInformation(int id) {
         Retrofit retrofit = ApiService.getClient(getContext());
         ApiService apiService = retrofit.create(ApiService.class);
@@ -179,7 +183,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    // Google log-in
+    // Lấy ảnh đại diện khi đăng nhập Google
     private void googleLogIn() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
         if (account != null) {
@@ -192,7 +196,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    // Handle logout dialog
+    // Hiển thị hộp thoại Đăng xuất
     @SuppressLint("SetTextI18n")
     private void handleLogoutDialog() {
         Dialog dialog = new Dialog(getActivity());
@@ -232,6 +236,7 @@ public class ProfileFragment extends Fragment {
         getActivity().finish();
     }
 
+    // Thêm vào nhật ký hệ thống
     private void addLog(Log log) {
         Retrofit retrofit = ApiService.getClient(getContext());
         ApiService apiService = retrofit.create(ApiService.class);
@@ -253,12 +258,14 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    // Lấy điạ chỉ IP của điện thoại
     private String getPhoneIpAddress() {
         WifiManager wifiManager = (WifiManager) getActivity()
                 .getApplicationContext().getSystemService(WIFI_SERVICE);
         return Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
     }
 
+    // Chuyển đổi dữ liệu ngày
     @SuppressLint("SimpleDateFormat")
     private String convertDateType(String inputDate) {
         if (inputDate == null) {

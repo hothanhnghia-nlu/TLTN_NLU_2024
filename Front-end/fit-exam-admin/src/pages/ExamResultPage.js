@@ -28,6 +28,7 @@ const ExamResultPage = () => {
         }
     }
 
+    // Thực hiện Xem Câu trả lời
     const handleViewAnswer = async (id) => {
         let res = await fetchResultDetailByQuestionId({id});
         if (res) {
@@ -62,6 +63,7 @@ const ExamResultPage = () => {
         setItemOffset(newOffset);
     }
 
+    // Thực hiện Tìm kiếm Kết quả thi
     const handleSearch = () => {
         if (query) {
             const filtered = listResults.filter(item => {
@@ -84,6 +86,7 @@ const ExamResultPage = () => {
         return `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
     }
 
+    // Thực hiện Xuất file Excel
     const getResultsExport = (event, done) => {
         const exportHeaders = ["STT", "Tên thí sinh", "Tên bài thi", "Môn thi", "Tổng số câu đúng", "Điểm thi", "Tổng thời gian thi", "Ngày thi"];
         let result = [exportHeaders];

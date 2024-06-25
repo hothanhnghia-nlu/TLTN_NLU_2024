@@ -25,6 +25,7 @@ const Header = () => {
         }
     }, [userId]);
 
+    // Thực hiện chức năng Đăng xuất
     const handleLogout = () => {
         localStorage.removeItem("id");
         navigate("/login");

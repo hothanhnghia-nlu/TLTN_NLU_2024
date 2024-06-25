@@ -79,6 +79,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         View v = searchView.findViewById(androidx.appcompat.R.id.search_plate);
         v.setBackgroundColor(Color.TRANSPARENT);
 
+        // Tìm kiếm Lịch sử thi
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -103,6 +104,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
+    // Lấy danh sách Lịch sử thi
     private void loadHistoryList(int id) {
         Retrofit retrofit = ApiService.getClient(getContext());
         ApiService apiService = retrofit.create(ApiService.class);
@@ -138,6 +140,7 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
     }
 
+    // Lọc danh sách cho tìm kiếm
     private void filterList(String text) {
         List<Result> filteredList = new ArrayList<>();
         for (Result result : results) {

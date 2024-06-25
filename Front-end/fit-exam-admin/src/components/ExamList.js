@@ -68,11 +68,13 @@ const ExamList = () => {
         setPageCount(Math.ceil(itemsToDisplay.length / itemsPerPage));
     }, [itemOffset, itemsPerPage, listExams, query, searchedItems]);
 
+    // Thực hiện Chuyển trang (phân trang)
     const handlePageClick = (event) => {
         const newOffset = (event.selected * itemsPerPage) % (query ? searchedItems.length : listExams.length);
         setItemOffset(newOffset);
     }
 
+    // Thực hiện Tìm kiếm Bài thi
     const handleSearch = () => {
         if (query) {
             const filtered = listExams.filter(item => {
@@ -87,6 +89,7 @@ const ExamList = () => {
         setItemOffset(0);
     }
 
+    // Thực hiện Lưu bài thi
     const handleSave = async () => {
         if (!name || !subjectId || !examTime || !numberOfQuestions || !startDate || !endDate) {
             toast.error("Vui lòng điền đầy đủ thông tin!");
@@ -129,14 +132,17 @@ const ExamList = () => {
         }
     }, [dataExamEdit]);
 
+    // Thực hiện Chỉnh sửa bài thi
     const handleEditExam = (exam) => {
         setDataExamEdit(exam);
     }
 
+    // Thực hiện Xóa bài thi
     const handleDeleteExam = (exam) => {
         setDataExamDelete(exam);
     }
 
+    // Thực hiện Cập nhật bài thi
     const handleUpdate = async () => {
         let examId = dataExamEdit.id;
         let res = await updateExam(examId, name, subjectId, examTime, numberOfQuestions, startDate, endDate);
@@ -152,6 +158,7 @@ const ExamList = () => {
         }
     }
 
+    // Thực hiện Xác nhận Xóa
     const confirmDelete = async () => {
         let examId = dataExamDelete.id;
         let res = await deleteExam(examId);
@@ -167,6 +174,7 @@ const ExamList = () => {
         }
     }
 
+    // Thực hiện Thay đổi số câu trả lời
     const handleAnswerNumChange = (event) => {
         const value = event.target.value;
 
@@ -187,6 +195,7 @@ const ExamList = () => {
         }
     };
 
+    // Thực hiện Chọn file
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -198,6 +207,12 @@ const ExamList = () => {
         }
     };
 
+    // Thực hiện Thêm câu hỏi
+    const handleAddQuestion = (exam) => {
+        setDataExamEdit(exam);
+    }
+
+    // Thực hiện Lưu câu hỏi
     const handleSaveQuestion = async () => {
         const imageFile = selectedImage?.file || null;
 
@@ -238,10 +253,6 @@ const ExamList = () => {
         } finally {
             setLoadingAPI(false);
         }
-    }
-
-    const handleAddQuestion = (exam) => {
-        setDataExamEdit(exam);
     }
 
     return (

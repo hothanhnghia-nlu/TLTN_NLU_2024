@@ -143,6 +143,7 @@ public class EditProfileActivity extends AppCompatActivity {
             Toast.makeText(this, "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
         }
 
+        // Chọn Ngày sinh
         edDob.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
@@ -152,23 +153,26 @@ public class EditProfileActivity extends AppCompatActivity {
             showDateDialog(year, month, dayOfMonth);
         });
 
+        // Chọn Giới tính
         acGender.setOnItemClickListener((parent, view, position, id) -> {
             selectedGender = (String) parent.getItemAtPosition(position);
         });
 
+        // Chọn Khoa phụ trách
         acFaculty.setOnItemClickListener((parent, view, position, id) -> {
             selectedFaculty = (String) parent.getItemAtPosition(position);
         });
 
+        // Nút mở Bộ sưu tập hình ảnh
         btnOpenGallery.setOnClickListener(v -> {
             openGallery();
         });
-
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Đang cập nhật...");
         progressDialog.setCancelable(false);
 
+        // Nút Lưu thay đổi
         btnSave.setOnClickListener(view -> {
             if (checkInternetPermission()) {
                 updateProfile(Integer.parseInt(userId));
@@ -177,10 +181,12 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
+        // Nút Trở lại
         btnBack.setOnClickListener(view -> {
             showCancelDialog();
         });
 
+        // Phím Trở lại
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -190,6 +196,7 @@ public class EditProfileActivity extends AppCompatActivity {
         EditProfileActivity.this.getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
+    // Thực hiện mở Bộ sưu tập Hình ảnh
     private void openGallery() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -219,6 +226,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+    // Lấy thông tin cá nhân
     private void getUserInformation(int id) {
         Retrofit retrofit = ApiService.getClient(this);
         ApiService apiService = retrofit.create(ApiService.class);
@@ -272,7 +280,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
-    // Google log-in
+    // Lấy ảnh đại diện khi đăng nhập Google
     private String getPhotoFromGoogleLogIn() {
         String result = "";
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
@@ -287,6 +295,7 @@ public class EditProfileActivity extends AppCompatActivity {
         return result;
     }
 
+    // Thực hiện chức năng Cập nhật thông tin cá nhân
     @SuppressLint("SetTextI18n")
     private void updateProfile(int id) {
         String name = edName.getText().toString().trim();
@@ -305,6 +314,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+    // Cập nhật người dùng
     private void updateUser(int id, String txtName, String txtPhone, String txtEmail, String txtDob, String txtGender, int txtFacultyId) {
         String bodyType = "multipart/form-data";
         RequestBody name = RequestBody.create(MediaType.parse(bodyType), txtName);
@@ -371,6 +381,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
+    // Thêm vào nhật ký hệ thống
     private void addLog(Log log) {
         Retrofit retrofit = ApiService.getClient(this);
         ApiService apiService = retrofit.create(ApiService.class);
@@ -392,6 +403,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
+    // Hiển thị hộp thoại Hủy tác vụ
     private void showCancelDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -409,11 +421,13 @@ public class EditProfileActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    // Lấy địa chỉ IP của điện thoại
     private String getPhoneIpAddress() {
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         return Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
     }
 
+    // Lấy danh sách Khoa
     private void getFaculty() {
         Retrofit retrofit = ApiService.getClient(this);
         ApiService apiService = retrofit.create(ApiService.class);
@@ -457,6 +471,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+    // Lấy Giới tính người dùng
     private void getUserGender() {
         if (gender != null) {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.drop_down_item, gender);
@@ -464,6 +479,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+    // Hiển thị hộp thoại Ngày
     private void showDateDialog(int year, int month, int dayOfMonth) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(new ContextThemeWrapper(
                 EditProfileActivity.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth),
@@ -475,6 +491,7 @@ public class EditProfileActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    // Chuyển đổi dữ liệu ngày
     @SuppressLint("SimpleDateFormat")
     private String convertDateType(String inputDate) {
         SimpleDateFormat inputFormat = new SimpleDateFormat("d/M/yyyy");
@@ -489,6 +506,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+    // Chuyển đổi dữ liệu ngày đã chọn
     @SuppressLint("SimpleDateFormat")
     private String convertSelectedDateType(String inputDate) {
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");

@@ -31,7 +31,7 @@ import vn.edu.hcmuaf.fit.fitexam.model.utils.ResultDetailConst;
 import vn.edu.hcmuaf.fit.fitexam.model.utils.UserConst;
 
 public interface ApiService {
-    String apiUrl = "https://192.168.124.110/api/";
+    String apiUrl = "https://192.168.127.110/api/";
 
     static Retrofit getClient(Context context) {
         OkHttpClient client = UnsafeOkHttpClient.getUnsafeOkHttpClient(context);

@@ -61,6 +61,7 @@ const SubjectPage = () => {
         setItemOffset(newOffset);
     }
 
+    // Thực hiện Tìm kiếm Môn học
     const handleSearch = () => {
         if (query) {
             const filtered = listSubjects.filter(item => {
@@ -75,6 +76,7 @@ const SubjectPage = () => {
         setItemOffset(0);
     }
 
+    // Thực hiện Chọn file
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -86,6 +88,7 @@ const SubjectPage = () => {
         }
     };
 
+    // Thực hiện Lưu môn học
     const handleSave = async () => {
         const imageFile = selectedImage?.file || null;
 
@@ -135,6 +138,7 @@ const SubjectPage = () => {
         setDataSubjectDelete(subject);
     }
 
+    // Thực hiện Cập nhật Môn học
     const handleUpdate = async () => {
         let subjectId = dataSubjectEdit.id;
         const imageFile = selectedImage.file;
@@ -159,6 +163,7 @@ const SubjectPage = () => {
         }
     }
 
+    // Thực hiện Xác nhận xóa
     const confirmDelete = async () => {
         let subjectId = dataSubjectDelete.id;
         let res = await deleteSubject(subjectId);
@@ -182,6 +187,7 @@ const SubjectPage = () => {
         return `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
     }
 
+    // Thực hiện Xuất file Excel
     const getSubjectsExport = (event, done) => {
         let result = [];
         if (listSubjects && listSubjects.length > 0) {

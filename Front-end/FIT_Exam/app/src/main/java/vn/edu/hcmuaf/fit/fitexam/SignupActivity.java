@@ -53,10 +53,12 @@ public class SignupActivity extends AppCompatActivity {
         btnSignup = findViewById(R.id.btnSignup);
         btnLogin = findViewById(R.id.btnLogin);
 
+        // Nút Đăng ký
         btnSignup.setOnClickListener(view -> {
             handleSignup();
         });
 
+        // Nút Đăng nhập
         btnLogin.setOnClickListener(view -> {
             Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -65,6 +67,7 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
+    // Thực hiện chức năng Đăng ký
     @SuppressLint("SetTextI18n")
     private void handleSignup() {
         String name = edName.getText().toString().trim();
@@ -89,6 +92,7 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
+    // Thêm người dùng
     private void addUser(String txtName, String txtEmail, String txtPhone, String txtPassword) {
         String bodyType = "multipart/form-data";
         RequestBody name = RequestBody.create(MediaType.parse(bodyType), txtName);
@@ -160,6 +164,7 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
+    // Thêm vào nhật ký hệ thống
     private void addLog(Log log) {
         Retrofit retrofit = ApiService.getClient(this);
         ApiService apiService = retrofit.create(ApiService.class);
@@ -181,11 +186,13 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
+    // Lấy điạ chỉ IP của điện thoại
     private String getPhoneIpAddress() {
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         return Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
     }
 
+    // Kiểm tra mật khẩu hợp lệ
     public boolean isPasswordValid(final String password) {
         Pattern pattern;
         Matcher matcher;

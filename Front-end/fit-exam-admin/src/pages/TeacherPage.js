@@ -81,6 +81,7 @@ const TeacherPage = () => {
         setItemOffset(newOffset);
     }
 
+    // Thực hiện Tìm kiếm Giảng viên
     const handleSearch = () => {
         if (query) {
             const filtered = listTeachers.filter(item => {
@@ -120,6 +121,7 @@ const TeacherPage = () => {
         setDataTeacherDelete(teacher);
     }
 
+    // Thực hiện Cập nhật Giảng viên
     const handleUpdate = async (id) => {
         let res = await updateUser(id, name, email, phone, dob, gender, role, status);
 
@@ -134,6 +136,7 @@ const TeacherPage = () => {
         }
     }
 
+    // Thực hiện Xác nhận xóa
     const confirmDelete = async (id) => {
         let res = await deleteUser({id});
 
@@ -148,6 +151,7 @@ const TeacherPage = () => {
         }
     }
 
+    // Thực hiện Xuất file Excel
     const getUsersExport = (event, done) => {
         let result = [];
         if (listTeachers && listTeachers.length > 0) {

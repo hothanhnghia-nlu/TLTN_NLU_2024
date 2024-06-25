@@ -52,6 +52,7 @@ const FacultyPage = () => {
         setItemOffset(newOffset);
     }
 
+    // Thực hiện Tìm kiếm Khoa
     const handleSearch = () => {
         if (query) {
             const filtered = listFaculties.filter(item => {
@@ -65,6 +66,7 @@ const FacultyPage = () => {
         setItemOffset(0);
     }
 
+    // Thực hiện Thêm Khoa
     const handleSave = async () => {
         let res = await createFaculty(name);
         if (res && res.id) {
@@ -90,10 +92,12 @@ const FacultyPage = () => {
         setDataFacultyEdit(faculty);
     }
 
+    // Thực hiện Xóa Khoa
     const handleDeleteFaculty = (faculty) => {
         setDataFacultyDelete(faculty);
     }
 
+    // Thực hiện Cập nhật Khoa
     const handleUpdate = async () => {
         let facultyId = dataFacultyEdit.id;
         let res = await updateFaculty(facultyId, name);
@@ -109,6 +113,7 @@ const FacultyPage = () => {
         }
     }
 
+    // Thực hiện Xác nhận xóa
     const confirmDelete = async () => {
         let facultyId = dataFacultyDelete.id;
         let res = await deleteFaculty(facultyId);

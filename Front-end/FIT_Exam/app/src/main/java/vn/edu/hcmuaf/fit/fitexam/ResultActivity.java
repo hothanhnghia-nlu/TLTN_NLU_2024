@@ -58,11 +58,13 @@ public class ResultActivity extends AppCompatActivity {
             Toast.makeText(this, "Vui lòng kểm tra kết nối mạng...", Toast.LENGTH_SHORT).show();
         }
 
+        // Nút Trở lại
         btnBack.setOnClickListener(view -> {
             finish();
         });
     }
 
+    // Lấy kết quả thi
     private void loadResult(int id) {
         Retrofit retrofit = ApiService.getClient(this);
         ApiService apiService = retrofit.create(ApiService.class);
